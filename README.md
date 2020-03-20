@@ -1,2 +1,1 @@
-# WalkieTalkie
-Walkie Talkie web application designed to have 
+Walkie Talkie web application for talking with your friends!
