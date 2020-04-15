@@ -1,19 +1,13 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import '../styles/App.css';
-import ChatPage from './ChatPage';
 import HomePage from './HomePage';
+import UserProvider from './providers/UserProvider';
 
 function App() {
   return (
-    < >
-    <Router>
-      <Switch>
-        <Route path="/chat" component={ChatPage} />
-        <Route path="/" component={HomePage} />
-      </Switch>
-    </Router>
-    </>
+    <UserProvider>
+      <HomePage/>
+    </UserProvider>
   );
 }
 
