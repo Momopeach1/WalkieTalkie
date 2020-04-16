@@ -8,7 +8,7 @@
 .config.js
 conifg
 key.js
-/src/config/key.js
+/src/config/keys.js
 # testing
 /coverage
 
