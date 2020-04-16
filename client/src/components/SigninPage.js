@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from 'react-router-dom';
-import { auth, signInWithGoogle } from "../../firebase";
+import { auth, signInWithGoogle } from "../firebase";
+import history from '../utilities/history';
 
 const SignIn = () => {
 
@@ -10,10 +11,12 @@ const SignIn = () => {
 
   const signInWithEmailAndPasswordHandler = (event,email, password) => {
       event.preventDefault();
-      auth.signInWithEmailAndPassword(email, password).catch(error => {
-      setError("Error signing in with password and email!");
-        console.error("Error signing in with password and email", error);
-      });
+      auth.signInWithEmailAndPassword(email, password)
+        .then(() => history.push('/chat'))
+        .catch(error => {
+        setError("Error signing in with password and email!");
+          console.error("Error signing in with password and email", error);
+        });
     };
     
     const onChangeHandler = (event) => {
