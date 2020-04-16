@@ -1,9 +1,9 @@
-import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-
+import React from 'react';
 import '../styles/ChatPage.css';
+import history from '../utilities/history';
+
 
 const ChatPage = () => {
   const arrowDown = () => <svg width="18" height="18" className="button-1w5pas"><g fill="none" fill-rule="evenodd"><path d="M0 0h18v18H0"></path><path stroke="currentColor" d="M4.5 4.5l9 9" stroke-linecap="round"></path><path stroke="currentColor" d="M13.5 4.5l-9 9" stroke-linecap="round"></path></g></svg>;
@@ -26,6 +26,7 @@ const ChatPage = () => {
           </Paper>
         </Grid>
       </Grid>
+      <button onClick={()=> history.push("/profile")}>profile</button>
     </div>
   );
 }

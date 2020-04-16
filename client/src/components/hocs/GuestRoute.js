@@ -3,9 +3,10 @@ import { Redirect, Route } from 'react-router-dom';
 import UserProvider from '../../contexts/UserContext';
 
 
-const ProtectedRoute = props => {
+const GuestRoute = props => {
     const { user } = useContext(UserProvider);
-    return user ? <Route {...props} /> : <Redirect to="/signin" />;
+    
+    return !user ? <Route {...props} /> : <Redirect to="/chat" />;
 };
 
-export default ProtectedRoute;
+export default GuestRoute;
