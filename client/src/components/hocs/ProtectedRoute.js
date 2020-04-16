@@ -1,22 +1,12 @@
 import React, { useContext } from 'react';
-import { Route } from 'react-router-dom';
-import UserProvider from '../providers/UserProvider';
+import { Route, Redirect } from 'react-router-dom';
+
+import UserProvider from '../contexts/UserContext';
 
 const ProtectedRoute = props => {
-    const state = useContext(UserProvider);
-    console.log(state);
-    // const renderRoute = new Promise((resolve,reject)=>{
-    //     firebase.auth().onAuthStateChanged(function(user) {
-    //         if(user){
-    //             resolve (true);
-    //         }
-    //         else{
-    //             resolve(false);
-    //         }
-    //       }); 
-    // })
-    //const route = await renderRoute;
-    return <Route {...props}/>;
+    const { user } = useContext(UserProvider);
+    
+    return user? <Route {...props} /> : <Redirect to="/signin" />;
 };
 
 export default ProtectedRoute;

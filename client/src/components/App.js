@@ -1,29 +1,33 @@
 import React from 'react';
-import { Route, Router } from 'react-router-dom';
-import History from '../history';
-import '../styles/App.css';
-import PasswordReset from "./account/PasswordReset";
-import ProfilePage from './account/ProfilePage';
-import SignIn from "./account/SignIn";
-import SignUp from "./account/SignUp";
+import { Route, Router, Switch } from 'react-router-dom';
+
+import HomePage from './HomePage';
+import ProfilePage from './ProfilePage';
+import SigninPage from "./SigninPage";
 import ChatPage from "./ChatPage";
+
+import { UserProvider } from './contexts/UserContext';
+
 import ProtectedRoute from './hocs/ProtectedRoute';
-import UserProvider from './providers/UserProvider';
+import history from '../utilities/history';
+import '../styles/App.css';
 
-function App() {
+const App = () => {
   return (
-    <UserProvider>
-    <Router history={History}>
-      <Route path="/SignUp" component={SignUp} />
-      <Route path="/SignIn" component={SignIn} />
-      <Route path = "/passwordReset" component={PasswordReset} />
-      <ProtectedRoute path ="/ProfilePage" component={ProfilePage}/>
-      <Route path="/chat" component={ChatPage} />
+    <Router history={history}>
+      <Switch>
+        <Route path="/signin" component={SigninPage} />
+        <ProtectedRoute path ="/profile" component={ProfilePage} />
+        <Route path="/chat" component={ChatPage} />
+        <Route path="/" component={HomePage} />
+      </Switch>
     </Router>
-    </UserProvider>
-
   );
 }
 
-export default App;
+export default () => (
+  <UserProvider>
+    <App />
+  </UserProvider>
+);
 

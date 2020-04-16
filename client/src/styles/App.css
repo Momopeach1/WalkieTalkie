@@ -1,41 +1,32 @@
+@font-face {
+  font-family: 'whitney-medium';
+  src: url('../assets/fonts/whitney/whitney-medium.otf');
+}
+
+@font-face {
+  font-family: 'whitney-bold';
+  src: url('../assets/fonts/whitney/whitney-bold.otf');
+}
+
+@font-face {
+  font-family: 'whitney-semibold';
+  src: url('../assets/fonts/whitney/whitney-semibold.otf');
+}
+
 .MuiPaper-elevation1 {
-    box-shadow: none !important;
+  box-shadow: none !important;
 }
-/* sidebar */
-#root > div > div > div.MuiGrid-root.sidebar.MuiGrid-item.MuiGrid-grid-xs-3 {
-    background-color: #2f3136;
-    height: 100vh;
-    
-}
-/* this dumb shit is for paper */
-.primary-color {
-    color: #b9bbbe !important;
-}
-.group-title {
-    font-size: 0.69em;
-    font-weight: 500;
-    line-height: 20px;
-    padding: 0.5em;
-    box-shadow: 0 1px 0 rgba(4,4,5,0.2),0 1.5px 0 rgba(6,6,7,0.05),0 2px 0 rgba(4,4,5,0.05);
-    color: #ffffff !important;
-}
+
 .MuiSvgIcon-root {
-    font-size: 1.6em !important;
-    opacity: 0.8 !important;
+  font-size: 1.6em !important;
+  opacity: 0.8 !important;
 }
-.secondary-color {
-    color: white;
-}
+
 body {
-    margin: 0px;
-    font-family: 'Roboto';
+  margin: 0px;
+  font-family: 'whitney-medium';
 }
 
-.main-chat {
-    background-color: #36393f;
-}
-
-/* Paper */
 .MuiPaper-root {
-    background-color: transparent !important;
+  background-color: transparent !important;
 }
