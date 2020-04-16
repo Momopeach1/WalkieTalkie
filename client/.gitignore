@@ -4,10 +4,11 @@
 /node_modules
 /.pnp
 .pnp.js
+
 .config.js
 conifg
 key.js
-
+/src/config/key.js
 # testing
 /coverage
 
