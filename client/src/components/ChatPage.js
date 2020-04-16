@@ -10,7 +10,7 @@ const ChatPage = () => {
   return (
     <div>
       <Grid container spacing={0}>
-        <Grid item className="sidebar" xs={3}>
+        <Grid item className="sidebar" xs={12} sm={5} md={4} lg={3} xl={2}>
           <Paper>
             <div className="primary-color group-title">
               <span className="group-name">Indecent Group</span>
@@ -18,7 +18,7 @@ const ChatPage = () => {
             </div>
           </Paper>
         </Grid>
-        <Grid item className="main-chat" xs ={9}>
+        <Grid item className="main-chat" xs ={12} sm={7} md={8} lg={9} xl={10}>
           <Paper>
             <div className="secondary-color">
                 General Discussion
