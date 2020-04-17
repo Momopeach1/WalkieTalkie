@@ -1,8 +1,8 @@
-import firebase from 'firebase/app';
-import React, { useContext, useEffect } from 'react';
+import React from 'react';
 import { Route, Router, Switch } from 'react-router-dom';
-import UserContext, { UserProvider } from '../contexts/UserContext';
-import { generateUserDocument } from '../firebase';
+import { UserProvider } from '../contexts/UserContext';
+import { SocketProvider } from '../contexts/SocketContext';
+import { LogsProvider } from '../contexts/LogsContext';
 import '../styles/App.css';
 import history from '../utilities/history';
 import ChatPage from "./ChatPage";
@@ -12,20 +12,11 @@ import ProfilePage from './ProfilePage';
 import SigninPage from "./SigninPage";
 import SignOutPage from "./SignoutPage";
 import SignupPage from "./SignupPage";
-
-
-
-
+import useApp from '../hooks/useApp';
 
 const App = () => {
-  const {setUser} = useContext(UserContext);
-  useEffect(()=>{
-    firebase.auth().onAuthStateChanged(async function(user) {
-      const response = await generateUserDocument(user);
-      console.log(response);
-      setUser(response);
-    });
-  },[])
+  useApp();
+
   return (
     <Router history={history}>
       <Switch>
@@ -41,8 +32,12 @@ const App = () => {
 }
 
 export default () => (
-  <UserProvider>
-    <App />
-  </UserProvider>
+  <LogsProvider>
+    <SocketProvider>
+      <UserProvider>
+        <App />
+      </UserProvider>
+    </SocketProvider>
+  </LogsProvider>
 );
 

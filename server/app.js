@@ -11,8 +11,11 @@ server.listen(PORT,()=>console.log('listening to port:', PORT));
 
 io.on('connection', (socket) => {
   console.log('a user connected');
-  socket.on('send',(data)=>{
-    console.log(data);
+
+  socket.join('General Room');
+
+  socket.on('send message',(data)=>{
+    io.in('General Room').emit('new message', data);
   });
 });
 io.listen(8000);

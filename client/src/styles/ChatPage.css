@@ -9,6 +9,10 @@
 .main-chat { 
   background-color: #36393f;
   height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-bottom: 10px;
 }
 
 .group-title {
