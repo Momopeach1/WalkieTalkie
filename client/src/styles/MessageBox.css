@@ -1,3 +1,9 @@
+/* Message Box */
+.chat-box-container {
+  display: flex;
+  justify-content: center;
+}
+
 .send-button {
   display: none;
 }
@@ -21,7 +27,7 @@ textarea {
 #standard-textarea-label {
   color: darkgray!important;
   left: 20px;
-  /* top: 0; */
+  transform: translate(0, 17px) scale(1);
 }
 
 textarea::placeholder {
@@ -30,8 +36,4 @@ textarea::placeholder {
 
 .MuiInput-underline:before, .MuiInput-underline:after {
   border-bottom: none!important;
-}
-
-.MuiInputLabel-formControl {
-  /* transform: translate(0, 17px) scale(1)!important; */
 }

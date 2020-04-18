@@ -1,23 +1,21 @@
 import React, { useContext } from "react";
 import LogsContext from "../contexts/LogsContext";
 
-import '../styles/useLogs.css';
-
 const useLogs = () => {
   const { logs } = useContext(LogsContext);
   
   const renderLogs = () => {
     return logs.map(log => {
       return (
-        <>
-          <span>
+        <div className="log">
+          <div>
             <img className="avatar" src={log.photoURL} />
-          </span>
-          <span>
+          </div>
+          <div>
             <div>{log.displayName}</div>
-            <div>{log.message}</div>
-          </span>
-        </>
+            <div className="whitney-book message">{log.message}</div>
+          </div>
+        </div>
       );
     });
   }

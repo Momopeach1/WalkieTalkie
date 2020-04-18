@@ -4,8 +4,6 @@ import TextField from '@material-ui/core/TextField';
 import '../../styles/MessageBox.css';
 import useMessageBox from '../../hooks/useMessageBox';
 
-
-
 const MessageBox = ()=>{
   const [message, handleOnChange, handleOnSubmit, handleOnKeyPress] = useMessageBox();
 
@@ -20,6 +18,8 @@ const MessageBox = ()=>{
         multiline
         onKeyPress={handleOnKeyPress}
         onChange={handleOnChange}
+        onFocus={ e => document.querySelector('#standard-textarea-label').style.transform = 'translate(0, 1.5px) scale(0.75)' }
+        onBlur={ e=> document.querySelector('#standard-textarea-label').style.transform = 'translate(0, 17px) scale(1)' }
       />
     </form>
   )

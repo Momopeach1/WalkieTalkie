@@ -14,6 +14,7 @@ const useMessageBox = () => {
 
   const handleOnSubmit = e => {
     e.preventDefault();
+    if (message.trim().length === 0) return;
     socket.emit('send message', { message, displayName, photoURL });
   }
 

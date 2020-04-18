@@ -14,6 +14,7 @@ const useChat = () => {
 
     socket.on('new message', data => {
       setLogs(prevLogs => [ ...prevLogs, data ]);
+      document.querySelector('.logs-container').scrollIntoView(false);
     });
   },[])
 };
