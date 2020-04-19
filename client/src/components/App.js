@@ -3,9 +3,10 @@ import { Route, Router, Switch } from 'react-router-dom';
 import { UserProvider } from '../contexts/UserContext';
 import { SocketProvider } from '../contexts/SocketContext';
 import { LogsProvider } from '../contexts/LogsContext';
+import { AllUsersProvider } from '../contexts/AllUsersContext';
 import '../styles/App.css';
 import history from '../utilities/history';
-import ChatPage from "./ChatPage";
+import ChatPage from "./ChatPage/ChatPage";
 import ProtectedRoute from './hocs/ProtectedRoute';
 import HomePage from './HomePage';
 import ProfilePage from './ProfilePage';
@@ -15,11 +16,12 @@ import SignupPage from "./SignupPage";
 import useApp from '../hooks/useApp';
 
 const App = () => {
-  useApp();
+  const [renderRoutes] = useApp();
 
   return (
     <Router history={history}>
       <Switch>
+        {/* { renderRoutes() } */}
         <Route path="/signin" component={SigninPage} />
         <Route path="/signup" component={SignupPage}/>
         <ProtectedRoute path ="/profile" component={ProfilePage} />
@@ -32,12 +34,14 @@ const App = () => {
 }
 
 export default () => (
-  <LogsProvider>
-    <SocketProvider>
-      <UserProvider>
-        <App />
-      </UserProvider>
-    </SocketProvider>
-  </LogsProvider>
+  <AllUsersProvider>
+    <LogsProvider>
+      <SocketProvider>
+        <UserProvider>
+          <App />
+        </UserProvider>
+      </SocketProvider>
+    </LogsProvider>
+  </AllUsersProvider>
 );
 

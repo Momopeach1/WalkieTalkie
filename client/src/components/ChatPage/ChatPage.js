@@ -1,11 +1,15 @@
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import Chat from './chat/Chat';
-import useChat from '../hooks/useChat';
-import '../styles/ChatPage.css';
-import history from '../utilities/history';
+import useChat from '../../hooks/useChat';
+import '../../styles/ChatPage.css';
+import history from '../../utilities/history';
+import ChannelHeader from './ChannelHeader';
+import ActiveMemberBar from './ActiveMemberBar';
+import { auth } from '../../firebase';
 
 const ChatPage = () => {
   useChat();
@@ -19,15 +23,27 @@ const ChatPage = () => {
             <div className="primary-color group-title">
               <span className="group-name">Indecent Group</span>
               <span>{arrowDown()}</span>
+              <button onClick={() => auth.signOut()}>Signout</button>
             </div>
           </Paper>
         </Grid>
+
         <Grid item className="main-chat" xs ={12} sm={7} md={8} lg={9} xl={10}>
-          <Chat />
+          <ChannelHeader />
+          
+          <Grid className="below-header-container" container spacing={0}>
+            
+            <Grid className="message-ui" item xs={10}>
+              <Chat />
+            </Grid>
+            <Grid item xs={2}>
+              <ActiveMemberBar />
+            </Grid>
+            
+          </Grid>
         </Grid>
       </Grid>
-      <button onClick={()=> history.push('/profile')}>profile</button>
-      {/* <button onClick={()=> socket.emit('send',{msg:msg})}> send </button> */}
+      {/* <button onClick={()=> history.push('/profile')}>profile</button> */}
     </div>
   );
 }

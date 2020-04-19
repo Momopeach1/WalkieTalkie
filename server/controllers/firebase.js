@@ -1,4 +1,8 @@
 const router = require('express').Router();
-router.get('/', (req, res)=> res.send('nigger'));
+
+
+router.get('/', (req, res)=> {
+  res.send('asdfsadfsd');
+});
 
 module.exports = router;

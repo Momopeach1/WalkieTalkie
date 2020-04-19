@@ -1,8 +1,8 @@
 import React from 'react';
 import TextField from '@material-ui/core/TextField';
 
-import '../../styles/MessageBox.css';
-import useMessageBox from '../../hooks/useMessageBox';
+import '../../../styles/MessageBox.css';
+import useMessageBox from '../../../hooks/useMessageBox';
 
 const MessageBox = ()=>{
   const [message, handleOnChange, handleOnSubmit, handleOnKeyPress] = useMessageBox();

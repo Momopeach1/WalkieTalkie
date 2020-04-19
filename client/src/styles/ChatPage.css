@@ -8,11 +8,11 @@
 
 .main-chat { 
   background-color: #36393f;
-  height: 100vh;
+  max-height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding-bottom: 10px;
+  /* justify-content: space-between; */
+  /* padding-bottom: 10px; */
 }
 
 .group-title {
@@ -47,4 +47,16 @@
   transition: transform .2s ease-out,stroke-dasharray .2s ease-out;
   transition: transform .2s ease-out,stroke-dasharray .2s ease-out,-webkit-transform .2s ease-out;
   margin-left: 4px;
+}
+
+.below-header-container {
+  flex-grow: 1;
+  max-height: 100%;
+  overflow-y: hidden;
+}
+
+.message-ui {
+  display: flex;
+  flex-direction: column;
+  max-height: inherit;
 }

@@ -12,7 +12,7 @@ const useLogs = () => {
             <img className="avatar" src={log.photoURL} />
           </div>
           <div>
-            <div>{log.displayName}</div>
+            <div className="displayName-text">{log.displayName}</div>
             <div className="whitney-book message">{log.message}</div>
           </div>
         </div>

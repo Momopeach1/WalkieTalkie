@@ -1,13 +1,17 @@
 import { useEffect } from 'react';
-import { auth } from "../firebase";
+import { auth, firestore } from "../firebase";
 import history from '../utilities/history';
 
+import firebase from 'firebase/app';
+import 'firebase/firestore';
 
 
 const SignoutPage = () =>{
   useEffect(()=>{
-    auth.signOut();
-    history.push('/');
+    auth.signOut()
+      .then(() => {
+        history.push('/');
+      });
   },[])
 }
 
