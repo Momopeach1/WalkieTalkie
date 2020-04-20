@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-const chatController = require('./chat');
+const firebaseController = require('./firebase');
 
-router.use('/chat',chatController);
+router.use('/firebase', firebaseController);
 
 module.exports = router;

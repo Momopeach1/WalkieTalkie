@@ -1,0 +1,40 @@
+/* Message Box */
+.chat-box-container {
+  display: flex;
+  /* justify-content: center; */
+}
+
+.send-button {
+  display: none;
+}
+
+.message-box {
+  background-color: #40444b;
+  width: inherit;
+  border-radius: 20px!important;
+  /* padding: 0 20px!important; */
+  margin-bottom: 10px!important;
+}
+
+.chat-form {
+  width: 97%;
+}
+
+textarea {
+  color: white!important;
+  max-height: initial;
+}
+
+#standard-textarea-label {
+  color: darkgray!important;
+  left: 20px;
+  transform: translate(0, 17px) scale(1);
+}
+
+textarea::placeholder {
+  color: #8e9297!important;
+}
+
+.MuiInput-underline:before, .MuiInput-underline:after {
+  border-bottom: none!important;
+}

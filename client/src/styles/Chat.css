@@ -1,0 +1,60 @@
+/* Chat Header */
+.group-title-symbol {
+  padding: 0 15px;
+  color: #72767d;
+}
+
+.channel-title {
+  display: flex;
+  align-items: center;
+  box-shadow: 0 1px 0 rgba(4,4,5,0.2),0 1.5px 0 rgba(6,6,7,0.05),0 2px 0 rgba(4,4,5,0.05)!important;
+  height: 48px;
+  font-size: 16px;
+}
+
+/* Main Chat */
+.log-container {
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.logs-container {
+  display: flex;
+  flex-direction: column;
+  color: #fff!important;
+  font-size: 1em;
+  line-height: 1.375rem;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+/* .logs-container:first-child {
+  margin-top: 10px;
+} */
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 40px;
+  margin-right: 20px;
+}
+
+.message {
+  color: #DCDDDE;
+  font: 16px;
+}
+
+.log {
+  display: flex;
+  margin: 5px 0;
+  padding: 5px 20px;
+}
+
+.log:hover {
+  background-color: rgb(50, 53, 59);
+}
+
+.displayName-text:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}

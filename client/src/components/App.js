@@ -1,34 +1,27 @@
-import firebase from 'firebase/app';
-import React, { useContext, useEffect } from 'react';
+import React from 'react';
 import { Route, Router, Switch } from 'react-router-dom';
-import UserContext, { UserProvider } from '../contexts/UserContext';
-import { generateUserDocument } from '../firebase';
+import { UserProvider } from '../contexts/UserContext';
+import { SocketProvider } from '../contexts/SocketContext';
+import { LogsProvider } from '../contexts/LogsContext';
+import { AllUsersProvider } from '../contexts/AllUsersContext';
 import '../styles/App.css';
 import history from '../utilities/history';
-import ChatPage from "./ChatPage";
+import ChatPage from "./ChatPage/ChatPage";
 import ProtectedRoute from './hocs/ProtectedRoute';
 import HomePage from './HomePage';
 import ProfilePage from './ProfilePage';
 import SigninPage from "./SigninPage";
 import SignOutPage from "./SignoutPage";
 import SignupPage from "./SignupPage";
-
-
-
-
+import useApp from '../hooks/useApp';
 
 const App = () => {
-  const {setUser} = useContext(UserContext);
-  useEffect(()=>{
-    firebase.auth().onAuthStateChanged(async function(user) {
-      const response = await generateUserDocument(user);
-      console.log(response);
-      setUser(response);
-    });
-  },[])
+  const [renderRoutes] = useApp();
+
   return (
     <Router history={history}>
       <Switch>
+        {/* { renderRoutes() } */}
         <Route path="/signin" component={SigninPage} />
         <Route path="/signup" component={SignupPage}/>
         <ProtectedRoute path ="/profile" component={ProfilePage} />
@@ -41,8 +34,14 @@ const App = () => {
 }
 
 export default () => (
-  <UserProvider>
-    <App />
-  </UserProvider>
+  <AllUsersProvider>
+    <LogsProvider>
+      <SocketProvider>
+        <UserProvider>
+          <App />
+        </UserProvider>
+      </SocketProvider>
+    </LogsProvider>
+  </AllUsersProvider>
 );
 
