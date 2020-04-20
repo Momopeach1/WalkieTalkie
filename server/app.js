@@ -30,21 +30,16 @@ const firestore = firebase.firestore();
 io.on('connection', (socket) => {
   console.log('a user connected');
 
-  socket.emit('generated socket id', { socketId: socket.id });
-
   socket.join('General Room');
 
+  socket.emit('generated socket id', { socketId: socket.id }, () => io.in('General Room').emit('user joined', {}) );
+  
   socket.on('send message',(data)=>{
     io.in('General Room').emit('new message', data);
   });
 
-  socket.on('user left', () => {
-    io.in('General Room').emit('user left', {});
-  })
-
   socket.on('disconnect', async () => {
     console.log('a user has disconnected', socket.id);
-
     const socketRef = firestore.collection('sockets').doc(`${socket.id}`);
     const socketDoc = await socketRef.get();
     const socketData = socketDoc.data();
@@ -53,9 +48,10 @@ io.on('connection', (socket) => {
     const userDoc = await userRef.get();
     const { uid, photoURL, email, displayName } = userDoc.data();
 
-    userRef.set({ uid, photoURL, email, displayName, socketId: null });
+    await userRef.set({ uid, photoURL, email, displayName, socketId: null });
+    await socketRef.delete();
 
-    socketRef.delete();
+    io.in('General Room').emit('user left', {});
   });
 });
 

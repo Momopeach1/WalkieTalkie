@@ -75,3 +75,7 @@ body {
 .MuiPaper-root {
   background-color: transparent !important;
 }
+
+.channel-title-color {
+  color: #8e9297;
+}

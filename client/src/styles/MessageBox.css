@@ -1,7 +1,7 @@
 /* Message Box */
 .chat-box-container {
   display: flex;
-  justify-content: center;
+  /* justify-content: center; */
 }
 
 .send-button {
@@ -12,7 +12,7 @@
   background-color: #40444b;
   width: inherit;
   border-radius: 20px!important;
-  padding: 0 20px!important;
+  /* padding: 0 20px!important; */
   margin-bottom: 10px!important;
 }
 

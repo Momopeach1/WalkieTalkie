@@ -25,14 +25,11 @@ const useChat = () => {
     const socket = openSocket();
     setSocket(socket);
 
-    // window.addEventListener("beforeunload", () => {
-    //   socket.emit('user left', {});
-    // });
-
-    socket.on('generated socket id', ({ socketId }) => {
+    socket.on('generated socket id', ({ socketId}, announceJoin) => {
+      console.log(announceJoin);
       generateUserDocument(user, { socketId });
-      firestore.collection('sockets').doc(`${socketId}`).set({ uid: user.uid });
-      fetchAllUsers();
+      firestore.collection('sockets').doc(`${socketId}`).set({ uid: user.uid })
+      .then( () => announceJoin() );
     });
 
     socket.on('new message', data => {
@@ -41,8 +38,14 @@ const useChat = () => {
     });
 
     socket.on('user left', () => {
+      console.log('user right');
       fetchAllUsers();
     })
+
+    socket.on('user joined', ()=> {
+      console.log('fetching');
+      fetchAllUsers();
+    });
   },[])
 };
 

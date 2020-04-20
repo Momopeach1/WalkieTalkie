@@ -1,5 +1,6 @@
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
+import Hidden from '@material-ui/core/Hidden';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -18,26 +19,30 @@ const ChatPage = () => {
   return (
     <div>
       <Grid container spacing={0}>
-        <Grid item className="sidebar" xs={12} sm={5} md={4} lg={3} xl={2}>
-          <Paper>
-            <div className="primary-color group-title">
-              <span className="group-name">Indecent Group</span>
-              <span>{arrowDown()}</span>
-              <button onClick={() => auth.signOut()}>Signout</button>
-            </div>
-          </Paper>
+        <Grid item className="sidebar" sm={3} md={2}>
+          <Hidden xsDown>
+            <Paper>
+              <div className="primary-color group-title">
+                <span className="group-name">Indecent Group</span>
+                <span>{arrowDown()}</span>
+                <button onClick={() => auth.signOut()}>Signout</button>
+              </div>
+            </Paper>
+          </Hidden>
         </Grid>
 
-        <Grid item className="main-chat" xs ={12} sm={7} md={8} lg={9} xl={10}>
+        <Grid item className="main-chat" xs={12} sm={9} md={10}>
           <ChannelHeader />
-          
+
           <Grid className="below-header-container" container spacing={0}>
             
-            <Grid className="message-ui" item xs={10}>
+            <Grid className="message-ui" item xs={12} sm={9} md={10}>
               <Chat />
             </Grid>
-            <Grid item xs={2}>
-              <ActiveMemberBar />
+            <Grid item sm={3} md={2}>
+              <Hidden xsDown>
+                <ActiveMemberBar />
+              </Hidden>
             </Grid>
             
           </Grid>
