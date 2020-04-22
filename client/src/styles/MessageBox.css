@@ -1,7 +1,7 @@
 /* Message Box */
 .chat-box-container {
   display: flex;
-  /* justify-content: center; */
+  justify-content: center;
 }
 
 .send-button {
@@ -10,9 +10,8 @@
 
 .message-box {
   background-color: #40444b;
-  width: inherit;
+  width: 100%;
   border-radius: 20px!important;
-  /* padding: 0 20px!important; */
   margin-bottom: 10px!important;
 }
 
@@ -37,4 +36,12 @@ textarea::placeholder {
 
 .MuiInput-underline:before, .MuiInput-underline:after {
   border-bottom: none!important;
+}
+
+.timestamp-text {
+  font-size: 0.75rem;
+  line-height: 1.375rem;
+  color: #72767d;
+  vertical-align: baseline;
+  margin-left: .25rem;
 }

@@ -14,7 +14,7 @@ const MessageBox = ()=>{
         id="standard-textarea"
         label="Channel Name"
         placeholder="Message Channel Name"
-        value={message}
+        value={message.text}
         multiline
         onKeyPress={handleOnKeyPress}
         onChange={handleOnChange}

@@ -7,6 +7,7 @@ import SocketContext from '../contexts/SocketContext';
 import LogsContext from '../contexts/LogsContext';
 import { generateUserDocument } from '../firebase';
 import { firestore } from '../firebase';
+import useLogs from './useLogs';
 
 const useChat = () => {
   const { setSocket } = useContext(SocketContext);
@@ -28,8 +29,13 @@ const useChat = () => {
     socket.on('generated socket id', ({ socketId}, announceJoin) => {
       console.log(announceJoin);
       generateUserDocument(user, { socketId });
+      
       firestore.collection('sockets').doc(`${socketId}`).set({ uid: user.uid })
-      .then( () => announceJoin() );
+      .then(() => announceJoin() );
+      
+      firestore.collection('msg').doc('General Room').get()
+        .then(snapshot => setLogs(snapshot.data().messages));
+
     });
 
     socket.on('new message', data => {

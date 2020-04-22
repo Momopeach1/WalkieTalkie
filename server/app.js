@@ -34,8 +34,13 @@ io.on('connection', (socket) => {
 
   socket.emit('generated socket id', { socketId: socket.id }, () => io.in('General Room').emit('user joined', {}) );
   
-  socket.on('send message',(data)=>{
+  socket.on('send message', async data => {
     io.in('General Room').emit('new message', data);
+
+    const msgRef = firestore.collection('msg').doc('General Room');
+    const msgDoc = await msgRef.get();
+    msgRef.set({ messages: [...msgDoc.data().messages, data] });
+    
   });
 
   socket.on('disconnect', async () => {
