@@ -11,7 +11,7 @@ const ActiveMemberBar = () => {
     <Paper className="active-member-bar">
       <div className="member-group">
         <div className="channel-title-color member-group-title">Online — {userList.onlines.length}</div>
-          {userList.onlines}
+        {userList.onlines}
       </div>
       <div className="member-group">
         <div className="channel-title-color member-group-title">Offline — {userList.offlines.length}</div>
