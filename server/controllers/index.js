@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-const firebaseController = require('./firebase');
+const userController = require('./user');
 
-router.use('/firebase', firebaseController);
+router.use('/user', userController);
 
 module.exports = router;
