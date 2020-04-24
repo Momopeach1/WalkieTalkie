@@ -10,9 +10,9 @@ const io             = socket(server);
 const passport       = require('./middlewares/authentication');
 
 app.use(express.json());
+app.use(expressSession({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(expressSession({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: true }));
 
 const mongooseOptions = { 
   useNewUrlParser: true,  

@@ -16,12 +16,11 @@ import SignupPage from "./SignupPage";
 import useApp from '../hooks/useApp';
 
 const App = () => {
-  const [renderRoutes] = useApp();
+  useApp();
 
   return (
     <Router history={history}>
       <Switch>
-        {/* { renderRoutes() } */}
         <Route path="/signin" component={SigninPage} />
         <Route path="/signup" component={SignupPage}/>
         <ProtectedRoute path ="/profile" component={ProfilePage} />

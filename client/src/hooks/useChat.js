@@ -1,13 +1,11 @@
 import { useContext, useEffect } from 'react';
 import openSocket from 'socket.io-client';
 
+import server from '../apis/server';
 import UserContext from '../contexts/UserContext';
 import AllUsersContext from '../contexts/AllUsersContext';
 import SocketContext from '../contexts/SocketContext';
 import LogsContext from '../contexts/LogsContext';
-import { generateUserDocument } from '../firebase';
-import { firestore } from '../firebase';
-import useLogs from './useLogs';
 
 const useChat = () => {
   const { setSocket } = useContext(SocketContext);
@@ -16,25 +14,20 @@ const useChat = () => {
   const { setAllUsers } = useContext(AllUsersContext);
 
   const fetchAllUsers = async () => {
-    const snapshot = await firestore.collection('users').get();
-    const AllUsersData = snapshot.docs.map(doc => doc.data());
-    setAllUsers(AllUsersData);
-    
+    const response = await server.get('/user');
+    setAllUsers(response.data);
   }
 
   useEffect(() => {
     const socket = openSocket();
     setSocket(socket);
 
-    socket.on('generated socket id', ({ socketId}, announceJoin) => {
-      console.log(announceJoin);
-      generateUserDocument(user, { socketId });
+    socket.on('generated socket id', async ({ socketId }, announceJoin) => {
+      await server.put('/user', { email: user.email, socketId: socketId });
+      announceJoin();
       
-      firestore.collection('sockets').doc(`${socketId}`).set({ uid: user.uid })
-      .then(() => announceJoin() );
-      
-      firestore.collection('msg').doc('General Room').get()
-        .then(snapshot => setLogs(snapshot.data().messages));
+      // firestore.collection('msg').doc('General Room').get()
+      //   .then(snapshot => setLogs(snapshot.data().messages));
 
     });
 

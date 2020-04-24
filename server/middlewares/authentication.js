@@ -12,7 +12,7 @@ passport.use(new LocalStrategy({ usernameField: 'email', passwordField: 'passwor
       user.comparePassword(password, (err, isMatch) => {
           if (err) return done(err);
           if (!isMatch) return done(null, false);
-
+          
           return done(null, user);
       });
   })
@@ -23,19 +23,43 @@ passport.use(new GoogleStrategy({
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     callbackURL: "http://localhost:8080/api/user/oauth/google/callback"
   }, (accessToken, refreshToken, profile, cb) => {
-    console.log(profile);
+    const displayName = profile.displayName;
+    const email = profile.emails[0].value;
+    const photoURL = profile.photos[0].value;
+    
+    User.findOne({ email: email }, (findErr, findRes) => {
+      if (findErr) return cb(findErr, null);
+      if (findRes !== null) return cb(null, findRes);
+
+      const newUser = new User({
+        displayName: displayName,
+        email: email,
+        password: 'google',
+        photoURL: photoURL,
+        role: 'Member',
+        socketId: null,
+      });
+
+      newUser.save(err => {
+        if (err) return cb(err, null);
+        return cb(null, findRes);
+      });
+    })
   })
 );
 
-passport.serializeUser((user, done) => done(null, user.id));
+passport.serializeUser((user, done) => {
+  return done(null, user.id)
+});
 
 passport.deserializeUser((id, done) => {
-    User.findById(id, (err, user) => {
-        if (err) return done(err, null);
-        if (!user) return done(null, false);
+  console.log('asdasdasd');
+  User.findById(id, (err, user) => {
+    if (err) return done(err, null);
+    if (!user) return done(null, false);
 
-        return done(null, user);
-    });
+    return done(null, user);
+  });
 });
 
 passport.isLoggedIn = () => (req, res, next) => (req.user? next() : res.sendStatus(401));
