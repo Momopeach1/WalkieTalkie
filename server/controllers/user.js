@@ -5,7 +5,6 @@ const User = require('../models/user');
 
 // @Route GET /api/user/check
 router.get('/check', passport.isLoggedIn(), (req, res) => {
-  console.log(req.user);
   res.json(req.user);
 });
 
@@ -31,7 +30,6 @@ router.put('/', (req, res, next) => {
 
 // @Route POST /api/user/signup
 router.post('/signup', (req, res) => {
-  console.log(User);
   User.findOne({ email: req.body.email }, (err, user) => {
     if (err) return next(err);
     if (user) return res.status(422).send({ error: 'Email is in use!' });
@@ -54,7 +52,7 @@ router.post('/signup', (req, res) => {
 
 // @Route POST /api/user/signin
 router.post('/signin', passport.authenticate('local'), (req, res) => {
-  res.json({ success: true });
+  res.json(req.user);
 });
 
 // @Route POST /api/user/signout

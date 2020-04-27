@@ -4,14 +4,14 @@ import server from '../apis/server';
 import UserContext from '../contexts/UserContext';
 
 const useApp = () => {
-	const { user, setUser } = useContext(UserContext);
+	const { setUser } = useContext(UserContext);
 
 	useEffect(()=>{
-    const response = server.get('/user/check')
-      .then(response => {  })
+    server.get('/user/check')
+      .then(response => { 
+        setUser(response.data); 
+      })
       .catch(error => { console.log(error.response.data) });
-		
-		// setUser(response.data);
 	}, [])
 }
 

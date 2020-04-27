@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link } from 'react-router-dom';
-import { auth, signInWithGoogle } from "../firebase";
+
+import server from '../apis/server';
+import UserContext from '../contexts/UserContext';
 import history from '../utilities/history';
 
 const SignIn = () => {
@@ -9,21 +11,23 @@ const SignIn = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
 
+  const { setUser } = useContext(UserContext);
+
   const signInWithEmailAndPasswordHandler = (event,email, password) => {
       event.preventDefault();
-      auth.signInWithEmailAndPassword(email, password)
-        .then(() => history.push('/chat'))
-        .catch(error => {
-        setError("Error signing in with password and email!");
-          console.error("Error signing in with password and email", error);
-        });
+      server.post('/user/signin', { email, password })
+        .then(response => {
+          setUser(response.data);
+          history.push('/chat');
+        })
+        .catch(error => console.log(error));
     };
     
     const onChangeHandler = (event) => {
         const {name, value} = event.currentTarget;
       
         if(name === 'userEmail') {
-            setEmail(value);
+          setEmail(value);
         }
         else if(name === 'userPassword'){
           setPassword(value);
@@ -59,7 +63,7 @@ return (
           id="userPassword"
           onChange = {(event) => onChangeHandler(event)}
         />
-        <button className="bg-green-400 hover:bg-green-500 w-full py-2 text-white" onClick = {(event) => {signInWithEmailAndPasswordHandler(event, email, password)}}>
+        <button onClick = {(event) => {signInWithEmailAndPasswordHandler(event, email, password)}}>
           Sign in
         </button>
       </form>

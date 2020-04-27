@@ -23,10 +23,10 @@ const App = () => {
       <Switch>
         <Route path="/signin" component={SigninPage} />
         <Route path="/signup" component={SignupPage}/>
-        <ProtectedRoute path ="/profile" component={ProfilePage} />
-        <ProtectedRoute path="/chat" component={ChatPage} />
+        <Route path ="/profile" component={ProfilePage} />
+        <Route path="/chat" component={ChatPage} />
         <Route path="/" component={HomePage} />
-        <ProtectedRoute path="/signout" component={SignOutPage} />
+        <Route path="/signout" component={SignOutPage} />
       </Switch>
     </Router>
   );

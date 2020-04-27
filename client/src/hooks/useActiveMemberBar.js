@@ -10,7 +10,10 @@ const useActiveMemberBar = () => {
     let offlines = [];
     
     allUsers.forEach(user => {
-      user.socketId? onlines.push(renderUser(user)) : offlines.push(renderUser(user));
+      console.log('user', user);
+      user.socketId
+        ? onlines.push(renderUser(user)) 
+        : offlines.push(renderUser(user));
     });
     
     userList = { onlines, offlines };
@@ -24,7 +27,15 @@ const useActiveMemberBar = () => {
           <img className="member-pic" src={user.photoURL} />
           {
             user.socketId && <div className="status-container">
-              <svg width="19" height="19"><circle r="7" cx="9.5" cy="9.5" fill="#43b581" stroke="#2f3136" stroke-width="2.5" /></svg>
+              <svg width="19" height="19">
+                <circle 
+                  r="7" 
+                  cx="9.5" 
+                  cy="9.5" 
+                  fill="#43b581" 
+                  stroke="#2f3136" 
+                  stroke-width="2.5" />
+              </svg>
             </div>
           }
 
