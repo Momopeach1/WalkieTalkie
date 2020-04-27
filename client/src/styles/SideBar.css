@@ -1,0 +1,83 @@
+.text-channel-title {
+  box-sizing: border-box;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  text-transform: uppercase;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 600;
+  color: #8e9297;
+}
+
+.channel-flex {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  justify-content: space-between;
+  padding-right: 16px;
+}
+
+.expander {
+  height: 12px;
+  margin: 0 3px;
+}
+
+.plus {
+  color: #8e9297;
+  cursor: pointer;
+}
+
+.channel-textbox {
+  width: 100%;
+}
+
+.channel-textbox > div > input {
+  height: 40px;
+  padding: 0 10px;
+}
+
+.modal-footer {
+  height: 78px;
+  background-color: #2F3136;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.modal-content {
+  padding: 15px;
+}
+
+.modal-button-cancel {
+  height: 38px;
+  width: 96px;
+  background-color: transparent;
+  color: white;
+  border: none;
+  font-size: 14px;
+
+}
+
+.modal-button-create {
+  height: 38px;
+  width: 122.92px;
+  background-color: #7289DA;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.create-title {
+  color: white;
+  font-size: 16px;
+  margin-bottom: 15px;
+}
+
+.channel-textbox-label {
+  color: #B9BBBE;
+  font-size: 12px;
+  margin-bottom: 15px;
+}
