@@ -8,6 +8,7 @@ const socket         = require('socket.io');
 const io             = socket(server);
 
 const passport       = require('./middlewares/authentication');
+const msg            = require('./models/message');
 
 app.use(express.json());
 app.use(expressSession({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: true }));
@@ -34,12 +35,21 @@ io.on('connection', (socket) => {
   
   socket.on('send message', async data => {
     io.in('General Room').emit('new message', data);
+    console.log(data);
 
-    // const msgRef = firestore.collection('msg').doc('General Room');
-    // const msgDoc = await msgRef.get();
-    // msgRef.set({ messages: [...msgDoc.data().messages, data] });
+    // msg.update(
+    //   {$push: { content: data.message.text,
+    //             createdAt: data.message.timestamp,
+
+    //    } }
+    //  );
+
     
   });
+
+  socket.on('created channel', () => {
+    io.in('General Room').emit('created channel', {});
+  })
 
   socket.on('disconnect', async () => {
     console.log('a user has disconnected', socket.id);

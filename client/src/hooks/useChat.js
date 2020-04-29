@@ -1,17 +1,19 @@
 import { useContext, useEffect } from 'react';
 import openSocket from 'socket.io-client';
-
 import server from '../apis/server';
-import UserContext from '../contexts/UserContext';
 import AllUsersContext from '../contexts/AllUsersContext';
-import SocketContext from '../contexts/SocketContext';
 import LogsContext from '../contexts/LogsContext';
+import SocketContext from '../contexts/SocketContext';
+import UserContext from '../contexts/UserContext';
+import ChannelContext from '../contexts/ChannelContext';
+
 
 const useChat = () => {
   const { setSocket } = useContext(SocketContext);
   const { setLogs } = useContext(LogsContext);
   const { user } = useContext(UserContext);
   const { setAllUsers } = useContext(AllUsersContext);
+  const { fetchChannels } = useContext(ChannelContext);
 
   const fetchAllUsers = async () => {
     const response = await server.get('/user');
@@ -25,10 +27,6 @@ const useChat = () => {
     socket.on('generated socket id', async ({ socketId }, announceJoin) => {
       await server.put('/user', { email: user.email, socketId: socketId });
       announceJoin();
-      
-      // firestore.collection('msg').doc('General Room').get()
-      //   .then(snapshot => setLogs(snapshot.data().messages));
-
     });
 
     socket.on('new message', data => {
@@ -36,8 +34,12 @@ const useChat = () => {
       document.querySelector('.logs-container').scrollIntoView(false);
     });
 
+    socket.on('created channel', () => {
+      fetchChannels();
+    })
+
     socket.on('user left', () => {
-      console.log('user right');
+      //console.log('user right');
       fetchAllUsers();
     })
 

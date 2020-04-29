@@ -4,6 +4,7 @@ import { UserProvider } from '../contexts/UserContext';
 import { SocketProvider } from '../contexts/SocketContext';
 import { LogsProvider } from '../contexts/LogsContext';
 import { AllUsersProvider } from '../contexts/AllUsersContext';
+import { ChannelProvider } from '../contexts/ChannelContext';
 import '../styles/App.css';
 import history from '../utilities/history';
 import ChatPage from "./ChatPage/ChatPage";
@@ -33,14 +34,16 @@ const App = () => {
 }
 
 export default () => (
-  <AllUsersProvider>
-    <LogsProvider>
-      <SocketProvider>
-        <UserProvider>
-          <App />
-        </UserProvider>
-      </SocketProvider>
-    </LogsProvider>
-  </AllUsersProvider>
+  <ChannelProvider>
+    <AllUsersProvider>
+      <LogsProvider>
+        <SocketProvider>
+          <UserProvider>
+            <App />
+          </UserProvider>
+        </SocketProvider>
+      </LogsProvider>
+    </AllUsersProvider>
+  </ChannelProvider>
 );
 

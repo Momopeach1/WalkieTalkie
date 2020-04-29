@@ -1,7 +1,7 @@
-import React, { useContext } from "react";
 import moment from 'moment';
-
+import React, { useContext } from "react";
 import LogsContext from "../contexts/LogsContext";
+
 
 const useLogs = () => {
   const { logs } = useContext(LogsContext);
@@ -9,8 +9,6 @@ const useLogs = () => {
   const appendLogs = () => {
     let result = [];
     let messages = [];
-    // [ 'abc', 'dasdf', '44343' ]
-    // [   A      A         B ]
     for (let i = 0; i < logs.length; ++i) {
       if (i === 0 || (logs[i].displayName === logs[i-1].displayName && moment(logs[i].message.timestamp).diff(moment(logs[i-1].message.timestamp), 'seconds') <= 5 ) ) {
         if (i > 0) console.log(moment(logs[i].message.timestamp).diff(moment(logs[i-1].message.timestamp), 'seconds'))
