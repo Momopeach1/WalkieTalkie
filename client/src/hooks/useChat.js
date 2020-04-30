@@ -20,9 +20,15 @@ const useChat = () => {
     setAllUsers(response.data);
   }
 
+  const fetchMessages = async () => {
+    const response = await server.get('/message');
+    setLogs(response.data);
+  }
+
   useEffect(() => {
     const socket = openSocket();
     setSocket(socket);
+    fetchMessages();
 
     socket.on('generated socket id', async ({ socketId }, announceJoin) => {
       await server.put('/user', { email: user.email, socketId: socketId });
@@ -39,12 +45,10 @@ const useChat = () => {
     })
 
     socket.on('user left', () => {
-      //console.log('user right');
       fetchAllUsers();
     })
 
     socket.on('user joined', ()=> {
-      console.log('fetching');
       fetchAllUsers();
     });
   },[])

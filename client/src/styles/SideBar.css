@@ -81,3 +81,13 @@
   font-size: 12px;
   margin-bottom: 15px;
 }
+
+.channel-radio {
+  display: none;
+}
+
+.channel-radio:checked + label {
+  display: block;
+  background-color: yellow;
+  width: 100%;
+}

@@ -10,7 +10,6 @@ const useActiveMemberBar = () => {
     let offlines = [];
     
     allUsers.forEach(user => {
-      console.log('user', user);
       user.socketId
         ? onlines.push(renderUser(user)) 
         : offlines.push(renderUser(user));

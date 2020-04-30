@@ -4,18 +4,23 @@ import ChannelContext from '../contexts/ChannelContext'
 
 
 const useChannelGroup = () => {
-  const { channels, fetchChannels } = useContext(ChannelContext);
-  
+  const { channels, fetchChannels, setSelectedChannel } = useContext(ChannelContext);
 
   useEffect(() => {
     fetchChannels();
   }, [])
+  
+  const handleOnClick = e => {
+    setSelectedChannel(e.target.value);
+  }
+
 
   const renderChannels = () => {
-    return channels.map(ch => {
+    return channels.map((ch, i) => {
       return (
         <div>
-          {ch.name}
+          <input type="radio" id={`${i}`} name="channel-radio" className="channel-radio" value={ch.name} onClick={handleOnClick} />
+          <label htmlFor={`${i}`}>{ch.name}</label>
         </div>
       )
     })

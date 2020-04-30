@@ -20,7 +20,6 @@ const mongooseOptions = {
   useUnifiedTopology: true, 
   useCreateIndex: true 
 };
-
 mongoose.connect(process.env.MONGO_URI, mongooseOptions);
 
 const PORT = process.env.PORT || 8080;
@@ -34,17 +33,14 @@ io.on('connection', (socket) => {
   socket.emit('generated socket id', { socketId: socket.id }, () => io.in('General Room').emit('user joined', {}) );
   
   socket.on('send message', async data => {
-    io.in('General Room').emit('new message', data);
-    console.log(data);
-
-    // msg.update(
-    //   {$push: { content: data.message.text,
-    //             createdAt: data.message.timestamp,
-
-    //    } }
-    //  );
-
-    
+    io.in('General Room').emit('new message', { 
+      content: data.message.text, 
+      createdAt: data.message.timestamp, 
+      sender: {
+        displayName: data.displayName,
+        photoURL: data.photoURL
+      }
+    });
   });
 
   socket.on('created channel', () => {
@@ -53,16 +49,6 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', async () => {
     console.log('a user has disconnected', socket.id);
-    // const socketRef = firestore.collection('sockets').doc(`${socket.id}`);
-    // const socketDoc = await socketRef.get();
-    // const socketData = socketDoc.data();
-
-    // const userRef = firestore.collection('users').doc(`${socketData.uid}`);
-    // const userDoc = await userRef.get();
-    // const { uid, photoURL, email, displayName } = userDoc.data();
-
-    // await userRef.set({ uid, photoURL, email, displayName, socketId: null });
-    // await socketRef.delete();
 
     io.in('General Room').emit('user left', {});
   });

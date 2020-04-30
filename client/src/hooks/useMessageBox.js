@@ -1,12 +1,16 @@
 import { useState, useContext } from 'react';
 import SocketContext from '../contexts/SocketContext';
 import UserContext from '../contexts/UserContext';
+import server from '../apis/server';
+import ChannelContext from '../contexts/ChannelContext';
 
 const useMessageBox = () => {
   const [message, setMessage] = useState({ text: '', timestamp: Date() });
   const { socket } = useContext(SocketContext);
   const { user } = useContext(UserContext);
   const { displayName, photoURL } = user;
+  const { selectedChannel } = useContext(ChannelContext);
+
 
   const handleOnChange = e => {
     setMessage({text: e.target.value, timestamp: Date() });
@@ -16,6 +20,7 @@ const useMessageBox = () => {
     e.preventDefault();
     if (message.text.trim().length === 0) return;
     socket.emit('send message', { message, displayName, photoURL });
+    server.post('/message', { content: message.text, createdAt: message.timestamp, selectedChannel })
   }
 
   const handleOnKeyPress = e => {
