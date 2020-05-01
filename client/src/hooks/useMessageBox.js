@@ -19,7 +19,7 @@ const useMessageBox = () => {
   const handleOnSubmit = e => {
     e.preventDefault();
     if (message.text.trim().length === 0) return;
-    socket.emit('send message', { message, displayName, photoURL });
+    socket.emit('send message', { message, displayName, photoURL, selectedChannel });
     server.post('/message', { content: message.text, createdAt: message.timestamp, selectedChannel })
   }
 

@@ -9,7 +9,7 @@ export default ChannelContext;
 export const ChannelProvider = ({ children }) => {
   const [channels, setChannels] = useState([]);
   const [selectedChannel, setSelectedChannel] = useState('');
-  console.log(selectedChannel);
+
   const fetchChannels = () => {
     server.get('/channel')
       .then(response => {

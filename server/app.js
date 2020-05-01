@@ -39,7 +39,8 @@ io.on('connection', (socket) => {
       sender: {
         displayName: data.displayName,
         photoURL: data.photoURL
-      }
+      },
+      channel: { name: data.selectedChannel }
     });
   });
 

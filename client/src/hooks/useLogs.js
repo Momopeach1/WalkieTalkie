@@ -1,15 +1,20 @@
 import moment from 'moment';
 import React, { useContext } from "react";
-import LogsContext from "../contexts/LogsContext";
 
+import LogsContext from '../contexts/LogsContext';
+import ChannelContext from '../contexts/ChannelContext';
 
 const useLogs = () => {
   const { logs } = useContext(LogsContext);
-  console.log('logs', logs);
+  const { selectedChannel } = useContext(ChannelContext);
+
   const appendLogs = () => {
     let result = [];
     let messages = [];
+    
     for (let i = 0; i < logs.length; ++i) {
+      if (logs[i].channel.name !== selectedChannel) continue;
+
       if (i === 0 || (logs[i].sender.displayName === logs[i-1].sender.displayName && moment(logs[i].createdAt).diff(moment(logs[i-1].createdAt), 'seconds') <= 5 ) ) {
         messages.push(<div className="whitney-book message">{logs[i].content}</div>);
       } else {
@@ -35,8 +40,6 @@ const useLogs = () => {
     }
 
     if (messages.length > 0) {
-
-
       result.push(
         <div className="log">
           <div>
@@ -58,23 +61,6 @@ const useLogs = () => {
 
   const renderLogs = () => {
     return appendLogs();
-    // return logs.map(log => {
-    //   console.log(moment().diff(log.message.timestamp, 'seconds'));
-    //   return (
-    //     <div className="log">
-    //       <div>
-    //         <img className="avatar" src={log.photoURL} />
-    //       </div>
-    //       <div>
-    //         <div className="message-header-container">
-    //           <div className="displayName-text">{log.displayName}</div>
-    //           <div className="timestamp-text">{moment(log.message.timestamp).calendar()} </div>
-    //         </div>
-    //         <div className="whitney-book message">{log.message.text}</div>
-    //       </div>
-    //     </div>
-    //   );
-    // });
   }
 
   return [renderLogs];

@@ -13,7 +13,7 @@ const useChat = () => {
   const { setLogs } = useContext(LogsContext);
   const { user } = useContext(UserContext);
   const { setAllUsers } = useContext(AllUsersContext);
-  const { fetchChannels } = useContext(ChannelContext);
+  const { selectedChannel, fetchChannels } = useContext(ChannelContext);
 
   const fetchAllUsers = async () => {
     const response = await server.get('/user');
@@ -24,6 +24,10 @@ const useChat = () => {
     const response = await server.get('/message');
     setLogs(response.data);
   }
+
+  useEffect(() => {
+    fetchMessages();
+  }, [selectedChannel])
 
   useEffect(() => {
     const socket = openSocket();
