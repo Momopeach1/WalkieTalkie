@@ -18,6 +18,11 @@
   padding-right: 16px;
 }
 
+.channel-flex:hover > span > .text-channel-title {
+  color: #dcddde;
+  cursor: pointer;
+}
+
 .expander {
   height: 12px;
   margin: 0 3px;
@@ -35,6 +40,7 @@
 .channel-textbox > div > input {
   height: 40px;
   padding: 0 10px;
+  color: #dcddde;
 }
 
 .modal-footer {
@@ -86,8 +92,61 @@
   display: none;
 }
 
+.channel-radio + label {
+  display: block;
+  /* width: 100%; */
+  color: #8e9297;
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  padding: 0px 8px;
+  margin-left: 8px;
+}
+
 .channel-radio:checked + label {
   display: block;
-  background-color: yellow;
-  width: 100%;
+  background-color: rgba(79, 84, 92, 0.32 );
+  /* width: 100%; */
+  color:  white;
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding: 0px 8px;
+  border-radius: 5px;
+}
+
+.channel-radio:hover + label {
+  background-color:rgba(79, 84, 92, 0.16 );
+  /* width: 100%; */
+  color: #dcddde;
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding: 0px 8px;
+  border-radius: 5px;
+}
+.channel-symbol {
+  color: #8e9297 !important;
+  margin-right: 6px;
+}
+
+.channel-group-container {
+  padding-right: 8px;
+
 }

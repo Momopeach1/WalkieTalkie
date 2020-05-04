@@ -30,32 +30,35 @@ const useChat = () => {
   }, [selectedChannel])
 
   useEffect(() => {
-    const socket = openSocket();
-    setSocket(socket);
-    fetchMessages();
-
-    socket.on('generated socket id', async ({ socketId }, announceJoin) => {
-      await server.put('/user', { email: user.email, socketId: socketId });
-      announceJoin();
-    });
-
-    socket.on('new message', data => {
-      setLogs(prevLogs => [ ...prevLogs, data ]);
-      document.querySelector('.logs-container').scrollIntoView(false);
-    });
-
-    socket.on('created channel', () => {
-      fetchChannels();
-    })
-
-    socket.on('user left', () => {
-      fetchAllUsers();
-    })
-
-    socket.on('user joined', ()=> {
-      fetchAllUsers();
-    });
-  },[])
+    if (user !== null) {
+      const socket = openSocket();
+      setSocket(socket);
+      fetchMessages();
+  
+      socket.on('generated socket id', async ({ socketId }, announceJoin) => {
+        console.log(socketId, user.email);
+        await server.put('/user', { email: user.email, socketId: socketId });
+        announceJoin();
+      });
+  
+      socket.on('new message', data => {
+        setLogs(prevLogs => [ ...prevLogs, data ]);
+        document.querySelector('.logs-container').scrollIntoView(false);
+      });
+  
+      socket.on('created channel', () => {
+        fetchChannels();
+      })
+  
+      socket.on('user left', () => {
+        fetchAllUsers();
+      })
+  
+      socket.on('user joined', ()=> {
+        fetchAllUsers();
+      });
+    }
+  },[user])
 };
 
 export default useChat;

@@ -8,7 +8,7 @@ const socket         = require('socket.io');
 const io             = socket(server);
 
 const passport       = require('./middlewares/authentication');
-const msg            = require('./models/message');
+const User           = require('./models/user');
 
 app.use(express.json());
 app.use(expressSession({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: true }));
@@ -29,7 +29,7 @@ io.on('connection', (socket) => {
   console.log('a user connected');
 
   socket.join('General Room');
-
+  
   socket.emit('generated socket id', { socketId: socket.id }, () => io.in('General Room').emit('user joined', {}) );
   
   socket.on('send message', async data => {
@@ -51,7 +51,10 @@ io.on('connection', (socket) => {
   socket.on('disconnect', async () => {
     console.log('a user has disconnected', socket.id);
 
-    io.in('General Room').emit('user left', {});
+    User.updateOne({ socketId: socket.id }, { socketId: null }, (error, result) => {
+      if (error) return;
+      io.in('General Room').emit('user left', result);
+    })
   });
 });
 
