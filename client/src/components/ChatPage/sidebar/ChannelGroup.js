@@ -11,15 +11,26 @@ const ChannelGroup = () => {
 
   return (
     <>
-      <div className="channel-flex" onClick={handleOnCollapse} >
+      <div className="channel-flex" onClick={() => handleOnCollapse('text')} >
         <span>
           <span className="text-channel-title expander">{ expander() }</span>
           <span className="text-channel-title" >TEXT CHANNELS</span>
         </span>
-        <AddChannelModal />
+        <AddChannelModal type="text" />
       </div>
       <div className="channel-group-container">
-        {renderChannels()}
+        {renderChannels('text')}
+      </div>
+
+      <div className="channel-flex" onClick={() => handleOnCollapse('voice')} >
+        <span>
+          <span className="text-channel-title expander">{ expander() }</span>
+          <span className="text-channel-title" >Voice Channels</span>
+        </span>
+        <AddChannelModal type="voice" />
+      </div>
+      <div className="channel-group-container">
+        {renderChannels('voice')}
       </div>
     </>
   );

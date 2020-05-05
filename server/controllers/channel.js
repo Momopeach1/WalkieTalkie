@@ -13,7 +13,7 @@ router.get('/', passport.isLoggedIn(), (req, res) => {
 
 // @Route POST /api/channel
 router.post('/', passport.isLoggedIn(), (req, res) => {
-  Channel.create({ name: req.body.name, messages: [] }, (error, result) => {
+  Channel.create({ name: req.body.name, type: req.body.type, messages: [] }, (error, result) => {
     if(error) res.status(500).send(error);
     res.json({ success: true })
   });

@@ -12,7 +12,6 @@ const useLogs = () => {
     let result = [];
     let messages = [];
     
-    console.log(logs);
     for (let i = 0; i < logs.length; ++i) {
       if (logs[i].channel.name !== selectedChannel) continue;
       if (i === 0 || (logs[i].sender.displayName === logs[i-1].sender.displayName && moment(logs[i].createdAt).diff(moment(logs[i-1].createdAt), 'seconds') <= 5 ) ) {

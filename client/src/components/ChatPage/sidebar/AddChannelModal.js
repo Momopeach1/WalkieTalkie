@@ -26,19 +26,22 @@ const customStyles = {
 // Make sure to bind modal to your appElement (http://reactcommunity.org/react-modal/accessibility/)
 Modal.setAppElement('#add-channel-modal')
  
-const AddChannelModal = () => {
+const AddChannelModal = ({ type }) => {
   const { socket } = useContext(SocketContext);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [channelName, setChannelName] = useState('');
 
   const plus = () => <svg aria-hidden="false" width="18" height="18" viewBox="0 0 18 18"><polygon fill-rule="nonzero" fill="currentColor" points="15 10 10 10 10 15 8 15 8 10 3 10 3 8 8 8 8 3 10 3 10 8 15 8"></polygon></svg>
 
-  const openModal = () => setIsOpen(true);
+  const openModal = e => {
+    e.stopPropagation();
+    setIsOpen(true)
+  };
  
   const closeModal = () => setIsOpen(false);
 
   const handleOnSubmit = () => {
-    server.post('/channel', { name: channelName })
+    server.post('/channel', { name: channelName, type })
       .then(() => {
         socket.emit('created channel', {});
         closeModal()
