@@ -19,8 +19,9 @@ router.get('/', (req, res, next) => {
 
 // @Route PUT /api/user
 router.put('/', passport.isLoggedIn(), (req, res, next) => {
-  const query = { email: req.user.email };
+  const query = { email: req.body.email };
   const update = { ...req.body };
+  console.log(update);
   User.updateOne(query, update, (updateErr, updateRes) => {
     if (updateErr) next(updateErr);
 

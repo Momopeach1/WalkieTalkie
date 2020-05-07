@@ -27,7 +27,7 @@ const PORT = process.env.PORT || 8080;
 
 // Socket.io
 io.on('connection', (socket) => {
-  console.log('a user connected');
+  console.log('a user connected', socket.id);
 
   socket.join('General Room');
   
@@ -51,9 +51,8 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', async () => {
     console.log('a user has disconnected', socket.id);
-
     User.findOne({ socketId: socket.id }, (error, result) => {
-      if (error) return;
+      if (error || !result) return;
       io.in('General Room').emit('user left', result);
       console.log('user left', result);
       Channel.findOne({ name: result.currentVoiceChannel }, (err, result) => {

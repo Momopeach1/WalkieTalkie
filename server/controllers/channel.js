@@ -25,16 +25,24 @@ router.put('/join-voice', passport.isLoggedIn(), (req, res) => {
   const socketId = req.body.socketId;
   const currentVoiceChannel = req.body.channelName;
 
-  Channel.findOne({ name: req.body.channelName }, (error, result) => {
+  Channel.findOne({ name: currentVoiceChannel }, (error, result) => {
     if(error) res.status(500).send(error);
-    result.set(`talkers.${socketId}`, req.user);
+    result.set(`talkers.${socketId}`, JSON.stringify(req.user)); //this needs to be in string format 
     result.save( (error, result) => {
-      if(error) res.status(500).send(error);
-      console.log(currentVoiceChannel);
-      User.updateOne({ email: req.user.email }, { currentVoiceChannel }, (error, result) => {
+      if (error) res.status(500).send(error);
+
+      User.findOne({ email: req.user.email }, (error, result) => {
         if(error) res.status(500).send(error);
-        res.json(result);
+        Channel.findOne({ name: result.currentVoiceChannel }, (error, result) => {
+          if (error) return res.status(500).send(error);
+          if (!result) return;
+
+          result.talkers.delete(socketId);
+          result.save();
+        });
+        User.updateOne({ email: req.user.email }, { currentVoiceChannel }, (error, result) => {})
       })
+      res.json(result);
     })
   })
 })

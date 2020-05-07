@@ -11,7 +11,7 @@ const useChannelGroup = () => {
   const { socket } = useContext(SocketContext);
   const [channelGroupsCollapse, setChannelGroupsCollapse] = useState({ text: false, voice: false });
   const [talkers, setTalkers] = useState({});
-
+  
   useEffect(() => {
     fetchChannels();
   }, []);
@@ -20,8 +20,15 @@ const useChannelGroup = () => {
     if (type === 'voice') {
       server.put('/channel/join-voice', ({ socketId: socket.id, channelName }))
         .then(result => {
+          console.log(result);
           setTalkers(prevTalkers => {
-            return { ...prevTalkers, [channelName]: result.data.talkers }
+            let talkerList = [];
+
+            for (let key in result.data.talkers) {
+              talkerList.push(JSON.parse(result.data.talkers[key]));
+            }
+
+            return { ...prevTalkers, [channelName]: talkerList}
           })
         })
       return;
@@ -33,9 +40,11 @@ const useChannelGroup = () => {
   const handleOnCollapse = type => {
     setChannelGroupsCollapse(prev => { return { ...prev, [type]: !prev[type] } });
   }
-
+  console.log(talkers);
   const renderTalkers = channelName => {
-    console.log(talkers);
+    // console.log(channelName);
+    // console.log(socket.id);
+    // console.log(talkers[channelName][socket.id]);
   }
 
   const isSame = (c1, c2) => c1 === c2? 'block' : 'none';
@@ -68,7 +77,7 @@ const useChannelGroup = () => {
           </label>
           { type === 'voice' && 
             <div style={{ paddingLeft: '20px' }}>
-              { renderTalkers() }
+              { renderTalkers(ch.name) }
               <div style={{ background: 'yellow', width: '24px', height: '24px', borderRadius: '24px' }}></div>
             </div>
           }

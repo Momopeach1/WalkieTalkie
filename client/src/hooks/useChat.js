@@ -25,9 +25,9 @@ const useChat = () => {
     setLogs(response.data);
   }
 
-  useEffect(() => {
-    fetchMessages();
-  }, [selectedChannel])
+  // useEffect(() => {
+  //   fetchMessages();
+  // }, [selectedChannel])
 
   useEffect(() => {
     if (user.email !== null) {
@@ -58,7 +58,7 @@ const useChat = () => {
         fetchAllUsers();
       });
     }
-  },[user])
+  },[user, selectedChannel])
 };
 
 export default useChat;
