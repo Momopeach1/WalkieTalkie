@@ -30,7 +30,7 @@ const useChat = () => {
   }, [selectedChannel])
 
   useEffect(() => {
-    if (user !== null) {
+    if (user.email !== null) {
       const socket = openSocket();
       setSocket(socket);
       fetchMessages();

@@ -9,26 +9,32 @@ export default ChannelContext;
 export const ChannelProvider = ({ children }) => {
   const [channels, setChannels] = useState([]);
   const [selectedChannel, setSelectedChannel] = useState('');
-  const filteredChannels = useRef({ textChannels: [], voiceChannels: [] });
+  const [filteredChannels, setFilteredChannels] = useState({ textChannels: [], voiceChannels: [] });
 
   const fetchChannels = () => {
     server.get('/channel')
       .then(response => {
         setChannels(response.data);
         setSelectedChannel(response.data.find(channel => channel.type === 'text').name);
-        filteredChannels.current.textChannels = [];
-        filteredChannels.current.voiceChannels = [];
+        setFilteredChannels({ textChannels: [], voiceChannels: [] })
         for(let channel of response.data){
-          if(channel.type === 'voice') filteredChannels.current.voiceChannels.push(channel);
-          else                         filteredChannels.current.textChannels.push(channel);
+          if(channel.type === 'voice') 
+            setFilteredChannels(prevChannels => {
+              return { ...prevChannels, voiceChannels: [...prevChannels.voiceChannels, channel] }
+            })
+          else {
+            setFilteredChannels(prevChannels => {
+              return { ...prevChannels, textChannels: [...prevChannels.textChannels, channel] }
+            })
+          }
         }
-        console.log(filteredChannels.current)
+        console.log(filteredChannels)
       })
       .catch(error => console.log(error));
   }
 
   return(
-    <ChannelContext.Provider value={{ channels, setChannels, fetchChannels, selectedChannel, setSelectedChannel, filteredChannels: filteredChannels.current }}>
+    <ChannelContext.Provider value={{ channels, setChannels, fetchChannels, selectedChannel, setSelectedChannel, filteredChannels }}>
       { children }
     </ChannelContext.Provider>
   )

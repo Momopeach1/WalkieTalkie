@@ -1,19 +1,32 @@
-import React, { useEffect, useContext, useState, useRef } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import ChannelContext from '../contexts/ChannelContext'
+import SocketContext from '../contexts/SocketContext';
+import server from '../apis/server';
 
 
 
 
 const useChannelGroup = () => {
-  // const [isCollapsed, setIsCollapsed] = useState(false);
   const { fetchChannels, setSelectedChannel, selectedChannel, filteredChannels } = useContext(ChannelContext);
+  const { socket } = useContext(SocketContext);
   const [channelGroupsCollapse, setChannelGroupsCollapse] = useState({ text: false, voice: false });
+  const [talkers, setTalkers] = useState({});
 
   useEffect(() => {
     fetchChannels();
   }, []);
   
-  const handleOnClick = e => {
+  const handleOnClick = (e, type, channelName) => {
+    if (type === 'voice') {
+      server.put('/channel/join-voice', ({ socketId: socket.id, channelName }))
+        .then(result => {
+          setTalkers(prevTalkers => {
+            return { ...prevTalkers, [channelName]: result.data.talkers }
+          })
+        })
+      return;
+    }
+
     setSelectedChannel(e.target.value);
   }
 
@@ -21,8 +34,8 @@ const useChannelGroup = () => {
     setChannelGroupsCollapse(prev => { return { ...prev, [type]: !prev[type] } });
   }
 
-  const handleOnVoiceCollapse = () => {
-
+  const renderTalkers = channelName => {
+    console.log(talkers);
   }
 
   const isSame = (c1, c2) => c1 === c2? 'block' : 'none';
@@ -36,16 +49,29 @@ const useChannelGroup = () => {
     }
   }
 
-  const renderChannels = (type) => {
-    console.log(filteredChannels)
+  const renderChannels = type => {
     return filteredChannels[`${type}Channels`].map((ch, i) => {
       return (
         <div style={{ display: !channelGroupsCollapse[type]? 'block' : isSame(ch.name, selectedChannel) }}>
-          <input defaultChecked={i === 0 && type ==='text' } type="radio" id={`${i}`} name={`${type}-radio`} className="channel-radio" value={ch.name} onClick={handleOnClick} />
-          <label htmlFor={`${i}`}>
+          <input 
+            defaultChecked={i === 0 && type ==='text' } 
+            type="radio" 
+            id={`${type}-${i}`} 
+            name={`${type}-radio`} 
+            className={type === 'voice'? 'voice-radio' : 'channel-radio'}
+            value={ch.name} 
+            onClick={e => handleOnClick(e, type, ch.name)} 
+          />
+          <label htmlFor={`${type}-${i}`}>
             {renderChannelIcon(type)}
             <div>{ch.name}</div>
           </label>
+          { type === 'voice' && 
+            <div style={{ paddingLeft: '20px' }}>
+              { renderTalkers() }
+              <div style={{ background: 'yellow', width: '24px', height: '24px', borderRadius: '24px' }}></div>
+            </div>
+          }
         </div>
       )
     })

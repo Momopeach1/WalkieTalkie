@@ -9,6 +9,7 @@ const io             = socket(server);
 
 const passport       = require('./middlewares/authentication');
 const User           = require('./models/user');
+const Channel        = require('./models/channel');
 
 app.use(express.json());
 app.use(expressSession({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: true }));
@@ -51,10 +52,20 @@ io.on('connection', (socket) => {
   socket.on('disconnect', async () => {
     console.log('a user has disconnected', socket.id);
 
-    User.updateOne({ socketId: socket.id }, { socketId: null }, (error, result) => {
+    User.findOne({ socketId: socket.id }, (error, result) => {
       if (error) return;
       io.in('General Room').emit('user left', result);
-    })
+      console.log('user left', result);
+      Channel.findOne({ name: result.currentVoiceChannel }, (err, result) => {
+        if (!result) return;
+        result.talkers.delete(socket.id);
+        result.save();
+      })
+
+      User.updateOne({ socketId: socket.id }, { socketId: null, currentVoiceChannel: '' }, (err, result) => {
+
+      });
+    });
   });
 });
 
