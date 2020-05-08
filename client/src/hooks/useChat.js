@@ -57,6 +57,9 @@ const useChat = () => {
       socket.on('user joined', ()=> {
         fetchAllUsers();
       });
+      socket.on('joined voice', () =>{
+        fetchChannels();
+      })
     }
   },[user, selectedChannel])
 };

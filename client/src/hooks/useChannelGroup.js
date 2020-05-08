@@ -1,17 +1,14 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useContext, useState, useRef } from 'react';
 import ChannelContext from '../contexts/ChannelContext'
 import SocketContext from '../contexts/SocketContext';
 import server from '../apis/server';
 
-
-
-
 const useChannelGroup = () => {
-  const { fetchChannels, setSelectedChannel, selectedChannel, filteredChannels } = useContext(ChannelContext);
+  const { fetchChannels, setSelectedChannel, selectedChannel, filteredChannels, talkers, setTalkers } = useContext(ChannelContext);
   const { socket } = useContext(SocketContext);
   const [channelGroupsCollapse, setChannelGroupsCollapse] = useState({ text: false, voice: false });
-  const [talkers, setTalkers] = useState({});
   
+
   useEffect(() => {
     fetchChannels();
   }, []);
@@ -19,17 +16,23 @@ const useChannelGroup = () => {
   const handleOnClick = (e, type, channelName) => {
     if (type === 'voice') {
       server.put('/channel/join-voice', ({ socketId: socket.id, channelName }))
-        .then(result => {
-          console.log(result);
-          setTalkers(prevTalkers => {
-            let talkerList = [];
+        .then(() => {
+          socket.emit('joined voice', {});
+        //   setTalkers(prevTalkers => {
+        //     let talkerList = [];
+            
+        //     // Remove me from old voice channel.
+        //     for (let key in prevTalkers) {
+        //       prevTalkers[key] = prevTalkers[key].filter(t => t.socketId !== socket.id );
+        //     }
 
-            for (let key in result.data.talkers) {
-              talkerList.push(JSON.parse(result.data.talkers[key]));
-            }
+        //     // Add me to new voice channek,
+        //     for (let key in result.data.talkers) {
+        //       talkerList.push(JSON.parse(result.data.talkers[key]));
+        //     }
 
-            return { ...prevTalkers, [channelName]: talkerList}
-          })
+        //     return { ...prevTalkers, [channelName]: talkerList}
+        //   })
         })
       return;
     }
@@ -40,11 +43,18 @@ const useChannelGroup = () => {
   const handleOnCollapse = type => {
     setChannelGroupsCollapse(prev => { return { ...prev, [type]: !prev[type] } });
   }
-  console.log(talkers);
+
   const renderTalkers = channelName => {
-    // console.log(channelName);
-    // console.log(socket.id);
-    // console.log(talkers[channelName][socket.id]);
+    if(!talkers[channelName]) return null;
+    console.log('talkers[channelName]', talkers[channelName])
+    return talkers[channelName].map(t => {
+      return(
+        <div className ="voice-member-container">
+          <img className="voice-avatar" src={t.photoURL} />
+          <span className="voice-displayName" >{t.displayName}</span>
+        </div>
+      )
+    })
   }
 
   const isSame = (c1, c2) => c1 === c2? 'block' : 'none';
@@ -72,13 +82,12 @@ const useChannelGroup = () => {
             onClick={e => handleOnClick(e, type, ch.name)} 
           />
           <label htmlFor={`${type}-${i}`}>
-            {renderChannelIcon(type)}
+            { renderChannelIcon(type) }
             <div>{ch.name}</div>
           </label>
-          { type === 'voice' && 
-            <div style={{ paddingLeft: '20px' }}>
+          { type === 'voice' && talkers[ch.name] &&
+            <div className="talkers-container">
               { renderTalkers(ch.name) }
-              <div style={{ background: 'yellow', width: '24px', height: '24px', borderRadius: '24px' }}></div>
             </div>
           }
         </div>

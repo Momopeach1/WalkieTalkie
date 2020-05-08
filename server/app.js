@@ -47,7 +47,11 @@ io.on('connection', (socket) => {
 
   socket.on('created channel', () => {
     io.in('General Room').emit('created channel', {});
-  })
+  });
+
+  socket.on('joined voice', () => {
+    io.in('General Room').emit('joined voice', {});
+  });
 
   socket.on('disconnect', async () => {
     console.log('a user has disconnected', socket.id);

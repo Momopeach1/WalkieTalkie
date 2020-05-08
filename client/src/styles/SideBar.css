@@ -200,3 +200,46 @@
   padding-right: 8px;
 
 }
+
+.voice-avatar {
+  width: 24px; 
+  height: 24px; 
+  border-radius: 24px;
+  margin-right: 10px;
+}
+
+.voice-member-container {
+  color: #8e9297;
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  display: flex;
+  height: 30px;
+  margin-bottom: 1px;
+  display: flex;
+  align-items: center;
+
+}
+
+.voice-member-container:hover {
+  background-color:rgba(79, 84, 92, 0.16 );
+  color: #dcddde;
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.voice-displayName {
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.talkers-container {
+  padding-bottom: 8px;
+  padding-left: 36px;
+}

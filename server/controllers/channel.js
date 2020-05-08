@@ -27,6 +27,7 @@ router.put('/join-voice', passport.isLoggedIn(), (req, res) => {
 
   Channel.findOne({ name: currentVoiceChannel }, (error, result) => {
     if(error) res.status(500).send(error);
+    if (req.user.currentVoiceChannel === currentVoiceChannel) return res.status(409).send("You're already in this voice channel!");
     result.set(`talkers.${socketId}`, JSON.stringify(req.user)); //this needs to be in string format 
     result.save( (error, result) => {
       if (error) res.status(500).send(error);
