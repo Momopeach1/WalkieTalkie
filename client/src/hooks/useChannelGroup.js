@@ -1,10 +1,10 @@
-import React, { useEffect, useContext, useState, useRef } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import ChannelContext from '../contexts/ChannelContext'
 import SocketContext from '../contexts/SocketContext';
 import server from '../apis/server';
 
 const useChannelGroup = () => {
-  const { fetchChannels, setSelectedChannel, selectedChannel, filteredChannels, talkers, setTalkers } = useContext(ChannelContext);
+  const { fetchChannels, setSelectedChannel, selectedChannel, filteredChannels, talkers, setSelectedVoice } = useContext(ChannelContext);
   const { socket } = useContext(SocketContext);
   const [channelGroupsCollapse, setChannelGroupsCollapse] = useState({ text: false, voice: false });
   
@@ -18,21 +18,7 @@ const useChannelGroup = () => {
       server.put('/channel/join-voice', ({ socketId: socket.id, channelName }))
         .then(() => {
           socket.emit('joined voice', {});
-        //   setTalkers(prevTalkers => {
-        //     let talkerList = [];
-            
-        //     // Remove me from old voice channel.
-        //     for (let key in prevTalkers) {
-        //       prevTalkers[key] = prevTalkers[key].filter(t => t.socketId !== socket.id );
-        //     }
-
-        //     // Add me to new voice channek,
-        //     for (let key in result.data.talkers) {
-        //       talkerList.push(JSON.parse(result.data.talkers[key]));
-        //     }
-
-        //     return { ...prevTalkers, [channelName]: talkerList}
-        //   })
+          setSelectedVoice(channelName);
         })
       return;
     }

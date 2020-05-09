@@ -10,7 +10,7 @@ const ChannelGroup = () => {
   const [renderChannels, handleOnCollapse] = useChannelGroup();
 
   return (
-    <>
+    <div className="all-channels-container">
       <div className="channel-flex" onClick={() => handleOnCollapse('text')} >
         <span>
           <span className="text-channel-title expander">{ expander() }</span>
@@ -32,7 +32,7 @@ const ChannelGroup = () => {
       <div className="channel-group-container">
         {renderChannels('voice')}
       </div>
-    </>
+    </div>
   );
 };
 

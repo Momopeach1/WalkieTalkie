@@ -21,11 +21,25 @@ router.get('/', (req, res, next) => {
 router.put('/', passport.isLoggedIn(), (req, res, next) => {
   const query = { email: req.body.email };
   const update = { ...req.body };
-  console.log(update);
+
   User.updateOne(query, update, (updateErr, updateRes) => {
     if (updateErr) next(updateErr);
-
     res.json(updateRes);
+  })
+})
+
+// @Route PUT /api/user/change-password
+router.put('/change-password', (req, res) => {
+  User.findOne({ email: req.body.email}, (error, result) => {
+    if (error) return res.status(500).send(error);
+    
+    result.password = req.body.password;
+    
+    result.save((error, result) => {
+      if (error) return res.status(500).send(error);
+
+      res.json(result);
+    })
   })
 })
 

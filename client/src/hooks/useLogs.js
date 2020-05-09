@@ -7,7 +7,7 @@ import ChannelContext from '../contexts/ChannelContext';
 const useLogs = () => {
   const { logs } = useContext(LogsContext);
   const { selectedChannel } = useContext(ChannelContext);
-
+  console.log("logs", logs);
   const appendLogs = () => {
     let result = [];
     let messages = [];

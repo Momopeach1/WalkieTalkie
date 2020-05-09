@@ -9,6 +9,7 @@ export default ChannelContext;
 export const ChannelProvider = ({ children }) => {
   const [channels, setChannels] = useState([]);
   const [selectedChannel, setSelectedChannel] = useState('');
+  const [selectedVoice, setSelectedVoice] = useState('');
   const [filteredChannels, setFilteredChannels] = useState({ textChannels: [], voiceChannels: [] });
   const [talkers, setTalkers] = useState({});
 
@@ -54,7 +55,9 @@ export const ChannelProvider = ({ children }) => {
       setSelectedChannel, 
       filteredChannels,
       talkers,
-      setTalkers
+      setTalkers,
+      selectedVoice, 
+      setSelectedVoice
     }}>
       { children }
     </ChannelContext.Provider>

@@ -48,4 +48,22 @@ router.put('/join-voice', passport.isLoggedIn(), (req, res) => {
   })
 })
 
+// @Route PUT /api/channel/leave-voice
+router.put('/leave-voice', passport.isLoggedIn(), (req, res) => {
+  Channel.findOne({ name: req.body.name }, (error, result) => {
+    if (error) return res.status(500).send(error);
+    result.talkers.delete(req.body.socketId);
+    result.save((error, result) => {
+      if (error) return res.status(500).send(error);
+      User.findOne({email: req.user.email}, (error, result) => {
+        if (error) return res.status(500).send(error);
+        User.updateOne({ email: req.user.email }, { currentVoiceChannel: '' }, (error, result) => {
+          if (error) return res.status(500).send(error);
+          res.json(result);
+        })
+      })
+    });
+  })
+})
+
 module.exports = router;
