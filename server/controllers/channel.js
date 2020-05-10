@@ -1,6 +1,7 @@
 const router = require('express').Router();
 
 const passport = require('../middlewares/authentication');
+const privilege = require('../middlewares/privilege');
 const Channel = require('../models/channel');
 const User = require('../models/user');
 
@@ -28,7 +29,8 @@ router.put('/join-voice', passport.isLoggedIn(), (req, res) => {
   Channel.findOne({ name: currentVoiceChannel }, (error, result) => {
     if(error) res.status(500).send(error);
     if (req.user.currentVoiceChannel === currentVoiceChannel) return res.status(409).send("You're already in this voice channel!");
-    result.set(`talkers.${socketId}`, JSON.stringify(req.user)); //this needs to be in string format 
+    console.log({ ...req.user });
+    result.set(`talkers.${socketId}`, JSON.stringify({ ...req.user._doc, currentVoiceChannel })); //this needs to be in string format 
     result.save( (error, result) => {
       if (error) res.status(500).send(error);
 
@@ -41,7 +43,8 @@ router.put('/join-voice', passport.isLoggedIn(), (req, res) => {
           result.talkers.delete(socketId);
           result.save();
         });
-        User.updateOne({ email: req.user.email }, { currentVoiceChannel }, (error, result) => {})
+        User.updateOne({ email: req.user.email }, { currentVoiceChannel }, (error, result) => {
+        })
       })
       res.json(result);
     })
@@ -63,6 +66,24 @@ router.put('/leave-voice', passport.isLoggedIn(), (req, res) => {
         })
       })
     });
+  })
+});
+
+// @Route PUT /api/channel/kick
+router.put('/kick', passport.isLoggedIn(), privilege.canKick(), (req, res) => {
+  Channel.findOne({ name: req.body.name }, (error, result) => {
+    if (error) return res.status(500).send(error);
+    result.talkers.delete(req.body.socketId);
+    result.save((error, result) => {
+      if (error) return res.status(500).send(error);
+      User.findOne({ email: req.body.email }, (error, result) => {
+        if (error) return res.status(500).send(error);
+        User.updateOne({ email: req.body.email }, { currentVoiceChannel: '' }, (error, result) => {
+          if (error) return res.status(500).send(error);
+          res.json(result);
+        })
+      })
+    })
   })
 })
 

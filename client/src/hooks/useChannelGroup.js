@@ -2,6 +2,7 @@ import React, { useEffect, useContext, useState } from 'react';
 import ChannelContext from '../contexts/ChannelContext'
 import SocketContext from '../contexts/SocketContext';
 import server from '../apis/server';
+import ContextMenuWrapper from '../components/ContextMenus/ContextMenu';
 
 const useChannelGroup = () => {
   const { fetchChannels, setSelectedChannel, selectedChannel, filteredChannels, talkers, setSelectedVoice } = useContext(ChannelContext);
@@ -32,13 +33,16 @@ const useChannelGroup = () => {
 
   const renderTalkers = channelName => {
     if(!talkers[channelName]) return null;
-    console.log('talkers[channelName]', talkers[channelName])
+
     return talkers[channelName].map(t => {
+      console.log('t', t);
       return(
-        <div className ="voice-member-container">
-          <img className="voice-avatar" src={t.photoURL} />
-          <span className="voice-displayName" >{t.displayName}</span>
-        </div>
+        <ContextMenuWrapper talker={t}>
+          <div className ="voice-member-container">
+            <img className="voice-avatar" src={t.photoURL} />
+            <span className="voice-displayName" >{t.displayName}</span>
+          </div>
+        </ContextMenuWrapper>
       )
     })
   }

@@ -13,7 +13,7 @@ const useChat = () => {
   const { setLogs } = useContext(LogsContext);
   const { user } = useContext(UserContext);
   const { setAllUsers } = useContext(AllUsersContext);
-  const { selectedChannel, fetchChannels } = useContext(ChannelContext);
+  const { selectedChannel, fetchChannels, setSelectedVoice } = useContext(ChannelContext);
 
   const fetchAllUsers = async () => {
     const response = await server.get('/user');
@@ -59,6 +59,10 @@ const useChat = () => {
       });
       socket.on('joined voice', () =>{
         fetchChannels();
+      })
+      socket.on('exit voice', () => {
+        fetchChannels();
+        setSelectedVoice('');
       })
     }
   },[user])

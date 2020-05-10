@@ -53,6 +53,10 @@ io.on('connection', (socket) => {
     io.in('General Room').emit('joined voice', {});
   });
 
+  socket.on('exit voice', () => {
+    io.in('General Room').emit('exit voice', {});
+  });
+
   socket.on('disconnect', async () => {
     console.log('a user has disconnected', socket.id);
     User.findOne({ socketId: socket.id }, (error, result) => {
