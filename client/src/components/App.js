@@ -5,6 +5,8 @@ import { SocketProvider } from '../contexts/SocketContext';
 import { LogsProvider } from '../contexts/LogsContext';
 import { AllUsersProvider } from '../contexts/AllUsersContext';
 import { ChannelProvider } from '../contexts/ChannelContext';
+import { WebRTCProvider } from '../contexts/WebRTCContext';
+
 import '../styles/App.css';
 import history from '../utilities/history';
 import ChatPage from "./ChatPage/ChatPage";
@@ -15,6 +17,7 @@ import SigninPage from "./SigninPage";
 import SignOutPage from "./SignoutPage";
 import SignupPage from "./SignupPage";
 import useApp from '../hooks/useApp';
+
 
 const App = () => {
   useApp();
@@ -34,16 +37,18 @@ const App = () => {
 }
 
 export default () => (
-  <ChannelProvider>
-    <AllUsersProvider>
-      <LogsProvider>
-        <SocketProvider>
-          <UserProvider>
-            <App />
-          </UserProvider>
-        </SocketProvider>
-      </LogsProvider>
-    </AllUsersProvider>
-  </ChannelProvider>
+  <WebRTCProvider>
+    <ChannelProvider>
+      <AllUsersProvider>
+        <LogsProvider>
+          <SocketProvider>
+            <UserProvider>
+              <App />
+            </UserProvider>
+          </SocketProvider>
+        </LogsProvider>
+      </AllUsersProvider>
+    </ChannelProvider>
+  </WebRTCProvider>
 );
 

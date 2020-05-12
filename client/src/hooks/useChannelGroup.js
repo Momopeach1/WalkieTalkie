@@ -3,13 +3,22 @@ import ChannelContext from '../contexts/ChannelContext'
 import SocketContext from '../contexts/SocketContext';
 import server from '../apis/server';
 import ContextMenuWrapper from '../components/ContextMenus/ContextMenu';
+import WebRTCContext from '../contexts/WebRTCContext';
 
 const useChannelGroup = () => {
-  const { fetchChannels, setSelectedChannel, selectedChannel, filteredChannels, talkers, setSelectedVoice } = useContext(ChannelContext);
-  const { socket } = useContext(SocketContext);
   const [channelGroupsCollapse, setChannelGroupsCollapse] = useState({ text: false, voice: false });
   
-
+  const { socket } = useContext(SocketContext);
+  const { getMedia } = useContext(WebRTCContext);
+  const { 
+    fetchChannels, 
+    setSelectedChannel, 
+    selectedChannel, 
+    filteredChannels, 
+    talkers, 
+    setSelectedVoice 
+  } = useContext(ChannelContext);
+  
   useEffect(() => {
     fetchChannels();
   }, []);
@@ -18,8 +27,9 @@ const useChannelGroup = () => {
     if (type === 'voice') {
       server.put('/channel/join-voice', ({ socketId: socket.id, channelName }))
         .then(() => {
-          socket.emit('joined voice', {});
+          socket.emit('joined voice', { channelName, socketId: socket.id });
           setSelectedVoice(channelName);
+          getMedia({ audio: true, video: false });
         })
       return;
     }
@@ -35,7 +45,6 @@ const useChannelGroup = () => {
     if(!talkers[channelName]) return null;
 
     return talkers[channelName].map(t => {
-      console.log('t', t);
       return(
         <ContextMenuWrapper talker={t}>
           <div className ="voice-member-container">

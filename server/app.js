@@ -49,15 +49,26 @@ io.on('connection', (socket) => {
     io.in('General Room').emit('created channel', {});
   });
 
-  socket.on('joined voice', () => {
+  socket.on('joined voice', data => {
+    socket.join(data.channelName);
     io.in('General Room').emit('joined voice', {});
+    socket.to(data.channelName).emit('new talker joined', { socketId: data.socketId });
   });
+
+  socket.on('send offer', data => {
+    io.to(data.targetSocketId).emit('request connection', { sdp: data.sdp, socketId: socket.id });
+  });
+
+  socket.on('send answer', data => {
+    io.to(data.targetSocketId).emit('complete connection', { sdp: data.sdp, socketId: socket.id });
+  })
 
   socket.on('exit voice', () => {
     io.in('General Room').emit('exit voice', {});
   });
 
   socket.on('disconnect', async () => {
+    // leave current voice channel here.
     console.log('a user has disconnected', socket.id);
     User.findOne({ socketId: socket.id }, (error, result) => {
       if (error || !result) return;

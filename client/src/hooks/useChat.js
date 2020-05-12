@@ -3,9 +3,10 @@ import openSocket from 'socket.io-client';
 import server from '../apis/server';
 import AllUsersContext from '../contexts/AllUsersContext';
 import LogsContext from '../contexts/LogsContext';
-import SocketContext from '../contexts/SocketContext';
+import SocketContext, { SocketProvider } from '../contexts/SocketContext';
 import UserContext from '../contexts/UserContext';
 import ChannelContext from '../contexts/ChannelContext';
+import WebRTCContext from '../contexts/WebRTCContext';
 
 
 const useChat = () => {
@@ -14,6 +15,7 @@ const useChat = () => {
   const { user } = useContext(UserContext);
   const { setAllUsers } = useContext(AllUsersContext);
   const { selectedChannel, fetchChannels, setSelectedVoice } = useContext(ChannelContext);
+  const { openCall, sendOffer, acceptOffer, acceptAnswer } = useContext(WebRTCContext);
 
   const fetchAllUsers = async () => {
     const response = await server.get('/user');
@@ -36,7 +38,6 @@ const useChat = () => {
       fetchMessages();
   
       socket.on('generated socket id', async ({ socketId }, announceJoin) => {
-        console.log(socketId, user.email);
         await server.put('/user', { email: user.email, socketId: socketId });
         announceJoin();
       });
@@ -57,13 +58,32 @@ const useChat = () => {
       socket.on('user joined', ()=> {
         fetchAllUsers();
       });
+
       socket.on('joined voice', () =>{
         fetchChannels();
-      })
+      });
+
       socket.on('exit voice', () => {
         fetchChannels();
         setSelectedVoice('');
+      });
+
+      socket.on('request connection', data => {
+        const peerConnection = new RTCPeerConnection();
+        acceptOffer(peerConnection, data.sdp, socket, data.socketId);
       })
+
+      socket.on('new talker joined', data => {
+        const peerConnection = new RTCPeerConnection();
+        openCall(peerConnection);
+        sendOffer(peerConnection, socket, data.socketId);
+      })
+      
+      socket.on('complete connection', data => {
+        acceptAnswer(data.socketId, data.sdp);
+
+      })
+
     }
   },[user])
 };

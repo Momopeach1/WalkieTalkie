@@ -40,7 +40,6 @@ export const ChannelProvider = ({ children }) => {
             : [...newTalkers[ch.name], JSON.parse(ch.talkers[key])];
           }
         }
-        console.log("new talkers", newTalkers);
         setTalkers(newTalkers);
       })
       .catch(error => console.log(error));
