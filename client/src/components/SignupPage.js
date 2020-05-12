@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Link } from 'react-router-dom';
 import history from '../utilities/history';
-import { auth, generateUserDocument, signInWithGoogle } from "../firebase";
 import server from '../apis/server';
 
 const SignUp = () => {
@@ -97,7 +96,6 @@ const SignUp = () => {
           <button
             onClick={() => {
               try {
-                signInWithGoogle();
               } catch (error) {
                 console.error("Error signing in with Google", error);
               }

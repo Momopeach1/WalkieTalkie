@@ -1,7 +1,5 @@
 import React, { useContext } from "react";
 import UserContext from "../contexts/UserContext";
-import { auth } from "../firebase";
-import history from "../utilities/history";
 
 const ProfilePage = () => {
   const user = useContext(UserContext);
@@ -24,8 +22,8 @@ const ProfilePage = () => {
         <h3 className = "italic">{email}</h3>
         </div>
       </div>
-      <button className = "w-full py-3 bg-red-600 mt-4 text-white" onClick = {() => {auth.signOut()}}>Sign out</button>
-      <button onClick ={()=> history.push('/chat')}> To Chat</button>
+      <button className = "w-full py-3 bg-red-600 mt-4 text-white">Sign out</button>
+      <button> To Chat</button>
     </div>
   ) 
 };
