@@ -18,9 +18,18 @@ export const WebRTCProvider = ({ children }) => {
   }
 
   const openCall = myPeerConnection => {
-    for (const track of gumStreamRef.current.getTracks()) {
-      myPeerConnection.addTrack(track);
-    }
+    navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+      .then((stream) => {
+        /* use the stream */
+        for (const track of stream.getTracks()) {
+          myPeerConnection.addTrack(track);
+        }
+      })
+      .catch((err) => {
+        /* handle the error */
+        console.log(err);
+      });
+
     console.log('opening call...');
   }
   
@@ -38,18 +47,30 @@ export const WebRTCProvider = ({ children }) => {
   }
 
   const acceptOffer = (myPeerConnection, description, socket, targetSocketId) => {
-    myPeerConnection.setRemoteDescription(new RTCSessionDescription(description))
-      .then(() => {
-        myPeerConnection.createAnswer().then(answer => {
-          return myPeerConnection.setLocalDescription(answer);
-        })
-        .then(() => {
-          // Send the answer to the remote peer through the signaling server.
-          socket.emit('send answer', { sdp: myPeerConnection.localDescription, targetSocketId })
-        })
-        .catch(err => console.log(err));
+    navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+      .then((stream) => {
+        /* use the stream */
+        for (const track of stream.getTracks()) {
+          myPeerConnection.addTrack(track);
+        }
+        myPeerConnection.setRemoteDescription(new RTCSessionDescription(description))
+          .then(() => {
+            myPeerConnection.createAnswer().then(answer => {
+              return myPeerConnection.setLocalDescription(answer);
+            })
+            .then(() => {
+              // Send the answer to the remote peer through the signaling server.
+              console.log('a string', myPeerConnection);
+              socket.emit('send answer', { sdp: myPeerConnection.localDescription, targetSocketId })
+            })
+            .catch(err => console.log(err));
+          })
+          .catch(err => console.log(err));
       })
-      .catch(err => console.log(err));
+      .catch((err) => {
+        /* handle the error */
+        console.log(err);
+      });
   }
 
   const acceptAnswer = (targetSocketId, description) => {
@@ -57,7 +78,7 @@ export const WebRTCProvider = ({ children }) => {
     
     myPeerConnection.setRemoteDescription(description);
 
-    console.log('Accepted Answer');
+    console.log('Accepted Answer', myPeerConnection);
   }
 
   return (

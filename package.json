@@ -4,14 +4,15 @@
   "description": "Talk",
   "main": "app.js",
   "scripts": {
-    "dev": "nodemon -r dotenv/config app.js",
+    "start": "node server/app.js",
+    "dev": "nodemon -r dotenv/config server/app.js",
+    "build": "cd client && npm install && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
-    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "firebase": "^7.14.1",
@@ -23,6 +24,7 @@
     "socket.io": "^2.3.0"
   },
   "devDependencies": {
+    "dotenv": "^8.2.0",
     "nodemon": "^2.0.3"
   }
 }

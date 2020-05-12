@@ -29,7 +29,7 @@ const useChannelGroup = () => {
         .then(() => {
           socket.emit('joined voice', { channelName, socketId: socket.id });
           setSelectedVoice(channelName);
-          getMedia({ audio: true, video: false });
+          // getMedia({ audio: true, video: false });
         })
       return;
     }
