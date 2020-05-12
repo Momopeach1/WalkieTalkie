@@ -2,6 +2,7 @@ const expressSession = require('express-session');
 const mongoose       = require('mongoose');
 const express        = require('express');
 const http           = require('http');
+const path           = require('path');
 const app            = express();
 const server         = http.Server(app);
 const socket         = require('socket.io');
