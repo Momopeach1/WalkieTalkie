@@ -7,7 +7,8 @@ const userSchema = new mongoose.Schema({
   photoURL: String,
   role: String,
   socketId: String,
-  email: { type: String, unique: true, lowercase: true }
+  email: { type: String, unique: true, lowercase: true },
+  currentVoiceChannel: { type: String, default: '' }
 });
 
 userSchema.pre('save', function(next) {

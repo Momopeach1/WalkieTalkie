@@ -4,6 +4,13 @@
 .sidebar {
   background-color: #2f3136;
   height: 100vh;
+  position: relative;
+}
+
+.sidebar > div {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .main-chat { 

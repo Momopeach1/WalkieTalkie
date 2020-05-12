@@ -1,3 +1,4 @@
+
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
@@ -53,7 +54,6 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-  console.log('asdasdasd');
   User.findById(id, (err, user) => {
     if (err) return done(err, null);
     if (!user) return done(null, false);

@@ -18,6 +18,11 @@
   padding-right: 16px;
 }
 
+.channel-flex:hover > span > .text-channel-title {
+  color: #dcddde;
+  cursor: pointer;
+}
+
 .expander {
   height: 12px;
   margin: 0 3px;
@@ -35,6 +40,7 @@
 .channel-textbox > div > input {
   height: 40px;
   padding: 0 10px;
+  color: #dcddde;
 }
 
 .modal-footer {
@@ -80,4 +86,219 @@
   color: #B9BBBE;
   font-size: 12px;
   margin-bottom: 15px;
+}
+
+/* Channel Radio */
+.channel-radio {
+  display: none;
+}
+
+.channel-radio + label {
+  display: block;
+  color: #8e9297;
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  padding: 0px 8px;
+  margin-left: 8px;
+}
+
+.channel-radio:checked + label {
+  display: block;
+  background-color: rgba(79, 84, 92, 0.32 );
+  color:  white;
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding: 0px 8px;
+  border-radius: 5px;
+}
+
+.channel-radio:hover + label {
+  background-color:rgba(79, 84, 92, 0.16 );
+  color: #dcddde;
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding: 0px 8px;
+  border-radius: 5px;
+}
+
+/* Voice Radios */
+.voice-radio {
+  display: none;
+}
+
+.voice-radio + label {
+  display: block;
+  color: #8e9297;
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  padding: 0px 8px;
+  margin-left: 8px;
+}
+
+.voice-radio:checked + label {
+  display: block;
+  background-color: transparent;
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding: 0px 8px;
+  border-radius: 5px;
+}
+
+.voice-radio:hover + label {
+  background-color:rgba(79, 84, 92, 0.16 );
+  color: #dcddde;
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding: 0px 8px;
+  border-radius: 5px;
+}
+
+.channel-symbol {
+  color: #8e9297 !important;
+  margin-right: 6px;
+}
+
+.channel-group-container {
+  padding-right: 8px;
+
+}
+
+.voice-avatar {
+  width: 24px; 
+  height: 24px; 
+  border-radius: 24px;
+  margin-right: 10px;
+}
+
+.voice-member-container {
+  color: #8e9297;
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  display: flex;
+  height: 30px;
+  margin-bottom: 1px;
+  display: flex;
+  align-items: center;
+
+}
+
+.voice-member-container:hover {
+  background-color:rgba(79, 84, 92, 0.16 );
+  color: #dcddde;
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.voice-displayName {
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.talkers-container {
+  padding-bottom: 8px;
+  padding-left: 36px;
+}
+
+.all-channels-container  {
+  overflow-y: auto;
+}
+
+.render-connection-controls {
+  box-sizing: border-box;
+  background-color: #292b2f;
+  width: 100%;
+  height: 89px;
+  padding: 8px;
+  border-bottom: hsla(0, 0%, 100%, 0.06);
+}
+
+.user-control-container {
+  background-color: #292b2f;
+  width: 100%;
+  height: 52px;
+  margin-top: auto;
+  align-items: center;
+  display: flex;
+  clear: both;
+  /* padding: 8px; */
+}
+
+.user-control-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 32px;
+  margin: 8px;
+}
+
+.settings-button {
+  line-height: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  position: relative;
+  float: right;
+  color: #b9bbbe;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  outline: none;
+}
+
+.user-control-username {
+  white-space: nowrap;
+  color: #ffffff;
+}
+
+.settings-button:hover {
+  background-color: rgba(79, 84, 92, 0.16 );
+  cursor: pointer;
 }

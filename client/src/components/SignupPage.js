@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Link } from 'react-router-dom';
+import history from '../utilities/history';
 import { auth, generateUserDocument, signInWithGoogle } from "../firebase";
+import server from '../apis/server';
 
 const SignUp = () => {
     const [email, setEmail] = useState("");
@@ -11,8 +13,10 @@ const SignUp = () => {
     const createUserWithEmailAndPasswordHandler = async (event, email, password) => {
       event.preventDefault();
       try{
-        const {user} = await auth.createUserWithEmailAndPassword(email, password);
-        generateUserDocument(user, {displayName});
+        // const {user} = await auth.createUserWithEmailAndPassword(email, password);
+        // generateUserDocument(user, {displayName});
+        await server.post('/user/signup', { displayName, email, password });
+        history.push('/signin');
       }
       catch(error){
         setError('Error Signing up with email and password');
