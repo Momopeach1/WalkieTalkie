@@ -18,11 +18,11 @@ export const WebRTCProvider = ({ children }) => {
   }
 
   const openCall = (myPeerConnection, socket, targetSocketId, channelName) => {
-    navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+    navigator.mediaDevices.getUserMedia({ audio: true })
       .then((stream) => {
         /* use the stream */
         for (const track of stream.getTracks()) {
-          myPeerConnection.addTrack(track);
+          myPeerConnection.addTrack(track, stream);
         }
 
         sendOffer(myPeerConnection, socket, targetSocketId, channelName);
@@ -38,7 +38,9 @@ export const WebRTCProvider = ({ children }) => {
   const sendOffer = (myPeerConnection, socket, targetSocketId, channelName) => {
     console.log('send offer', channelName);
     connections[targetSocketId] = myPeerConnection;
-    myPeerConnection.createOffer()
+    myPeerConnection.createOffer({   offerToReceiveAudio: 1,
+      offerToReceiveVideo: 0,
+      voiceActivityDetection: false })
       .then(offer => myPeerConnection.setLocalDescription(new RTCSessionDescription(offer)))
       .then(() => {
         socket.emit('send offer', { sdp: myPeerConnection.localDescription, targetSocketId, channelName })
@@ -51,11 +53,11 @@ export const WebRTCProvider = ({ children }) => {
 
   const acceptOffer = (myPeerConnection, description, socket, targetSocketId) => {
     connections[targetSocketId] = myPeerConnection;
-    navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+    navigator.mediaDevices.getUserMedia({ audio: true })
       .then((stream) => {
         /* use the stream */
         for (const track of stream.getTracks()) {
-          myPeerConnection.addTrack(track);
+          myPeerConnection.addTrack(track, stream);
         }
         myPeerConnection.setRemoteDescription(new RTCSessionDescription(description))
           .then(() => {

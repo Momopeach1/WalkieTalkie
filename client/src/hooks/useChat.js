@@ -16,8 +16,8 @@ const useChat = () => {
   const { setAllUsers } = useContext(AllUsersContext);
   const { selectedChannel, fetchChannels, setSelectedVoice, selectedVoice } = useContext(ChannelContext);
   const { openCall, sendOffer, acceptOffer, acceptAnswer, addIce } = useContext(WebRTCContext);
-  const config = { "iceServers": [{ "urls": "stun:stun.1.google.com:19302"}] };
-
+  // const config = { "iceServers": [{ "urls": "stun:stun.1.google.com:19302"}] };
+  const config = null;
   const fetchAllUsers = async () => {
     const response = await server.get('/user');
     setAllUsers(response.data);
@@ -83,6 +83,13 @@ const useChat = () => {
             console.log('All ice candidates have been sent.');
           }
         }
+        peerConnection.ontrack = e => {
+          if (document.querySelector('audio#local').srcObject !== e.streams[0]) {
+            document.querySelector('audio#local').srcObject = e.streams[0];
+            console.log('Received remote stream', e.streams);
+
+          }          
+        }
         openCall(peerConnection, socket, data.socketId, data.channelName);
       })
 
@@ -97,6 +104,13 @@ const useChat = () => {
             socket.emit('send ice', { ice: JSON.stringify(event.candidate), socketId: data.socketId, channelName: data.channelName });
           } else {
             console.log('All ice candidates have been sent.');
+          }
+        }
+        peerConnection.ontrack = e => {
+          console.log('meooooowwwwwwwww') 
+          if (document.querySelector('audio#local').srcObject !== e.streams[0]) {
+            document.querySelector('audio#local').srcObject = e.streams[0];
+            console.log('Received remote stream', e.streams);
           }
         }
         acceptOffer(peerConnection, data.sdp, socket, data.socketId);

@@ -18,7 +18,7 @@ const UserControl = () => {
         <button className="settings-button">
           <div>{settings}</div>
         </button>
-        
+        <audio id="local" controls autoPlay />
       </div>
     </>
   )
