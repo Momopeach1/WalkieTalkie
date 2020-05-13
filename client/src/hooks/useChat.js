@@ -14,8 +14,9 @@ const useChat = () => {
   const { setLogs } = useContext(LogsContext);
   const { user } = useContext(UserContext);
   const { setAllUsers } = useContext(AllUsersContext);
-  const { selectedChannel, fetchChannels, setSelectedVoice } = useContext(ChannelContext);
-  const { openCall, sendOffer, acceptOffer, acceptAnswer } = useContext(WebRTCContext);
+  const { selectedChannel, fetchChannels, setSelectedVoice, selectedVoice } = useContext(ChannelContext);
+  const { openCall, sendOffer, acceptOffer, acceptAnswer, addIce } = useContext(WebRTCContext);
+  const config = { "iceServers": [{ "urls": "stun:stun.1.google.com:19302"}] };
 
   const fetchAllUsers = async () => {
     const response = await server.get('/user');
@@ -68,16 +69,44 @@ const useChat = () => {
         setSelectedVoice('');
       });
 
+      socket.on('new talker joined', data => {
+        console.log('new talker joined', data.channelName);
+        // Caller
+        const peerConnection = new RTCPeerConnection(config);
+        peerConnection.onicecandidate = event => {
+          if (event.candidate) {
+            console.log('Sending ice candidate to callee', JSON.stringify({ice: event.candidate}));
+            console.log('sending to selectedVoice', data.channelName);
+            socket.emit('send ice', { ice: JSON.stringify(event.candidate), socketId: data.socketId, channelName: data.channelName });
+          } else {
+            console.log('All ice candidates have been sent.');
+          }
+        }
+        openCall(peerConnection, socket, data.socketId);
+        // sendOffer(peerConnection, socket, data.socketId);
+      })
+
       socket.on('request connection', data => {
-        const peerConnection = new RTCPeerConnection();
+        // Callee
+        console.log('requesting connection');
+        const peerConnection = new RTCPeerConnection(config);
+        peerConnection.onicecandidate = event => {
+          if (event.candidate) {
+            console.log('Sending ice candidate to caller', JSON.stringify({ice: event.candidate}))
+            console.log('sending to selectedVoice', data.channelName);
+            socket.emit('send ice', { ice: event.candidate, socketId: data.socketId, channelName: data.channelName });
+          } else {
+            console.log('All ice candidates have been sent.');
+          }
+        }
         acceptOffer(peerConnection, data.sdp, socket, data.socketId);
       })
 
-      socket.on('new talker joined', data => {
-        const peerConnection = new RTCPeerConnection();
-        openCall(peerConnection);
-        sendOffer(peerConnection, socket, data.socketId);
+      socket.on('send ice', data => {
+        console.log('adding ice canditates...', new RTCIceCandidate(JSON.parse(data.ice)));
+        addIce(data.socketId, new RTCIceCandidate(JSON.parse(data.ice)));
       })
+
       
       socket.on('complete connection', data => {
         acceptAnswer(data.socketId, data.sdp);

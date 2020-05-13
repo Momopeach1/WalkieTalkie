@@ -5,7 +5,7 @@ const WebRTCContext = React.createContext();
 export const WebRTCProvider = ({ children }) => {
   const gumStreamRef = useRef(null);
   const connections = {}; // socketId -> RTCPeerConnection
-  console.log(connections);
+  
   const getMedia = (constraints) => {
     navigator.mediaDevices.getUserMedia(constraints)
       .then((stream) => {
@@ -17,13 +17,15 @@ export const WebRTCProvider = ({ children }) => {
       });
   }
 
-  const openCall = myPeerConnection => {
+  const openCall = (myPeerConnection, socket, targetSocketId) => {
     navigator.mediaDevices.getUserMedia({ audio: true, video: false })
       .then((stream) => {
         /* use the stream */
         for (const track of stream.getTracks()) {
           myPeerConnection.addTrack(track);
         }
+
+        sendOffer(myPeerConnection, socket, targetSocketId);
       })
       .catch((err) => {
         /* handle the error */
@@ -42,11 +44,13 @@ export const WebRTCProvider = ({ children }) => {
     })
     .catch(function(reason) {
       // An error occurred, so handle the failure to connect
+      console.log('Failed to send offer');
     });
     console.log('sending offer', connections);
   }
 
   const acceptOffer = (myPeerConnection, description, socket, targetSocketId) => {
+    connections[targetSocketId] = myPeerConnection;
     navigator.mediaDevices.getUserMedia({ audio: true, video: false })
       .then((stream) => {
         /* use the stream */
@@ -81,8 +85,27 @@ export const WebRTCProvider = ({ children }) => {
     console.log('Accepted Answer', myPeerConnection);
   }
 
+  const addIce = (targetSocketId, ice) => {
+    const pc = connections[targetSocketId];
+    if (ice) {
+      // A typical value of ice here might look something like this:
+      //
+      // {candidate: "candidate:0 1 UDP 2122154243 192.168.1.9 53421 typ host", sdpMid: "0", ...}
+      //
+      // Pass the whole thing to addIceCandidate:
+      console.log('attempting to add ice', ice);
+      pc.addIceCandidate(ice)
+        .then(() => console.log('connections', connections))
+        .catch(e => {
+          console.log("Failure during addIceCandidate(): " + e.name);
+        });
+    } else {
+      // handle other things you might be signaling, like sdp
+    }
+  }
+
   return (
-    <WebRTCContext.Provider value={{ getMedia, openCall, sendOffer, acceptOffer, acceptAnswer }}>
+    <WebRTCContext.Provider value={{ getMedia, openCall, sendOffer, acceptOffer, acceptAnswer, addIce }}>
       { children }
     </WebRTCContext.Provider>
   )

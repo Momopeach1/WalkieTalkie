@@ -51,9 +51,10 @@ io.on('connection', (socket) => {
   });
 
   socket.on('joined voice', data => {
+    console.log('joined voice', data.channelName);
     socket.join(data.channelName);
     io.in('General Room').emit('joined voice', {});
-    socket.to(data.channelName).emit('new talker joined', { socketId: data.socketId });
+    socket.to(data.channelName).emit('new talker joined', { socketId: data.socketId, channelName: data.channelName });
   });
 
   socket.on('send offer', data => {
@@ -62,6 +63,11 @@ io.on('connection', (socket) => {
 
   socket.on('send answer', data => {
     io.to(data.targetSocketId).emit('complete connection', { sdp: data.sdp, socketId: socket.id });
+  })
+
+  socket.on('send ice', data => {
+    console.log('send ice channel name', data.channelName)
+    socket.to(data.channelName).emit('send ice', { socketId: socket.id, ice: data.ice, channelName: data.channelName })
   })
 
   socket.on('exit voice', () => {
