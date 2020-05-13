@@ -2,6 +2,7 @@ const expressSession = require('express-session');
 const mongoose       = require('mongoose');
 const express        = require('express');
 const http           = require('http');
+const path           = require('path');
 const app            = express();
 const server         = http.Server(app);
 const socket         = require('socket.io');
@@ -50,21 +51,29 @@ io.on('connection', (socket) => {
   });
 
   socket.on('joined voice', data => {
+    console.log('joined voice', data.channelName);
     socket.join(data.channelName);
     io.in('General Room').emit('joined voice', {});
-    socket.to(data.channelName).emit('new talker joined', { socketId: data.socketId });
+    socket.to(data.channelName).emit('new talker joined', { socketId: data.socketId, channelName: data.channelName });
   });
 
   socket.on('send offer', data => {
-    io.to(data.targetSocketId).emit('request connection', { sdp: data.sdp, socketId: socket.id });
+    io.to(data.targetSocketId).emit('request connection', { sdp: data.sdp, socketId: socket.id, channelName: data.channelName });
   });
 
   socket.on('send answer', data => {
     io.to(data.targetSocketId).emit('complete connection', { sdp: data.sdp, socketId: socket.id });
   })
 
-  socket.on('exit voice', () => {
-    io.in('General Room').emit('exit voice', {});
+  socket.on('send ice', data => {
+    console.log('send ice channel name', data.channelName)
+    socket.to(data.channelName).emit('send ice', { socketId: socket.id, ice: data.ice, channelName: data.channelName })
+  })
+
+  socket.on('exit voice', data => {
+    console.log('leaving room', data.channelName);
+    socket.leave(data.channelName);
+    io.in('General Room').emit('exit voice', { leaver: socket.id });
   });
 
   socket.on('disconnect', async () => {
@@ -90,5 +99,14 @@ io.on('connection', (socket) => {
 // Controller Setup
 app.use('/api',require('./controllers'))
 
-server.listen(PORT,()=>console.log('listening to port:', PORT));
+// for production use, we serve the static react build folder
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../client/build')));
 
+  // all unknown routes should be handed to our react app
+  app.get('*', function (req, res) {
+    res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+  });
+}
+
+server.listen(PORT,()=>console.log('listening to port:', PORT));

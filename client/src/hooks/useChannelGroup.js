@@ -26,10 +26,10 @@ const useChannelGroup = () => {
   const handleOnClick = (e, type, channelName) => {
     if (type === 'voice') {
       server.put('/channel/join-voice', ({ socketId: socket.id, channelName }))
-        .then(() => {
+      .then(() => {
           socket.emit('joined voice', { channelName, socketId: socket.id });
           setSelectedVoice(channelName);
-          getMedia({ audio: true, video: false });
+          // getMedia({ audio: true, video: false });
         })
       return;
     }

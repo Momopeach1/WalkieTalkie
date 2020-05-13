@@ -15,7 +15,7 @@ const useUserControl = () => {
   const handleLeaveVoice = () => {
     server.put('/channel/leave-voice', { socketId: socket.id, name: selectedVoice })
     .then(result => {
-      socket.emit('exit voice', {});
+      socket.emit('exit voice', { channelName: selectedVoice });
     })
   }
 
