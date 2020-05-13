@@ -58,7 +58,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('send offer', data => {
-    io.to(data.targetSocketId).emit('request connection', { sdp: data.sdp, socketId: socket.id });
+    io.to(data.targetSocketId).emit('request connection', { sdp: data.sdp, socketId: socket.id, channelName: data.channelName });
   });
 
   socket.on('send answer', data => {
@@ -70,8 +70,10 @@ io.on('connection', (socket) => {
     socket.to(data.channelName).emit('send ice', { socketId: socket.id, ice: data.ice, channelName: data.channelName })
   })
 
-  socket.on('exit voice', () => {
-    io.in('General Room').emit('exit voice', {});
+  socket.on('exit voice', data => {
+    console.log('leaving room', data.channelName);
+    socket.leave(data.channelName);
+    io.in('General Room').emit('exit voice', { leaver: socket.id });
   });
 
   socket.on('disconnect', async () => {

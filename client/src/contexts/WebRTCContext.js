@@ -17,7 +17,7 @@ export const WebRTCProvider = ({ children }) => {
       });
   }
 
-  const openCall = (myPeerConnection, socket, targetSocketId) => {
+  const openCall = (myPeerConnection, socket, targetSocketId, channelName) => {
     navigator.mediaDevices.getUserMedia({ audio: true, video: false })
       .then((stream) => {
         /* use the stream */
@@ -25,7 +25,7 @@ export const WebRTCProvider = ({ children }) => {
           myPeerConnection.addTrack(track);
         }
 
-        sendOffer(myPeerConnection, socket, targetSocketId);
+        sendOffer(myPeerConnection, socket, targetSocketId, channelName);
       })
       .catch((err) => {
         /* handle the error */
@@ -35,18 +35,18 @@ export const WebRTCProvider = ({ children }) => {
     console.log('opening call...');
   }
   
-  const sendOffer = (myPeerConnection, socket, targetSocketId) => {
+  const sendOffer = (myPeerConnection, socket, targetSocketId, channelName) => {
+    console.log('send offer', channelName);
     connections[targetSocketId] = myPeerConnection;
     myPeerConnection.createOffer()
-    .then(offer => myPeerConnection.setLocalDescription(offer))
-    .then(() => {
-      socket.emit('send offer', { sdp: myPeerConnection.localDescription, targetSocketId })
-    })
-    .catch(function(reason) {
-      // An error occurred, so handle the failure to connect
-      console.log('Failed to send offer');
-    });
-    console.log('sending offer', connections);
+      .then(offer => myPeerConnection.setLocalDescription(new RTCSessionDescription(offer)))
+      .then(() => {
+        socket.emit('send offer', { sdp: myPeerConnection.localDescription, targetSocketId, channelName })
+      })
+      .catch(function(reason) {
+        // An error occurred, so handle the failure to connect
+        console.log('Failed to send offer');
+      });
   }
 
   const acceptOffer = (myPeerConnection, description, socket, targetSocketId) => {
@@ -60,7 +60,7 @@ export const WebRTCProvider = ({ children }) => {
         myPeerConnection.setRemoteDescription(new RTCSessionDescription(description))
           .then(() => {
             myPeerConnection.createAnswer().then(answer => {
-              return myPeerConnection.setLocalDescription(answer);
+              return myPeerConnection.setLocalDescription(new RTCSessionDescription(answer));
             })
             .then(() => {
               // Send the answer to the remote peer through the signaling server.
@@ -80,7 +80,7 @@ export const WebRTCProvider = ({ children }) => {
   const acceptAnswer = (targetSocketId, description) => {
     const myPeerConnection = connections[targetSocketId];
     
-    myPeerConnection.setRemoteDescription(description);
+    myPeerConnection.setRemoteDescription(new RTCSessionDescription(description));
 
     console.log('Accepted Answer', myPeerConnection);
   }
@@ -93,9 +93,10 @@ export const WebRTCProvider = ({ children }) => {
       // {candidate: "candidate:0 1 UDP 2122154243 192.168.1.9 53421 typ host", sdpMid: "0", ...}
       //
       // Pass the whole thing to addIceCandidate:
-      console.log('attempting to add ice', ice);
       pc.addIceCandidate(ice)
-        .then(() => console.log('connections', connections))
+        .then(() => {
+          console.log('connections', connections)
+        })
         .catch(e => {
           console.log("Failure during addIceCandidate(): " + e.name);
         });

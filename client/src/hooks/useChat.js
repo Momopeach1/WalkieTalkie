@@ -64,9 +64,9 @@ const useChat = () => {
         fetchChannels();
       });
 
-      socket.on('exit voice', () => {
+      socket.on('exit voice', data => {
         fetchChannels();
-        setSelectedVoice('');
+        if (data.leaver === socket.id) setSelectedVoice('');
       });
 
       socket.on('new talker joined', data => {
@@ -77,13 +77,13 @@ const useChat = () => {
           if (event.candidate) {
             console.log('Sending ice candidate to callee', JSON.stringify({ice: event.candidate}));
             console.log('sending to selectedVoice', data.channelName);
+            console.log('new talker joined v2', data.channelName)
             socket.emit('send ice', { ice: JSON.stringify(event.candidate), socketId: data.socketId, channelName: data.channelName });
           } else {
             console.log('All ice candidates have been sent.');
           }
         }
-        openCall(peerConnection, socket, data.socketId);
-        // sendOffer(peerConnection, socket, data.socketId);
+        openCall(peerConnection, socket, data.socketId, data.channelName);
       })
 
       socket.on('request connection', data => {
@@ -94,7 +94,7 @@ const useChat = () => {
           if (event.candidate) {
             console.log('Sending ice candidate to caller', JSON.stringify({ice: event.candidate}))
             console.log('sending to selectedVoice', data.channelName);
-            socket.emit('send ice', { ice: event.candidate, socketId: data.socketId, channelName: data.channelName });
+            socket.emit('send ice', { ice: JSON.stringify(event.candidate), socketId: data.socketId, channelName: data.channelName });
           } else {
             console.log('All ice candidates have been sent.');
           }
