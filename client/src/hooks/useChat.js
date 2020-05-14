@@ -16,8 +16,10 @@ const useChat = () => {
   const { setAllUsers } = useContext(AllUsersContext);
   const { selectedChannel, fetchChannels, setSelectedVoice, selectedVoice } = useContext(ChannelContext);
   const { openCall, sendOffer, acceptOffer, acceptAnswer, addIce } = useContext(WebRTCContext);
-  // const config = { "iceServers": [{ "urls": "stun:stun.1.google.com:19302"}] };
-  const config = null;
+  const config = { "iceServers": [{ "url": "stun:stun.1.google.com:19302"}, 
+                                  { "url": "turn:68.196.40.74:3478", "username": "yong", "credential": "123"}
+                  ]};
+  // const config = null;
   const fetchAllUsers = async () => {
     const response = await server.get('/user');
     setAllUsers(response.data);
