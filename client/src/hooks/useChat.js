@@ -86,11 +86,14 @@ const useChat = () => {
           }
         }
         peerConnection.ontrack = e => {
-          if (document.querySelector('audio#local').srcObject !== e.streams[0]) {
-            document.querySelector('audio#local').srcObject = e.streams[0];
+          var audioElement = document.createElement("AUDIO");
+          audioElement.setAttribute("autoplay", "autoplay");
+          audioElement.setAttribute("id", data.socketId);
+          document.body.appendChild(audioElement);
+          if (document.querySelector(`audio#${data.socketId}`).srcObject !== e.streams[0]) {
+            document.querySelector(`audio#${data.socketId}`).srcObject = e.streams[0];
             console.log('Received remote stream', e.streams);
-
-          }          
+          }
         }
         openCall(peerConnection, socket, data.socketId, data.channelName);
       })
@@ -109,9 +112,12 @@ const useChat = () => {
           }
         }
         peerConnection.ontrack = e => {
-          console.log('meooooowwwwwwwww') 
-          if (document.querySelector('audio#local').srcObject !== e.streams[0]) {
-            document.querySelector('audio#local').srcObject = e.streams[0];
+          var audioElement = document.createElement("AUDIO");
+          audioElement.setAttribute("autoplay", "autoplay");
+          audioElement.setAttribute("id", data.socketId);
+          document.body.appendChild(audioElement);
+          if (document.querySelector(`audio#${data.socketId}`).srcObject !== e.streams[0]) {
+            document.querySelector(`audio#${data.socketId}`).srcObject = e.streams[0];
             console.log('Received remote stream', e.streams);
           }
         }
