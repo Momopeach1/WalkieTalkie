@@ -2,7 +2,6 @@ import { useContext, useEffect } from 'react';
 import openSocket from 'socket.io-client';
 
 import server from '../apis/server';
-import key from '../config/keys';
 import AllUsersContext from '../contexts/AllUsersContext';
 import LogsContext from '../contexts/LogsContext';
 import SocketContext from '../contexts/SocketContext';
@@ -91,14 +90,16 @@ const useChat = () => {
           }
         }
         peerConnection.ontrack = e => {
-          var audioElement = document.createElement("AUDIO");
-          audioElement.setAttribute("autoplay", "autoplay");
-          audioElement.setAttribute("id", data.socketId);
-          document.body.appendChild(audioElement);
-          if (document.querySelector(`audio#${data.socketId}`).srcObject !== e.streams[0]) {
-            document.querySelector(`audio#${data.socketId}`).srcObject = e.streams[0];
-            console.log('Received remote stream', e.streams);
-          }
+          if (!document.querySelector(`audio#${data.socketId}`)) {
+            var audioElement = document.createElement("AUDIO");
+            audioElement.setAttribute("autoplay", "autoplay");
+            audioElement.setAttribute("id", data.socketId);
+            document.body.appendChild(audioElement);
+            if (document.querySelector(`audio#${data.socketId}`).srcObject !== e.streams[0]) {
+              document.querySelector(`audio#${data.socketId}`).srcObject = e.streams[0];
+              console.log('Received remote stream', e.streams);
+            }
+         }
         }
         console.log("opening call socket id", data.socketId);
         getMedia({ audio: true }, () => openCall(peerConnection, socket, data.socketId, data.channelName))
@@ -118,13 +119,16 @@ const useChat = () => {
           }
         }
         peerConnection.ontrack = e => {
-          var audioElement = document.createElement("AUDIO");
-          audioElement.setAttribute("autoplay", "autoplay");
-          audioElement.setAttribute("id", data.socketId);
-          document.body.appendChild(audioElement);
-          if (document.querySelector(`audio#${data.socketId}`).srcObject !== e.streams[0]) {
-            document.querySelector(`audio#${data.socketId}`).srcObject = e.streams[0];
-            console.log('Received remote stream', e.streams);
+          if (!document.querySelector(`audio#${data.socketId}`)) {
+            var audioElement = document.createElement("AUDIO");
+            audioElement.setAttribute("autoplay", "autoplay");
+            audioElement.setAttribute("id", data.socketId);
+            document.body.appendChild(audioElement);
+            if (document.querySelector(`audio#${data.socketId}`).srcObject !== e.streams[0]) {
+              document.querySelector(`audio#${data.socketId}`).srcObject = e.streams[0];
+              console.log('Received remote stream', e.streams);
+            }
+
           }
         }
 
