@@ -20,8 +20,8 @@ const useChat = () => {
   const { openCall, sendOffer, acceptOffer, acceptAnswer, addIce, getMedia } = useContext(WebRTCContext);
   const config = { 
     "iceServers": [
-      key.googleSTUN, 
-      key.myTURN
+      { "url": "stun:stun.1.google.com:19302" }, 
+      { "url": "turn:68.196.40.74:3478", "username": "yong", "credential": "123" }
     ]
   };
   // const config = null;
