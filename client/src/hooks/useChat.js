@@ -17,7 +17,7 @@ const useChat = () => {
   const { user } = useContext(UserContext);
   const { setAllUsers } = useContext(AllUsersContext);
   const { selectedChannel, fetchChannels, setSelectedVoice, selectedVoice } = useContext(ChannelContext);
-  const { openCall, sendOffer, acceptOffer, acceptAnswer, addIce } = useContext(WebRTCContext);
+  const { openCall, sendOffer, acceptOffer, acceptAnswer, addIce, getMedia } = useContext(WebRTCContext);
   const config = { 
     "iceServers": [
       key.googleSTUN, 
@@ -100,7 +100,8 @@ const useChat = () => {
             console.log('Received remote stream', e.streams);
           }
         }
-        openCall(peerConnection, socket, data.socketId, data.channelName);
+        console.log("opening call socket id", data.socketId);
+        getMedia({ audio: true }, () => openCall(peerConnection, socket, data.socketId, data.channelName))
       })
 
       socket.on('request connection', data => {
@@ -126,7 +127,9 @@ const useChat = () => {
             console.log('Received remote stream', e.streams);
           }
         }
-        acceptOffer(peerConnection, data.sdp, socket, data.socketId);
+
+        console.log("accepting offer socket id", data.socketId);
+        getMedia({ audio: true }, () => acceptOffer(peerConnection, data.sdp, socket, data.socketId));
       })
 
       socket.on('send ice', data => {
