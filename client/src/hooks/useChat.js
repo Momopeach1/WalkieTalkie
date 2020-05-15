@@ -1,9 +1,11 @@
 import { useContext, useEffect } from 'react';
 import openSocket from 'socket.io-client';
+
 import server from '../apis/server';
+import key from '../config/keys';
 import AllUsersContext from '../contexts/AllUsersContext';
 import LogsContext from '../contexts/LogsContext';
-import SocketContext, { SocketProvider } from '../contexts/SocketContext';
+import SocketContext from '../contexts/SocketContext';
 import UserContext from '../contexts/UserContext';
 import ChannelContext from '../contexts/ChannelContext';
 import WebRTCContext from '../contexts/WebRTCContext';
@@ -16,9 +18,12 @@ const useChat = () => {
   const { setAllUsers } = useContext(AllUsersContext);
   const { selectedChannel, fetchChannels, setSelectedVoice, selectedVoice } = useContext(ChannelContext);
   const { openCall, sendOffer, acceptOffer, acceptAnswer, addIce } = useContext(WebRTCContext);
-  const config = { "iceServers": [{ "url": "stun:stun.1.google.com:19302"}, 
-                                  { "url": "turn:68.196.40.74:3478", "username": "yong", "credential": "123"}
-                  ]};
+  const config = { 
+    "iceServers": [
+      key.googleSTUN, 
+      key.myTURN
+    ]
+  };
   // const config = null;
   const fetchAllUsers = async () => {
     const response = await server.get('/user');
