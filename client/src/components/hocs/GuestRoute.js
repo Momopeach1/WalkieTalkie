@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 
 import history from '../../utilities/history';
 import UserProvider from '../../contexts/UserContext';
@@ -10,7 +10,7 @@ const GuestRoute = props => {
 
     const renderRoute = () => {
         if (isAuth === null) return null;
-        else if (isAuth === false) return <Redirect to="/signin" />
+        else if (isAuth === false) return <Route {...props} />
         else return history.goBack();
     }
     
