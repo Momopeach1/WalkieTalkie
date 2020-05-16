@@ -1,11 +1,18 @@
 import React, { useContext } from 'react';
 import { Redirect, Route } from 'react-router-dom';
-import UserProvider from '../../contexts/UserContext';
+import UserContext from '../../contexts/UserContext';
 
 
 const ProtectedRoute = props => {
-    const { user } = useContext(UserProvider);
-    return user ? <Route {...props} /> : <Redirect to="/signin" />;
+    const { isAuth } = useContext(UserContext);
+    console.log('ProtectedRoute: isAuth =', isAuth)
+    const renderRoute = () => {
+        if (isAuth === null) return null; // Replace this with loading component later.
+        else if (isAuth === false) return <Redirect to="/signin" />;
+        else return <Route {...props} />
+    }
+    
+    return renderRoute();
 };
 
 export default ProtectedRoute;

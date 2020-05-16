@@ -5,13 +5,39 @@ const WebRTCContext = React.createContext();
 export const WebRTCProvider = ({ children }) => {
   let myStream = null;
   let connections = {}; // socketId -> RTCPeerConnection
+
+  const config = { 
+    "iceServers": [
+      { "url": "stun:stun.1.google.com:19302" }, 
+      { "url": "turn:68.196.40.74:3478", "username": "yong", "credential": "123" }
+    ]
+  };
+
+  const onIceCandidateHandler = (event, data, sendIce) => {
+    if (event.candidate) {
+      sendIce();
+    } else {      
+      console.log('All ice candidates have been sent.');
+    }
+  };
+
+  const onTrackHandler = (event, data) => {
+    if (!document.getElementById(`${data.socketId}`)) {
+      const audioElement = document.createElement("AUDIO");
+      audioElement.setAttribute("autoplay", "autoplay");
+      audioElement.setAttribute("id", data.socketId);
+      document.body.appendChild(audioElement);
+      if (document.getElementById(`${data.socketId}`).srcObject !== event.streams[0]) {
+        document.getElementById(`${data.socketId}`).srcObject = event.streams[0];
+      }
+   }
+  };
   
   const getMedia = (constraints, callback) => {
     console.log('inside of promise')
     navigator.mediaDevices.getUserMedia(constraints)
       .then((stream) => {
         /* use the stream */
-        console.log('stream', stream);
         myStream = stream;
         callback();
       })
@@ -22,60 +48,48 @@ export const WebRTCProvider = ({ children }) => {
   }
 
   const openCall = (myPeerConnection, socket, targetSocketId, channelName) => {
-
-    /* use the stream */
     for (const track of myStream.getTracks()) {
       myPeerConnection.addTrack(track, myStream);
     }
 
     sendOffer(myPeerConnection, socket, targetSocketId, channelName);
-
-    console.log('opening call...');
   }
   
   const sendOffer = (myPeerConnection, socket, targetSocketId, channelName) => {
-    console.log('send offer', channelName);
     connections[targetSocketId] = myPeerConnection;
     myPeerConnection.createOffer({   offerToReceiveAudio: 1,
       offerToReceiveVideo: 0,
       voiceActivityDetection: false })
       .then(offer => myPeerConnection.setLocalDescription(new RTCSessionDescription(offer)))
       .then(() => {
+        console.log('Sending offer to callee.');
         socket.emit('send offer', { sdp: myPeerConnection.localDescription, targetSocketId, channelName })
       })
       .catch(function(reason) {
         // An error occurred, so handle the failure to connect
-        console.log('Failed to send offer');
+        console.log('Failed to send offer.');
       });
   }
 
   const acceptOffer = (myPeerConnection, description, socket, targetSocketId) => {
     connections[targetSocketId] = myPeerConnection;
-    console.log("accepting offer pc is", connections[targetSocketId])
-    // navigator.mediaDevices.getUserMedia({ audio: true })
-    //   .then((stream) => {
-        /* use the stream */
-        for (const track of myStream.getTracks()) {
-          myPeerConnection.addTrack(track, myStream);
-        }
-        myPeerConnection.setRemoteDescription(new RTCSessionDescription(description))
-          .then(() => {
-            myPeerConnection.createAnswer().then(answer => {
-              return myPeerConnection.setLocalDescription(new RTCSessionDescription(answer));
-            })
-            .then(() => {
-              // Send the answer to the remote peer through the signaling server.
-              console.log('a string', myPeerConnection);
-              socket.emit('send answer', { sdp: myPeerConnection.localDescription, targetSocketId })
-            })
-            .catch(err => console.log(err));
-          })
-          .catch(err => console.log(err));
-      // })
-      // .catch((err) => {
-        /* handle the error */
-      //   console.log(err);
-      // });
+    
+    for (const track of myStream.getTracks()) {
+      myPeerConnection.addTrack(track, myStream);
+    }
+
+    myPeerConnection.setRemoteDescription(new RTCSessionDescription(description))
+      .then(() => {
+        myPeerConnection.createAnswer().then(answer => {
+          return myPeerConnection.setLocalDescription(new RTCSessionDescription(answer));
+        })
+        .then(() => {
+          console.log('Sending answer to caller.')
+          socket.emit('send answer', { sdp: myPeerConnection.localDescription, targetSocketId })
+        })
+        .catch(err => console.log(err));
+      })
+      .catch(err => console.log(err));
   }
 
   const acceptAnswer = (targetSocketId, description) => {
@@ -89,22 +103,12 @@ export const WebRTCProvider = ({ children }) => {
   const addIce = (targetSocketId, ice) => {
     const pc = connections[targetSocketId];
     if (ice && pc) {
-      // A typical value of ice here might look something like this:
-      //
-      // {candidate: "candidate:0 1 UDP 2122154243 192.168.1.9 53421 typ host", sdpMid: "0", ...}
-      //
-      // Pass the whole thing to addIceCandidate:
-      console.log("all connections", connections);
-      console.log("length of connection", Object.keys(connections).length);
-      console.log("target socket id", typeof targetSocketId);
-      console.log("contains", connections.hasOwnProperty(targetSocketId))
-      console.log("pc", connections[targetSocketId]);
       pc.addIceCandidate(ice)
         .then(() => {
-          console.log('connections', connections)
+          console.log('Successfully added ice candidiates.');
         })
         .catch(e => {
-          console.log("Failure during addIceCandidate(): " + e.name);
+          console.log('Failure to add ice candidiate:', e.name);
         });
     } else {
       // handle other things you might be signaling, like sdp
@@ -112,7 +116,17 @@ export const WebRTCProvider = ({ children }) => {
   }
 
   return (
-    <WebRTCContext.Provider value={{ getMedia, openCall, sendOffer, acceptOffer, acceptAnswer, addIce }}>
+    <WebRTCContext.Provider value={{ 
+      getMedia, 
+      openCall, 
+      sendOffer, 
+      acceptOffer, 
+      acceptAnswer, 
+      addIce, 
+      config, 
+      onIceCandidateHandler,
+      onTrackHandler  
+    }}>
       { children }
     </WebRTCContext.Provider>
   )

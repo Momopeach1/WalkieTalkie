@@ -5,7 +5,7 @@ import server from '../apis/server';
 import ChannelContext from '../contexts/ChannelContext';
 
 const useMessageBox = () => {
-  const [message, setMessage] = useState({ text: '', timestamp: Date() });
+  const [message, setMessage] = useState({ text: '' });
   const { socket } = useContext(SocketContext);
   const { user } = useContext(UserContext);
   const { displayName, photoURL } = user;
@@ -13,14 +13,14 @@ const useMessageBox = () => {
 
 
   const handleOnChange = e => {
-    setMessage({text: e.target.value, timestamp: Date() });
+    setMessage({text: e.target.value});
   }
 
   const handleOnSubmit = e => {
     e.preventDefault();
     if (message.text.trim().length === 0) return;
     socket.emit('send message', { message, displayName, photoURL, selectedChannel });
-    server.post('/message', { content: message.text, createdAt: message.timestamp, selectedChannel })
+    server.post('/message', { content: message.text, createdAt: Date(), selectedChannel })
   }
 
   const handleOnKeyPress = e => {
@@ -28,7 +28,7 @@ const useMessageBox = () => {
       // Default Behavior
     } else if (e.key === 'Enter') {
       handleOnSubmit(e);
-      setMessage({ text: '', timestamp: Date() });
+      setMessage({ text: '' });
     }
   }
 

@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { Route, Router, Switch } from 'react-router-dom';
 import { UserProvider } from '../contexts/UserContext';
 import { SocketProvider } from '../contexts/SocketContext';
@@ -9,15 +10,18 @@ import { WebRTCProvider } from '../contexts/WebRTCContext';
 
 import '../styles/App.css';
 import history from '../utilities/history';
+
 import ChatPage from "./ChatPage/ChatPage";
-import ProtectedRoute from './hocs/ProtectedRoute';
 import HomePage from './HomePage';
 import ProfilePage from './ProfilePage';
 import SigninPage from "./SigninPage";
 import SignOutPage from "./SignoutPage";
 import SignupPage from "./SignupPage";
-import useApp from '../hooks/useApp';
 
+import ProtectedRoute from './hocs/ProtectedRoute';
+import GuestRoute from './hocs/GuestRoute';
+
+import useApp from '../hooks/useApp';
 
 const App = () => {
   useApp();
@@ -25,11 +29,11 @@ const App = () => {
   return (
     <Router history={history}>
       <Switch>
-        <Route path="/signin" component={SigninPage} />
-        <Route path="/signup" component={SignupPage}/>
+        <GuestRoute path="/signin" component={SigninPage} />
+        <GuestRoute path="/signup" component={SignupPage}/>
         <Route path ="/profile" component={ProfilePage} />
-        <Route path="/chat" component={ChatPage} />
-        <Route path="/" component={HomePage} />
+        <ProtectedRoute path="/chat" component={ChatPage} />
+        <GuestRoute path="/" component={HomePage} />
         <Route path="/signout" component={SignOutPage} />
       </Switch>
     </Router>

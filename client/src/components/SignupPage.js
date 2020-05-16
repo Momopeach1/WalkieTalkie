@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import history from '../utilities/history';
 import server from '../apis/server';
 
+import '../styles/RegistrationPage.scss';
+
 const SignUp = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -38,78 +40,104 @@ const SignUp = () => {
     };
   
     return (
-      <div className="mt-8">
-        <h1 className="text-3xl mb-2 text-center font-bold">Sign Up</h1>
-        <div className="border border-blue-400 mx-auto w-11/12 md:w-2/4 rounded py-8 px-4 md:px-8">
-          {error !== null && (
-            <div className="py-4 bg-red-600 w-full text-white text-center mb-3">
-              {error}
-            </div>
-          )}
-          <form className="">
-            <label htmlFor="displayName" className="block">
-              Display Name:
-            </label>
-            <input
-              type="text"
-              className="my-1 p-1 w-full "
-              name="displayName"
-              value={displayName}
-              placeholder="Hentai"
-              id="displayName"
-              onChange={event => onChangeHandler(event)}
-            />
-            <label htmlFor="userEmail" className="block">
-              Email:
-            </label>
-            <input
-              type="email"
-              className="my-1 p-1 w-full"
-              name="userEmail"
-              value={email}
-              placeholder="Hentai23@gmail.com"
-              id="userEmail"
-              onChange={event => onChangeHandler(event)}
-            />
-            <label htmlFor="userPassword" className="block">
-              Password:
-            </label>
-            <input
-              type="password"
-              className="mt-1 mb-3 p-1 w-full"
-              name="userPassword"
-              value={password}
-              placeholder="Your Password"
-              id="userPassword"
-              onChange={event => onChangeHandler(event)}
-            />
+      <div class="back">
+        <div class="registration-form">
+          <header>
+            <h1>Sign Up</h1>
+            <p> Fill stuff in </p>
+          </header>
+          <div>
+            {error !== null && (
+              <div>
+                {error}
+              </div>
+            )}
+            <form>
+              <div class="input-section email-section" >
+                {/* <label htmlFor="displayName">
+                  Display Name:
+                </label>
+                <input
+                  type="text"
+                  name="displayName"
+                  value={displayName}
+                  placeholder="Hentai"
+                  id="displayName"
+                  onChange={event => onChangeHandler(event)}
+                /> */}
+
+                <label htmlFor="userEmail">
+                  Email:
+                </label>
+                <input
+                  type="email"
+                  name="userEmail"
+                  value={email}
+                  placeholder="Hentai23@gmail.com"
+                  id="userEmail"
+                  onChange={event => onChangeHandler(event)}
+                  />
+
+                {/* button */}
+                <div class="animated-button">
+                  <span class="icon-paper-plane">
+                    <i class="fa fa-envelope-o" />
+                  </span>
+                  <span class="next-button email">
+                    <i class="fa fa-arrow-up" />
+                  </span>
+                </div>
+              </div>
+
+              <div class="input-section password-section folded">
+                <label htmlFor="userPassword">
+                  Password:
+                </label>
+                <input
+                  type="password"
+                  name="userPassword"
+                  value={password}
+                  placeholder="Your Password"
+                  id="userPassword"
+                  onChange={event => onChangeHandler(event)}
+                />
+                <div class="animated-button">
+                  <span class="icon-lock">
+                    <i class="fa fa-lock" />
+                  </span>
+                  <span class="next-button password">
+                    <i class="fa fa-arrow-up"/>
+                  </span>
+                </div>
+              </div>
+
+              {/* <button
+                onClick={event => {
+                  createUserWithEmailAndPasswordHandler(event, email, password);
+                }}
+              >
+                Sign up
+              </button> */}
+
+            </form>
+            <p>or</p>
             <button
-              className="bg-green-400 hover:bg-green-500 w-full py-2 text-white"
-              onClick={event => {
-                createUserWithEmailAndPasswordHandler(event, email, password);
+              onClick={() => {
+                try {
+                } catch (error) {
+                  console.error("Error signing in with Google", error);
+                }
               }}
             >
-              Sign up
+              Sign In with Google
             </button>
-          </form>
-          <p className="text-center my-3">or</p>
-          <button
-            onClick={() => {
-              try {
-              } catch (error) {
-                console.error("Error signing in with Google", error);
-              }
-            }}
-            className="bg-red-500 hover:bg-red-600 w-full py-2 text-white"
-          >
-            Sign In with Google
-          </button>
-          <p className="text-center my-3">
-            Already have an account?{" "}
-            <Link to="/SignIn" className="text-blue-500 hover:text-blue-600">
-              Sign in here
-            </Link>{" "}
-          </p>
+            <p>
+              Already have an account?{" "}
+              <Link to="/SignIn">
+                Sign in here
+              </Link>{" "}
+            </p>
+          </div>
         </div>
       </div>
     );

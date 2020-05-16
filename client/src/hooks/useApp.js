@@ -4,14 +4,19 @@ import server from '../apis/server';
 import UserContext from '../contexts/UserContext';
 
 const useApp = () => {
-	const { setUser } = useContext(UserContext);
+	const { setUser, setIsAuth, isAuth } = useContext(UserContext);
 
 	useEffect(()=>{
+    console.log('isAuth', isAuth)
     server.get('/user/check')
       .then(response => { 
-        setUser(response.data); 
+        setUser(response.data);
+        setIsAuth(true);
       })
-      .catch(error => { console.log(error.response.data) });
+      .catch(error => { 
+        setIsAuth(false);
+        console.log(error.response.data);
+      });
 	}, [])
 }
 

@@ -260,12 +260,30 @@
 .user-control-container {
   background-color: #292b2f;
   width: 100%;
-  height: 52px;
+  min-height: 52px;
   margin-top: auto;
   align-items: center;
   display: flex;
+  flex-direction: column;
   clear: both;
+  /* justify-content: space-between; */
   /* padding: 8px; */
+}
+
+.username-and-avatar-control {
+  display: flex;
+  align-items: center;
+}
+
+.username-avatar-buttons-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+}
+
+.settings-button-container {
+ height: 32px;
 }
 
 .user-control-avatar {

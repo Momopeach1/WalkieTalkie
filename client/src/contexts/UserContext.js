@@ -10,8 +10,10 @@ export const UserProvider = ({ children }) => {
     photoURL: null,
   });
 
+  const [isAuth, setIsAuth] = useState(null);
+
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ user, setUser, isAuth, setIsAuth }}>
       { children }
     </UserContext.Provider>
   );

@@ -11,13 +11,14 @@ const SignIn = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
 
-  const { setUser } = useContext(UserContext);
+  const { setUser, setIsAuth } = useContext(UserContext);
 
   const signInWithEmailAndPasswordHandler = (event,email, password) => {
       event.preventDefault();
       server.post('/user/signin', { email, password })
         .then(response => {
           setUser(response.data);
+          setIsAuth(true);
           history.push('/chat');
         })
         .catch(error => console.log(error));
@@ -34,32 +35,30 @@ const SignIn = () => {
         }
     };
 return (
-  <div className="mt-8">
-    <h1 className="text-3xl mb-2 text-center font-bold">Sign In</h1>
-    <div className="border border-blue-400 mx-auto w-11/12 md:w-2/4 rounded py-8 px-4 md:px-8">
-      {error !== null && <div className = "py-4 bg-red-600 w-full text-white text-center mb-3">{error}</div>}
-      <form className="">
-        <label htmlFor="userEmail" className="block">
+  <div >
+    <h1>Sign In</h1>
+    <div>
+      {error !== null && <div>{error}</div>}
+      <form>
+        <label htmlFor="userEmail">
           Email:
         </label>
         <input
           type="email"
-          className="my-1 p-1 w-full"
           name="userEmail"
           value = {email}
-          placeholder="Hentai6969@gmail.com"
+          placeholder="youremail@gmail.com"
           id="userEmail"
           onChange = {(event) => onChangeHandler(event)}
         />
-        <label htmlFor="userPassword" className="block">
+        <label htmlFor="userPassword">
           Password:
         </label>
         <input
           type="password"
-          className="mt-1 mb-3 p-1 w-full"
           name="userPassword"
           value = {password}
-          placeholder="Your Password"
+          placeholder="Password"
           id="userPassword"
           onChange = {(event) => onChangeHandler(event)}
         />
@@ -67,22 +66,21 @@ return (
           Sign in
         </button>
       </form>
-      <p className="text-center my-3">or</p>
+      <p>or</p>
       <button
-        className="bg-red-500 hover:bg-red-600 w-full py-2 text-white"
         onClick={() => {
           window.location.href = 'http://localhost:8080/api/user/oauth/google';
         }}
       >
         Sign in with Google
       </button>
-      <p className="text-center my-3">
+      <p>
         Don't have an account?{" "}
-        <Link to="signUp" className="text-blue-500 hover:text-blue-600">
+        <Link to="signUp" >
           Sign up here
         </Link>{" "}
         <br />{" "}
-        <Link to="passwordReset" className="text-blue-500 hover:text-blue-600">
+        <Link to="passwordReset">
           Forgot Password?
         </Link>
       </p>
