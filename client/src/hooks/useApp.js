@@ -5,9 +5,8 @@ import UserContext from '../contexts/UserContext';
 
 const useApp = () => {
 	const { setUser, setIsAuth, isAuth } = useContext(UserContext);
-
+  console.log('Inside of use app', isAuth);
 	useEffect(()=>{
-    console.log('isAuth', isAuth)
     server.get('/user/check')
       .then(response => { 
         setUser(response.data);
@@ -15,7 +14,6 @@ const useApp = () => {
       })
       .catch(error => { 
         setIsAuth(false);
-        console.log(error.response.data);
       });
 	}, [])
 }
