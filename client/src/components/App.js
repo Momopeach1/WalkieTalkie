@@ -19,6 +19,7 @@ import SignOutPage from "./SignoutPage";
 import SignupPage from "./SignupPage";
 
 import ProtectedRoute from './hocs/ProtectedRoute';
+import GuestRoute from './hocs/GuestRoute';
 
 import useApp from '../hooks/useApp';
 
@@ -28,12 +29,12 @@ const App = () => {
   return (
     <Router history={history}>
       <Switch>
-        <Route path="/signin" component={SigninPage} />
-        <Route path="/signup" component={SignupPage}/>
+        <GuestRoute path="/signin" component={SigninPage} />
+        <GuestRoute path="/signup" component={SignupPage}/>
         <ProtectedRoute path ="/profile" component={ProfilePage} />
         <ProtectedRoute path="/chat" component={ChatPage} />
-        <Route path="/" component={HomePage} />
-        <Route path="/signout" component={SignOutPage} />
+        <GuestRoute path="/" component={HomePage} />
+        <ProtectedRoute path="/signout" component={SignOutPage} />
       </Switch>
     </Router>
   );
