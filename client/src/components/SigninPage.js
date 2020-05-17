@@ -5,8 +5,8 @@ import server from '../apis/server';
 import UserContext from '../contexts/UserContext';
 import history from '../utilities/history';
 
-const SignIn = () => {
-
+const SignIn = props => {
+  console.log(props);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
@@ -19,7 +19,7 @@ const SignIn = () => {
         .then(response => {
           setUser(response.data);
           setIsAuth(true);
-          history.push('/chat');
+          history.push(props.location.state.from || '/chat');
         })
         .catch(error => console.log(error));
     };

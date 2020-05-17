@@ -7,11 +7,17 @@ const ProtectedRoute = props => {
   const { isAuth } = useContext(UserContext);
 
   const renderRoute = () => {
-    if (isAuth === null) return null; // Replace this with loading component later.
-    else if (isAuth === false) return <Redirect to="/signin" />;
-    else return <Route {...props} />
+    if (isAuth === null) 
+      return null; 
+    else if (isAuth === false) 
+      return <Redirect to={{ 
+        pathname: "/signin", 
+        state: { from: props.location.pathname } 
+      }} />;
+    else 
+      return <Route {...props} />
   }
-  
+
   return renderRoute();
 };
 
