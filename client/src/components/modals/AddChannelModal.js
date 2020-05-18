@@ -1,8 +1,8 @@
 import TextField from '@material-ui/core/TextField';
 import React, { useState, useContext } from 'react';
 import Modal from 'react-modal';
-import server from '../../../apis/server';
-import SocketContext from '../../../contexts/SocketContext';
+import server from '../../apis/server';
+import SocketContext from '../../contexts/SocketContext';
 
  
 const customStyles = {

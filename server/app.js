@@ -71,18 +71,16 @@ io.on('connection', (socket) => {
   })
 
   socket.on('exit voice', data => {
-    console.log('leaving room', data.channelName);
     socket.leave(data.channelName);
     io.in('General Room').emit('exit voice', { leaver: socket.id });
   });
 
-  socket.on('disconnect', async () => {
+  socket.on('disconnect', () => {
     // leave current voice channel here.
     console.log('a user has disconnected', socket.id);
     User.findOne({ socketId: socket.id }, (error, result) => {
       if (error || !result) return;
       io.in('General Room').emit('user left', result);
-      console.log('user left', result);
       Channel.findOne({ name: result.currentVoiceChannel }, (err, result) => {
         if (!result) return;
         result.talkers.delete(socket.id);

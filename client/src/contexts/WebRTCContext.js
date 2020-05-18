@@ -115,6 +115,25 @@ export const WebRTCProvider = ({ children }) => {
     }
   }
 
+  const leaveVoice = () => {
+    for (const track of myStream.getTracks()) {
+      track.stop();
+    }
+
+    for (let key in connections) {
+      connections[key].close();
+    }
+
+    document.querySelectorAll('audio').forEach(node => node.remove());
+
+    connections = {};
+  }
+
+  const closeConnection = leaver => {
+    connections[leaver].close();
+    delete connections[leaver];
+  }
+
   return (
     <WebRTCContext.Provider value={{ 
       getMedia, 
@@ -125,7 +144,9 @@ export const WebRTCProvider = ({ children }) => {
       addIce, 
       config, 
       onIceCandidateHandler,
-      onTrackHandler  
+      onTrackHandler,
+      leaveVoice,
+      closeConnection
     }}>
       { children }
     </WebRTCContext.Provider>

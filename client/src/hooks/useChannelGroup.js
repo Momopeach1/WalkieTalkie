@@ -4,19 +4,22 @@ import SocketContext from '../contexts/SocketContext';
 import server from '../apis/server';
 import ContextMenuWrapper from '../components/ContextMenus/ContextMenu';
 import WebRTCContext from '../contexts/WebRTCContext';
+import useSettings from './useSettings';
+import useUserControl from './useUserControl';
 
 const useChannelGroup = () => {
   const [channelGroupsCollapse, setChannelGroupsCollapse] = useState({ text: false, voice: false });
-  
+
   const { socket } = useContext(SocketContext);
-  const { getMedia } = useContext(WebRTCContext);
+  const { getMedia, leaveVoice } = useContext(WebRTCContext);
   const { 
     fetchChannels, 
     setSelectedChannel, 
     selectedChannel, 
     filteredChannels, 
     talkers, 
-    setSelectedVoice 
+    setSelectedVoice,
+    selectedVoice
   } = useContext(ChannelContext);
   
   useEffect(() => {
@@ -27,17 +30,24 @@ const useChannelGroup = () => {
     if (type === 'voice') {
       server.put('/channel/join-voice', ({ socketId: socket.id, channelName }))
         .then(() => {
-          console.log('joined channel')
-          getMedia({ audio: true }, () => {
-            console.log('get media')
-            socket.emit('joined voice', { channelName, socketId: socket.id });
-            setSelectedVoice(channelName);    
-          })
+          if (selectedVoice !== '') { 
+            leaveVoice();
+          } 
+          getTheMedia(channelName);
+          
         })
-      return;
+        return;
+      }
+      
+      setSelectedChannel(e.target.value);
     }
-
-    setSelectedChannel(e.target.value);
+    
+  const getTheMedia = channelName => {
+    getMedia({ audio: true }, () => {
+      console.log('get media')
+      socket.emit('joined voice', { channelName, socketId: socket.id });
+      setSelectedVoice(channelName);    
+    })
   }
 
   const handleOnCollapse = type => {

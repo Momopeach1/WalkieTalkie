@@ -1,7 +1,7 @@
 import React from 'react';
 
 import '../../../styles/SideBar.css';
-import AddChannelModal from './AddChannelModal';
+import AddChannelModal from '../../modals/AddChannelModal';
 import useChannelGroup from '../../../hooks/useChannelGroup';
 
 

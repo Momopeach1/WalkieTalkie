@@ -10,7 +10,8 @@ const voiceChannelSocket = (socket, webRTCContext, channelContext) => {
     getMedia, 
     config, 
     onIceCandidateHandler, 
-    onTrackHandler 
+    onTrackHandler,
+    closeConnection
   } = webRTCContext;
   const { fetchChannels, setSelectedVoice } = channelContext;
 
@@ -21,6 +22,10 @@ const voiceChannelSocket = (socket, webRTCContext, channelContext) => {
 
   socket.on('exit voice', data => {
     fetchChannels();
+    if (data.leaver !== socket.id) {
+      closeConnection(data.leaver);
+      document.getElementById(data.leaver).remove();
+    }
     if (data.leaver === socket.id) setSelectedVoice('');
   });
 
