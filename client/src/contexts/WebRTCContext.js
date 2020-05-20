@@ -134,6 +134,10 @@ export const WebRTCProvider = ({ children }) => {
     delete connections[leaver];
   }
 
+  const toggleMute = () => {
+    myStream.getTracks()[0].enabled = !myStream.getTracks()[0].enabled;
+  }
+
   return (
     <WebRTCContext.Provider value={{ 
       getMedia, 
@@ -146,7 +150,8 @@ export const WebRTCProvider = ({ children }) => {
       onIceCandidateHandler,
       onTrackHandler,
       leaveVoice,
-      closeConnection
+      closeConnection,
+      toggleMute
     }}>
       { children }
     </WebRTCContext.Provider>
