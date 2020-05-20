@@ -1,9 +1,7 @@
 import moment from 'moment';
 import React, { useContext } from "react";
-
 import LogsContext from '../contexts/LogsContext';
 import ChannelContext from '../contexts/ChannelContext';
-import { MaskedViewComponent } from 'react-native';
 
 const useLogs = () => {
   const { logs } = useContext(LogsContext);
