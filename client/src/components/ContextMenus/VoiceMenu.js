@@ -1,4 +1,6 @@
-import React, { useContext } from 'react';
+import React, { useContext, useRef, useState } from 'react';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import { MenuItem } from 'react-contextmenu';
 import server from '../../apis/server';
@@ -8,6 +10,9 @@ import UserContext from '../../contexts/UserContext';
 const VoiceMenu = () => {
   const { socket } = useContext(SocketContext);
   const { user } = useContext(UserContext);
+  const [muted, setMuted] = useState(false);
+
+  const MuteMenuItemRef = useRef(null);
 
   function handleClick(e, data) {
     server.put('/channel/kick', { socketId: data.talker.socketId, email: data.talker.email, name: data.talker.currentVoiceChannel })
@@ -25,8 +30,25 @@ const VoiceMenu = () => {
     <>
       {kickOption()}
       <MenuItem divider />
-      <MenuItem>
-        <div></div>
+      <MenuItem 
+        preventClose
+        ref={MuteMenuItemRef} 
+        onClick={(e, d) => { 
+          document.getElementById(d.talker.socketId).muted = !document.getElementById(d.talker.socketId).muted;
+          setMuted(prevMuted => !prevMuted);
+        }} >
+        <FormControlLabel 
+          control= {
+            <Checkbox
+              checked={muted}
+              onChange={e => {
+                MuteMenuItemRef.current.props.onClick();
+              }}
+            />
+          }
+          labelPlacement="start"
+          label="Mute"
+        />
       </MenuItem>
     </>
   );
