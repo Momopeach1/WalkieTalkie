@@ -28,9 +28,9 @@
   justify-content: flex-end;
 }
 
-/* .logs-container:first-child {
+.logs-container:first-child {
   margin-top: 10px;
-} */
+}
 
 .avatar {
   width: 40px;
@@ -49,8 +49,8 @@
 
 .log {
   display: flex;
-  margin: 5px 0;
-  padding: 5px 20px;
+  margin-top: 10px;
+  padding: 5px 20px 0px;
 }
 
 .log:hover {
@@ -60,4 +60,21 @@
 .displayName-text:hover {
   text-decoration: underline;
   cursor: pointer;
+}
+
+.hover-timestamp {
+  visibility: hidden; 
+  width: 76px;
+  display: inline-block;
+  text-align: right;
+  padding-right: 10px;
+  box-sizing: border-box;
+}
+
+.appended-message:hover {
+  background-color: rgb(50, 53, 59);
+}
+
+.appended-message:hover > .hover-timestamp {
+  visibility: visible;
 }

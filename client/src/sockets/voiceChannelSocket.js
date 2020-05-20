@@ -11,7 +11,8 @@ const voiceChannelSocket = (socket, webRTCContext, channelContext) => {
     config, 
     onIceCandidateHandler, 
     onTrackHandler,
-    closeConnection
+    closeConnection,
+    leaveVoice
   } = webRTCContext;
   const { fetchChannels, setSelectedVoice } = channelContext;
 
@@ -26,7 +27,10 @@ const voiceChannelSocket = (socket, webRTCContext, channelContext) => {
       closeConnection(data.leaver);
       document.getElementById(data.leaver).remove();
     }
-    if (data.leaver === socket.id) setSelectedVoice('');
+    if (data.leaver === socket.id) {
+      setSelectedVoice('');
+      // leaveVoice();
+    } 
   });
 
   socket.on('new talker joined', data => {

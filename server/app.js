@@ -37,7 +37,7 @@ io.on('connection', (socket) => {
   socket.on('send message', async data => {
     io.in('General Room').emit('new message', { 
       content: data.message.text, 
-      createdAt: data.message.timestamp, 
+      createdAt: data.createdAt,
       sender: {
         displayName: data.displayName,
         photoURL: data.photoURL
@@ -74,6 +74,11 @@ io.on('connection', (socket) => {
     socket.leave(data.channelName);
     io.in('General Room').emit('exit voice', { leaver: socket.id });
   });
+
+  socket.on('kick', data => {
+    io.sockets.connected[data.socketId].leave(data.channelName);
+    io.in('General Room').emit('exit voice', { leaver: data.socketId });
+  })
 
   socket.on('disconnect', () => {
     // leave current voice channel here.
