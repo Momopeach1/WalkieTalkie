@@ -35,17 +35,21 @@ const VoiceMenu = () => {
       <MenuItem 
         preventClose
         ref={MuteMenuItemRef} 
-        onClick={(e, d) => { 
+        onClick={(e, d) => {
+          e.stopPropagation();
+          console.log("data", d);
           document.getElementById(d.talker.socketId).muted = !document.getElementById(d.talker.socketId).muted;
           setMuted(prevMuted => !prevMuted);
         }} >
-        <FormControlLabel 
+        <FormControlLabel
+          onClick={e => e.stopPropagation()} 
           control= {
             <Checkbox
               checked={muted}
               onChange={e => {
                 MuteMenuItemRef.current.props.onClick();
               }}
+              onClick={e => e.stopPropagation()}
             />
           }
           labelPlacement="start"

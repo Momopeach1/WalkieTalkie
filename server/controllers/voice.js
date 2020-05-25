@@ -88,4 +88,15 @@ router.put('/kick', passport.isLoggedIn(), privilege.canKick(), (req, res) => {
   })
 })
 
+//DEVELOPMENT ENDPOINT
+// @Route PUT  /api/voice/reset
+router.put('/reset', (req, res) => {
+  Voice.updateMany({}, { talkers: new Map() }, (error, result) => {
+    if (error) return res.status(500).send(error);
+    User.updateMany({}, { currentVoiceChannel: '' }, (error, result) => {
+      if (error) return res.status(500).send(error);
+      res.send(result);
+    })
+  });
+})
 module.exports = router;
