@@ -4,9 +4,13 @@ const router = express.Router();
 const userController = require('./user');
 const channelController = require('./channel');
 const messageController = require('./message');
+const textController = require('./text')
+const voiceController = require('./voice');
 
 router.use('/user', userController);
 router.use('/channel', channelController);
 router.use('/message', messageController);
+router.use('/text', textController);
+router.use('/voice', voiceController);
 
 module.exports = router;

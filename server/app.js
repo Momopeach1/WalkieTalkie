@@ -46,6 +46,14 @@ io.on('connection', (socket) => {
     });
   });
 
+  socket.on('create text channel', () => {
+    io.in('General Room').emit('create text channel', {});
+  });
+
+  socket.on('create voice channel', () => {
+    io.in('General Room').emit('create voice channel', {});
+  });
+
   socket.on('created channel', () => {
     io.in('General Room').emit('created channel', {});
   });

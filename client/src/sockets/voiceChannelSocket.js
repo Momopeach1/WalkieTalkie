@@ -14,15 +14,19 @@ const voiceChannelSocket = (socket, webRTCContext, channelContext) => {
     closeConnection,
     leaveVoice
   } = webRTCContext;
-  const { fetchChannels, setSelectedVoice } = channelContext;
+  const { setSelectedVoice, fetchVoiceChannels } = channelContext;
 
 
-  socket.on('joined voice', () =>{
-    fetchChannels();
+  socket.on('joined voice', () => {
+    fetchVoiceChannels();
   });
 
+  socket.on('create voice channel', () => {
+    fetchVoiceChannels();
+  })
+
   socket.on('exit voice', data => {
-    fetchChannels();
+    fetchVoiceChannels();
     if (data.leaver !== socket.id) {
       closeConnection(data.leaver);
       document.getElementById(data.leaver).remove();

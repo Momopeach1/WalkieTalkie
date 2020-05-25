@@ -19,16 +19,17 @@ const useChannelGroup = () => {
     filteredChannels, 
     talkers, 
     setSelectedVoice,
-    selectedVoice
+    selectedVoice,
+    textChannels
   } = useContext(ChannelContext);
   
   useEffect(() => {
-    fetchChannels();
+    // fetchChannels();
   }, []);
   
   const handleOnClick = (e, type, channelName) => {
     if (type === 'voice') {
-      server.put('/channel/join-voice', ({ socketId: socket.id, channelName }))
+      server.put('/voice/join-voice', ({ socketId: socket.id, channelName }))
         .then(() => {
           if (selectedVoice !== '') { 
             leaveVoice();
@@ -80,8 +81,8 @@ const useChannelGroup = () => {
     }
   }
 
-  const renderChannels = type => {
-    return filteredChannels[`${type}Channels`].map((ch, i) => {
+  const renderChannels = (type, channels) => {
+    return /*filteredChannels[`${type}Channels`]*/channels.map((ch, i) => {
       return (
         <div style={{ display: !channelGroupsCollapse[type]? 'block' : isSame(ch.name, selectedChannel) }}>
           <input 

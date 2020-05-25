@@ -7,6 +7,7 @@ import server from '../../apis/server';
 import SocketContext from '../../contexts/SocketContext';
 import UserContext from '../../contexts/UserContext';
 
+
 const VoiceMenu = () => {
   const { socket } = useContext(SocketContext);
   const { user } = useContext(UserContext);
@@ -15,7 +16,7 @@ const VoiceMenu = () => {
   const MuteMenuItemRef = useRef(null);
 
   function handleClick(e, data) {
-    server.put('/channel/kick', { socketId: data.talker.socketId, email: data.talker.email, name: data.talker.currentVoiceChannel })
+    server.put('/voice/kick', { socketId: data.talker.socketId, email: data.talker.email, name: data.talker.currentVoiceChannel })
       .then(() => socket.emit('kick', {socketId: data.talker.socketId, channelName: data.talker.currentVoiceChannel }))
       .catch(error => console.log(error));
   }
@@ -25,6 +26,7 @@ const VoiceMenu = () => {
       Kick
     </MenuItem>
   )
+
 
   return (
     <>

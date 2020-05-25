@@ -1,5 +1,8 @@
-const textChannelSocket = (socket, logsContext) => {
+
+const textChannelSocket = (socket, logsContext, channelContext) => {
   const { setLogs } = logsContext;
+  const { fetchTextChannels } = channelContext;
+
 
   socket.on('new message', data => {
 
@@ -8,6 +11,10 @@ const textChannelSocket = (socket, logsContext) => {
       return [ ...prevLogs, data ];
     });
     document.querySelector('.logs-container').scrollIntoView(false);
+  });
+
+  socket.on('create text channel', () => {
+    fetchTextChannels();
   });
 
 }

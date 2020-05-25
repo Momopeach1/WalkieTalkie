@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import '../../../styles/SideBar.css';
 import AddChannelModal from '../../modals/AddChannelModal';
 import useChannelGroup from '../../../hooks/useChannelGroup';
+import ChannelContext from '../../../contexts/ChannelContext';
 
 
 const ChannelGroup = () => {
   const expander = () => <svg width="12" height="12" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M16.59 8.59004L12 13.17L7.41 8.59004L6 10L12 16L18 10L16.59 8.59004Z"></path></svg>
   const [renderChannels, handleOnCollapse] = useChannelGroup();
+  const { textChannels, voiceChannels } = useContext(ChannelContext);
 
   return (
     <div className="all-channels-container">
@@ -19,7 +21,7 @@ const ChannelGroup = () => {
         <AddChannelModal type="text" />
       </div>
       <div className="channel-group-container">
-        {renderChannels('text')}
+        {renderChannels('text', textChannels)}
       </div>
 
       <div className="channel-flex" onClick={() => handleOnCollapse('voice')} >
@@ -30,7 +32,7 @@ const ChannelGroup = () => {
         <AddChannelModal type="voice" />
       </div>
       <div className="channel-group-container">
-        {renderChannels('voice')}
+        {renderChannels('voice', voiceChannels)}
       </div>
     </div>
   );

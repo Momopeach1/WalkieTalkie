@@ -5,7 +5,6 @@ import UserContext from '../contexts/UserContext';
 
 const useApp = () => {
 	const { setUser, setIsAuth, isAuth } = useContext(UserContext);
-  console.log('Inside of use app', isAuth);
 	useEffect(()=>{
     server.get('/user/check')
       .then(response => { 

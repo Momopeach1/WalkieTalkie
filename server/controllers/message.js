@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 const passport = require('../middlewares/authentication');
 const Message = require('../models/message');
-const Channel = require('../models/channel');
+const Text = require('../models/text');
 
 //@Route - GET /api/message
 router.get('/', (req, res) => {
@@ -21,7 +21,7 @@ router.get('/', (req, res) => {
 router.post('/', passport.isLoggedIn(), (req, res) => {
   const { content, createdAt, selectedChannel } = req.body;
   
-  Channel.findOne({ name: selectedChannel }, (error, result) => {
+  Text.findOne({ name: selectedChannel }, (error, result) => {
     if (error){ 
       res.status(500).send(error);
       reject(error);
@@ -36,7 +36,7 @@ router.post('/', passport.isLoggedIn(), (req, res) => {
     
     newMessage.save();
 
-    Channel.updateOne({ name: selectedChannel }, {messages: [...result.messages, newMessage.id]}, (updateErr, updateRes) => {
+    Text.updateOne({ name: selectedChannel }, {messages: [...result.messages, newMessage.id]}, (updateErr, updateRes) => {
       if (updateErr){ 
         res.status(500).send(updateErr);
       }

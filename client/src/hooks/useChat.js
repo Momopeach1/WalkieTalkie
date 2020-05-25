@@ -4,7 +4,7 @@ import openSocket from 'socket.io-client';
 import server from '../apis/server';
 import AllUsersContext from '../contexts/AllUsersContext';
 import LogsContext from '../contexts/LogsContext';
-import SocketContext from '../contexts/SocketContext';
+import SocketContext, { SocketProvider } from '../contexts/SocketContext';
 import UserContext from '../contexts/UserContext';
 import ChannelContext from '../contexts/ChannelContext';
 import WebRTCContext from '../contexts/WebRTCContext';
@@ -22,33 +22,32 @@ const useChat = () => {
   const channelContext = useContext(ChannelContext);
   const webRTCContext = useContext(WebRTCContext);
   
-
   useEffect(() => {
     logsContext.fetchMessages();
   }, [channelContext.selectedChannel])
-
+  
   useEffect(() => {
     if (user.email !== null) {
       const socket = openSocket();
       setSocket(socket);
       logsContext.fetchMessages();
+      channelContext.fetchTextChannels();
+      channelContext.fetchVoiceChannels();
   
       socket.on('generated socket id', async ({ socketId }, announceJoin) => {
         await server.put('/user', { email: user.email, socketId: socketId });
         announceJoin();
       });
   
-      textChannelSocket(socket, logsContext) // (socket, { setLogs }) -> func.setLogs(ksnkjlnfdksnf)
+      // (socket, { setLogs }) -> func.setLogs(ksnkjlnfdksnf)
+      textChannelSocket(socket, logsContext, channelContext) 
       voiceChannelSocket(socket, webRTCContext, channelContext);
-
-  
-      socket.on('created channel', () => {
-        channelContext.fetchChannels();
-      })
   
       socket.on('user left', () => {
         allUsersContext.fetchAllUsers();
-        channelContext.fetchChannels();
+        // channelContext.fetchChannels();
+        channelContext.fetchTextChannels();
+        channelContext.fetchVoiceChannels();
       })
   
       socket.on('user joined', ()=> {

@@ -8,10 +8,39 @@ export default ChannelContext;
 
 export const ChannelProvider = ({ children }) => {
   const [channels, setChannels] = useState([]);
+  const [textChannels, setTextChannels] = useState([]);
+  const [voiceChannels, setVoiceChannels] = useState([]);
   const [selectedChannel, setSelectedChannel] = useState('');
   const [selectedVoice, setSelectedVoice] = useState('');
   const [filteredChannels, setFilteredChannels] = useState({ textChannels: [], voiceChannels: [] });
   const [talkers, setTalkers] = useState({});
+
+  const fetchTextChannels = () => {
+    server.get('/text')
+      .then(response => {
+        setTextChannels(response.data);
+        setSelectedChannel(response.data[0].name); //always assume we have at least one text channel left
+      })
+      .catch(err => console.log(err));
+  };
+
+  const fetchVoiceChannels = () => {
+    server.get('/voice')
+      .then(response => {
+        setVoiceChannels(response.data);
+        let newTalkers = {};
+
+        for (let ch of response.data) {
+          for (let key in ch.talkers) {
+            newTalkers[ch.name] = !newTalkers[ch.name]
+            ? [JSON.parse(ch.talkers[key])] 
+            : [...newTalkers[ch.name], JSON.parse(ch.talkers[key])];
+          }
+        }
+        setTalkers(newTalkers);
+      })
+      .catch(err => console.log(err));
+  };
 
   const fetchChannels = () => {
     server.get('/channel')
@@ -56,7 +85,12 @@ export const ChannelProvider = ({ children }) => {
       talkers,
       setTalkers,
       selectedVoice, 
-      setSelectedVoice
+      setSelectedVoice,
+      fetchTextChannels,
+      textChannels,
+      voiceChannels,
+      setVoiceChannels,
+      fetchVoiceChannels
     }}>
       { children }
     </ChannelContext.Provider>
