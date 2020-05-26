@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useRef } from 'react';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
@@ -8,11 +8,13 @@ import SocketContext from '../../contexts/SocketContext';
 import UserContext from '../../contexts/UserContext';
 
 
-const VoiceMenu = () => {
+
+const VoiceMenu = ({ muted, setMuted, talker }) => {
   const { socket } = useContext(SocketContext);
   const { user } = useContext(UserContext);
-  const [muted, setMuted] = useState(false);
 
+  // const [muted, setMuted] = useState(false);
+  
   const MuteMenuItemRef = useRef(null);
 
   function handleClick(e, data) {
@@ -21,35 +23,40 @@ const VoiceMenu = () => {
       .catch(error => console.log(error));
   }
 
-  const kickOption = () => user.role === 'Admin' && ( // and user.name !== my name?
+  const kickOption = () => user.role === 'Admin' && user.email !== talker.email && ( // and user.name !== my name?
     <MenuItem onClick={handleClick}>
       Kick
     </MenuItem>
   )
+  
+  const muteOption = () => document.getElementById(talker.socketId) && (
+    <MenuItem
+      preventClose
+      ref={MuteMenuItemRef} 
+      onClick={(e, d) => {
+        console.log(d);
+        if (!document.getElementById(d.talker.socketId)) return;
+        document.getElementById(d.talker.socketId).muted = !document.getElementById(d.talker.socketId).muted;
+        setMuted(prevMuted => !prevMuted);
+      }} >
+      <FormControlLabel 
+        control= {
+          <Checkbox
+            checked={muted}
+          />
+        }
+        labelPlacement="start"
+        label="Mute"
+      />
+    </MenuItem>
+  );
 
 
   return (
     <>
       {kickOption()}
       <MenuItem divider />
-      <MenuItem 
-        preventClose
-        ref={MuteMenuItemRef} 
-        onClick={(e, d) => {
-          console.log(d);
-          document.getElementById(d.talker.socketId).muted = !document.getElementById(d.talker.socketId).muted;
-          setMuted(prevMuted => !prevMuted);
-        }} >
-        <FormControlLabel 
-          control= {
-            <Checkbox
-              checked={muted}
-            />
-          }
-          labelPlacement="start"
-          label="Mute"
-        />
-      </MenuItem>
+      {muteOption()}
     </>
   );
 }

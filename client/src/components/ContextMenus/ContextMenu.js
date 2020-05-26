@@ -5,7 +5,7 @@ import VoiceMenu from './VoiceMenu';
 import '../../styles/ContextMenu.css';
 
  
-const ContextMenuWrapper = ({ talker, children }) => {
+const ContextMenuWrapper = ({ talker, children, muted, setMuted }) => {
   const collect = () => {
     return { talker }
   }
@@ -17,7 +17,7 @@ const ContextMenuWrapper = ({ talker, children }) => {
       </ContextMenuTrigger>
  
       <ContextMenu id={talker.socketId}>
-        <VoiceMenu />
+        <VoiceMenu talker={talker} muted={muted} setMuted={setMuted} />
       </ContextMenu>
  
     </div>

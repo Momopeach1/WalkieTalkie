@@ -23,6 +23,7 @@ import GuestRoute from './hocs/GuestRoute';
 
 import useApp from '../hooks/useApp';
 
+
 const App = () => {
   useApp();
 
@@ -41,18 +42,18 @@ const App = () => {
 }
 
 export default () => (
-  <WebRTCProvider>
-    <ChannelProvider>
-      <AllUsersProvider>
-        <LogsProvider>
-          <SocketProvider>
-            <UserProvider>
-              <App />
-            </UserProvider>
-          </SocketProvider>
-        </LogsProvider>
-      </AllUsersProvider>
-    </ChannelProvider>
-  </WebRTCProvider>
+    <WebRTCProvider>
+      <ChannelProvider>
+        <AllUsersProvider>
+          <LogsProvider>
+            <SocketProvider>
+              <UserProvider>
+                <App />
+              </UserProvider>
+            </SocketProvider>
+          </LogsProvider>
+        </AllUsersProvider>
+      </ChannelProvider>
+    </WebRTCProvider>
 );
 

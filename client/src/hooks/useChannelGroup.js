@@ -2,10 +2,8 @@ import React, { useEffect, useContext, useState } from 'react';
 import ChannelContext from '../contexts/ChannelContext'
 import SocketContext from '../contexts/SocketContext';
 import server from '../apis/server';
-import ContextMenuWrapper from '../components/ContextMenus/ContextMenu';
 import WebRTCContext from '../contexts/WebRTCContext';
-import useSettings from './useSettings';
-import useUserControl from './useUserControl';
+import Talker from '../components/ChatPage/sidebar/Talkers';
 
 const useChannelGroup = () => {
   const [channelGroupsCollapse, setChannelGroupsCollapse] = useState({ text: false, voice: false });
@@ -58,16 +56,7 @@ const useChannelGroup = () => {
   const renderTalkers = channelName => {
     if(!talkers[channelName]) return null;
 
-    return talkers[channelName].map(t => {
-      return(
-        <ContextMenuWrapper talker={t}>
-          <div className ="voice-member-container">
-            <img className="voice-avatar" src={t.photoURL} />
-            <span className="voice-displayName" >{t.displayName}</span>
-          </div>
-        </ContextMenuWrapper>
-      )
-    })
+    return talkers[channelName].map(t => <Talker t={t} />)
   }
 
   const isSame = (c1, c2) => c1 === c2? 'block' : 'none';

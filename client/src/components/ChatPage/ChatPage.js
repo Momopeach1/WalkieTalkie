@@ -15,22 +15,22 @@ const ChatPage = () => {
   return (
     <div>
       <Grid container spacing={0}>
-        <Grid item className="sidebar" sm={3} md={2}>
+        <Grid item className="sidebar" sm={4} md={2}>
           <Hidden xsDown>
             <SidebarContainer />
           </Hidden>
         </Grid>
 
-        <Grid item className="main-chat" xs={12} sm={9} md={10}>
+        <Grid item className="main-chat" xs={12} sm={8} md={10}>
           <ChannelHeader />
 
           <Grid className="below-header-container" container spacing={0}>
             
-            <Grid className="message-ui" item xs={12} sm={9} md={10}>
+            <Grid className="message-ui" item xs={12} sm={12} md={10}>
               <Chat />
             </Grid>
             <Grid item sm={3} md={2}>
-              <Hidden xsDown>
+              <Hidden smDown>
                 <ActiveMemberBar />
               </Hidden>
             </Grid>
