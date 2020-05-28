@@ -3,7 +3,11 @@ import { Link } from 'react-router-dom';
 import history from '../utilities/history';
 import server from '../apis/server';
 
-import '../styles/RegistrationPage.scss';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography'
+
+import '../styles/RegistrationPage.css';
+import { Grid } from "@material-ui/core";
 
 const SignUp = () => {
     const [email, setEmail] = useState("");
@@ -40,106 +44,69 @@ const SignUp = () => {
     };
   
     return (
-      <div class="back">
-        <div class="registration-form">
-          <header>
-            <h1>Sign Up</h1>
-            <p> Fill stuff in </p>
-          </header>
-          <div>
-            {error !== null && (
-              <div>
-                {error}
-              </div>
-            )}
-            <form>
-              <div class="input-section email-section" >
-                {/* <label htmlFor="displayName">
-                  Display Name:
-                </label>
-                <input
-                  type="text"
-                  name="displayName"
-                  value={displayName}
-                  placeholder="Hentai"
-                  id="displayName"
-                  onChange={event => onChangeHandler(event)}
-                /> */}
-
-                <label htmlFor="userEmail">
-                  Email:
-                </label>
-                <input
-                  type="email"
-                  name="userEmail"
-                  value={email}
-                  placeholder="Hentai23@gmail.com"
-                  id="userEmail"
-                  onChange={event => onChangeHandler(event)}
+      <div className="back">
+          <div className="registration-block">
+            <Grid container spacing={3}>
+              <Grid item xs={6}>
+                <Typography 
+                  variant="h2" 
+                  className="registration-title"
+                  >
+                  Registration
+                </Typography>
+                {error !== null && <div>{error}</div>}
+                <form className="registration-form">
+                  <TextField
+                    required
+                    id="displayName"
+                    name="displayName"
+                    value={displayName}
+                    label="UserName"
+                    variant="outlined"
+                    placeholder="Name"
+                    onChange={(event) => onChangeHandler(event)}
                   />
-
-                {/* button */}
-                <div class="animated-button">
-                  <span class="icon-paper-plane">
-                    <i class="fa fa-envelope-o" />
-                  </span>
-                  <span class="next-button email">
-                    <i class="fa fa-arrow-up" />
-                  </span>
-                </div>
-              </div>
-
-              <div class="input-section password-section folded">
-                <label htmlFor="userPassword">
-                  Password:
-                </label>
-                <input
-                  type="password"
-                  name="userPassword"
-                  value={password}
-                  placeholder="Your Password"
-                  id="userPassword"
-                  onChange={event => onChangeHandler(event)}
-                />
-                <div class="animated-button">
-                  <span class="icon-lock">
-                    <i class="fa fa-lock" />
-                  </span>
-                  <span class="next-button password">
-                    <i class="fa fa-arrow-up"/>
-                  </span>
-                </div>
-              </div>
-
-              {/* <button
-                onClick={event => {
-                  createUserWithEmailAndPasswordHandler(event, email, password);
-                }}
-              >
-                Sign up
-              </button> */}
-
-            </form>
-            <p>or</p>
-            <button
-              onClick={() => {
-                try {
-                } catch (error) {
-                  console.error("Error signing in with Google", error);
-                }
-              }}
-            >
-              Sign In with Google
-            </button>
-            <p>
-              Already have an account?{" "}
-              <Link to="/SignIn">
-                Sign in here
-              </Link>{" "}
-            </p>
+                  <TextField
+                    required
+                    id="userEmail"
+                    name="userEmail"
+                    value={email}
+                    label="Email"
+                    placeholder="Email"
+                    variant="outlined"
+                    onChange={(event) => onChangeHandler(event)}
+                  />
+                  <TextField 
+                    required
+                    id="userPassword"
+                    name="userPassword"
+                    value={password}
+                    placeholder="Password"
+                    type="password"
+                    variant="outlined"
+                    onChange={(event) => onChangeHandler(event)}
+                  />
+                  <button onClick = {(event) => {createUserWithEmailAndPasswordHandler(event, email, password)}}>
+                    Register
+                  </button>
+                </form>
+                <p>
+                  Have an account?{" "}
+                  <Link to="signin" >
+                    Log in here
+                  </Link>{" "}
+                  <br />{" "}
+                  <Link to="passwordReset">
+                    Forgot Password?
+                  </Link>
+                </p>
+              </Grid>
+              <Grid item xs={6}>
+                {/* image */}
+              </Grid>
+            </Grid>
           </div>
         </div>
-      </div>
     );
   };
   

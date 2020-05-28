@@ -111,7 +111,7 @@ io.on('connection', (socket) => {
 app.use('/api',require('./controllers'))
 
 // for production use, we serve the static react build folder
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'production' || true) {
   app.use(express.static(path.join(__dirname, '../client/build')));
 
   // all unknown routes should be handed to our react app

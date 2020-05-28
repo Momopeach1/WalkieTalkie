@@ -31,7 +31,6 @@ passport.use(new GoogleStrategy({
     User.findOne({ email: email }, (findErr, findRes) => {
       if (findErr) return cb(findErr, null);
       if (findRes !== null) return cb(null, findRes);
-
       const newUser = new User({
         displayName: displayName,
         email: email,
@@ -43,7 +42,7 @@ passport.use(new GoogleStrategy({
 
       newUser.save(err => {
         if (err) return cb(err, null);
-        return cb(null, findRes);
+        return cb(null, newUser);
       });
     })
   })

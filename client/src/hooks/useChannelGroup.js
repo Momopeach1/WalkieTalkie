@@ -39,6 +39,7 @@ const useChannelGroup = () => {
       }
       
       setSelectedChannel(e.target.value);
+      // document.querySelector('.log-container').scrollTop = document.querySelector('.log-container').scrollHeight;
     }
     
   const getTheMedia = channelName => {

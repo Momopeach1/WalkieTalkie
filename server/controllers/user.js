@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const url = require('url');
 
 const passport = require('../middlewares/authentication');
 const User = require('../models/user');
@@ -81,7 +82,13 @@ router.get('/oauth/google', passport.authenticate('google', { scope: ['profile',
 
 // @Router GET /api/user/oauth/google/callback
 router.get('/oauth/google/callback', passport.authenticate('google'), (req, res) => {
-  res.redirect('http://localhost:3000/chat');
+  console.log('reached call back');
+  const host = url.format({
+    protocol: req.protocol,
+    host: req.get('host')
+  });
+
+  res.redirect(`${host}/chat`);
 })
 
 module.exports = router;

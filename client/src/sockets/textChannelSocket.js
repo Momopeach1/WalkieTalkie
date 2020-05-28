@@ -10,7 +10,8 @@ const textChannelSocket = (socket, logsContext, channelContext) => {
     setLogs(prevLogs => {
       return [ ...prevLogs, data ];
     });
-    document.querySelector('.logs-container').scrollIntoView(false);
+    // document.querySelector('.log-container').scrollIntoView(false);
+    document.querySelector('.log-container').scrollTop = document.querySelector('.log-container').scrollHeight
   });
 
   socket.on('create text channel', () => {
