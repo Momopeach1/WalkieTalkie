@@ -69,7 +69,7 @@ return (
       <p>or</p>
       <button
         onClick={() => {
-          window.location.href = 'http://localhost:8080/api/user/oauth/google';
+          window.location.href = '/api/user/oauth/google';
         }}
       >
         Sign in with Google
