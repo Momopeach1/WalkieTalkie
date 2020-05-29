@@ -6,6 +6,10 @@
   height: 100%;
 }
 
+.registration-left {
+  display: block;
+}
+
 .registration-block {
   text-align: left;
   background-color: thistle;
@@ -22,8 +26,14 @@
 
 .registration-title {
   font-weight: bold;
+  padding-bottom: 50px;
 }
 
 .registration-form {
   align-items: right;
+}
+
+.text-field {
+  padding: 5px;
+  margin: 5px;
 }

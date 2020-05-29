@@ -78,3 +78,30 @@
 .appended-message:hover > .hover-timestamp {
   visibility: visible;
 }
+
+/* Channel Welcome */
+.channel-welcome {
+  margin-top: auto;
+  margin-left: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid hsla(0,0%,100%,.02);
+}
+
+.channel-welcome-title {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 40px;
+  margin: 8px 0;
+}
+
+.channel-welcome-subtext {
+  color: #b9bbbe;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.edit-channel {
+  padding: 12px 0 0;
+  color: #00b0f4;
+  font-size: 14px;
+}

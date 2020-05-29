@@ -5,11 +5,13 @@ import history from '../utilities/history';
 import UserContext from '../contexts/UserContext';
 import SocketContext from '../contexts/SocketContext';
 import WebRTCContext from '../contexts/WebRTCContext';
+import ChannelContext from '../contexts/ChannelContext';
 
 const useSettings = () => {
   const { setIsAuth, setUser } = useContext(UserContext);
   const { socket } = useContext(SocketContext);
   const { leaveVoice } = useContext(WebRTCContext);
+  const { selectedVoice, setSelectedVoice, setTalkers } = useContext(ChannelContext);
 
   const handleOnSignout = () => {
     server.post('/user/signout')
@@ -22,7 +24,11 @@ const useSettings = () => {
           photoURL: null,
         });
         history.push('/');
-        leaveVoice();
+        if (selectedVoice) {
+          setTalkers({});
+          setSelectedVoice(''); 
+          leaveVoice();
+        }
         socket.disconnect();
       });
   };

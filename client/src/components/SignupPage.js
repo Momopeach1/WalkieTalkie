@@ -47,7 +47,7 @@ const SignUp = () => {
       <div className="back">
           <div className="registration-block">
             <Grid container spacing={3}>
-              <Grid item xs={6}>
+              <Grid className ="registration-left" item xs={6}>
                 <Typography 
                   variant="h2" 
                   className="registration-title"
@@ -59,7 +59,7 @@ const SignUp = () => {
                   <TextField
                     required
                     id="displayName"
-                    name="displayName"
+                    className="text-field"
                     value={displayName}
                     label="UserName"
                     variant="outlined"
@@ -69,7 +69,7 @@ const SignUp = () => {
                   <TextField
                     required
                     id="userEmail"
-                    name="userEmail"
+                    className="text-field"
                     value={email}
                     label="Email"
                     placeholder="Email"
@@ -79,7 +79,7 @@ const SignUp = () => {
                   <TextField 
                     required
                     id="userPassword"
-                    name="userPassword"
+                    className="text-field"
                     value={password}
                     placeholder="Password"
                     type="password"

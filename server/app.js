@@ -10,7 +10,7 @@ const io             = socket(server);
 
 const passport       = require('./middlewares/authentication');
 const User           = require('./models/user');
-const Channel        = require('./models/channel');
+const Voice          = require('./models/voice');
 
 app.use(express.json());
 app.use(expressSession({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: true }));
@@ -86,6 +86,10 @@ io.on('connection', (socket) => {
   socket.on('kick', data => {
     io.sockets.connected[data.socketId].leave(data.channelName);
     io.in('General Room').emit('exit voice', { leaver: data.socketId });
+  });
+
+  socket.on('refresh users', () =>{
+    io.in('General Room').emit('refresh users', {});
   })
 
   socket.on('disconnect', () => {
@@ -94,7 +98,7 @@ io.on('connection', (socket) => {
     User.findOne({ socketId: socket.id }, (error, result) => {
       if (error || !result) return;
       io.in('General Room').emit('user left', result);
-      Channel.findOne({ name: result.currentVoiceChannel }, (err, result) => {
+      Voice.findOne({ name: result.currentVoiceChannel }, (err, result) => {
         if (!result) return;
         result.talkers.delete(socket.id);
         result.save();

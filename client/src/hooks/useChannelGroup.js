@@ -4,6 +4,7 @@ import SocketContext from '../contexts/SocketContext';
 import server from '../apis/server';
 import WebRTCContext from '../contexts/WebRTCContext';
 import Talker from '../components/ChatPage/sidebar/Talkers';
+import UserContext from '../contexts/UserContext';
 
 const useChannelGroup = () => {
   const [channelGroupsCollapse, setChannelGroupsCollapse] = useState({ text: false, voice: false });

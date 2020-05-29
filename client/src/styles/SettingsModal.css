@@ -1,0 +1,29 @@
+.setting-flex-container {
+  display: flex;
+}
+
+.setting-main {
+  flex-grow: 1;
+  width: 100%;
+  border: 1px solid red;
+}
+
+.setting-fixed-container {
+  position: relative;
+  width: 50px;
+  border: 1px solid blue;
+}
+
+.setting-exit {
+  position: fixed;
+  width: inherit;
+  text-align: center;
+  color: white;
+  cursor: pointer;
+}
+
+.settings-modal-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 100px;
+}

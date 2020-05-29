@@ -8,6 +8,7 @@ export const UserProvider = ({ children }) => {
     displayName: null,
     socketId: null,
     photoURL: null,
+    currentVoiceChannel: null
   });
 
   const [isAuth, setIsAuth] = useState(null);

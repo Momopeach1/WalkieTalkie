@@ -20,13 +20,46 @@ router.get('/', (req, res, next) => {
 
 // @Route PUT /api/user
 router.put('/', passport.isLoggedIn(), (req, res, next) => {
-  const query = { email: req.body.email };
+  const query = { email: req.user.email };
   const update = { ...req.body };
 
-  User.updateOne(query, update, (updateErr, updateRes) => {
-    if (updateErr) next(updateErr);
-    res.json(updateRes);
-  })
+  User.findOne(query, (error, result) => {
+    if (error) return next(error);
+    if (update.currentPassword !== undefined) result.comparePassword(update.currentPassword, (error, isMatch) => {
+      // if (error) return next(error);
+      // if (!isMatch) return res.status(409).send('Wrong password');
+
+      // User.updateOne(query, update, (updateErr, updateRes) => {
+      //   if (updateErr) next(updateErr);
+        
+      //   delete update.currentPassword;
+      //   res.json(update);
+      // })
+      updateUser(error, isMatch, result);
+    }); else updateUser(error, true, result);
+  });
+
+
+  const updateUser = (error, isMatch, user) => {
+    if (error) return next(error);
+    if (!isMatch) return res.status(409).send('Wrong password');
+    
+    delete update.currentPassword;
+    if (update.password !== undefined && update.password.length === 0) delete update.password; //when we change this field to hidden delete this
+    if (update.password) {
+      user.password = update.password;
+      user.save(error => {
+        if (error) return next(error);
+        res.json(update);
+      })
+    } else {
+      User.updateOne(query, update, (updateErr, updateRes) => {
+        if (updateErr) next(updateErr);
+        delete update.currentPassword;
+        res.json(update);
+      })    
+    }
+  }
 })
 
 // @Route PUT /api/user/change-password

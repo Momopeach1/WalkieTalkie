@@ -50,7 +50,22 @@ const useLogs = () => {
   
   const renderLogs = () => {
     const logs = renderLogs2();
-    logs.unshift(<div style={{ marginTop: "500px" }}>EMPTY DIV</div>)
+    //welcome text 
+  logs.unshift(
+    <div className="channel-welcome">
+      {/* picture here logo or something */}
+      <div className="channel-welcome-title">
+        Welcome to #
+      {selectedChannel}!
+      </div>
+      <div className="channel-welcome-subtext">
+        This is the start of the #{selectedChannel} channel.
+        <div className="edit-channel">
+          Edit Channel
+        </div>
+      </div>
+    </div>
+    )
     return logs;
   }
 

@@ -9,7 +9,6 @@ import WebRTCContext from '../contexts/WebRTCContext';
 const useUserControl = () => {
   const [muted, setMuted] = useState(false);
 
-  const { user } = useContext(UserContext);
   const { selectedVoice, setSelectedVoice } = useContext(ChannelContext);
   const { socket } = useContext(SocketContext);
   const { toggleMute } = useContext(WebRTCContext);

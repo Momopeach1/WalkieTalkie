@@ -16,7 +16,7 @@ import voiceChannelSocket from '../sockets/voiceChannelSocket';
 
 const useChat = () => {
   const { setSocket } = useContext(SocketContext);
-  const { user } = useContext(UserContext);
+  const { user, isAuth } = useContext(UserContext);
   const logsContext = useContext(LogsContext);
   const allUsersContext = useContext(AllUsersContext);
   const channelContext = useContext(ChannelContext);
@@ -48,16 +48,19 @@ const useChat = () => {
         // channelContext.fetchChannels();
         channelContext.fetchTextChannels();
         channelContext.fetchVoiceChannels();
-      })
+      });
   
       socket.on('user joined', ()=> {
         allUsersContext.fetchAllUsers();
       });
 
-    
-
+      socket.on('refresh users', () => {
+        console.log('received refresh users');
+        allUsersContext.fetchAllUsers();
+        logsContext.fetchMessages();
+      });
     }
-  },[user])
+  },[isAuth])
 };
 
 export default useChat;
