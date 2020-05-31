@@ -1,8 +1,24 @@
 const router = require('express').Router();
 const url = require('url');
+const cloudinary = require('cloudinary').v2;
+const multer = require('multer');
 
 const passport = require('../middlewares/authentication');
 const User = require('../models/user');
+
+cloudinary.config({
+  cloud_name: 'walkietalkie',
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_SECRET
+});
+
+const storage = multer.diskStorage({
+  filename: function(req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now());
+  }
+});
+
+const upload = multer({ storage: storage });
 
 // @Route GET /api/user/check
 router.get('/check', passport.isLoggedIn(), (req, res) => {
@@ -19,9 +35,16 @@ router.get('/', (req, res, next) => {
 });
 
 // @Route PUT /api/user
-router.put('/', passport.isLoggedIn(), (req, res, next) => {
+router.put('/', passport.isLoggedIn(), upload.single('photo'), async (req, res, next) => {
   const query = { email: req.user.email };
   const update = { ...req.body };
+
+  if (req.file) {
+    await cloudinary.uploader.upload(req.file.path, (error, result) => {
+      update.photoURL = result.secure_url;
+    });
+  }
+
 
   User.findOne(query, (error, result) => {
     if (error) return next(error);
@@ -45,6 +68,7 @@ router.put('/', passport.isLoggedIn(), (req, res, next) => {
     if (!isMatch) return res.status(409).send('Wrong password');
     
     delete update.currentPassword;
+    delete update.photo;
     if (update.password !== undefined && update.password.length === 0) delete update.password; //when we change this field to hidden delete this
     if (update.password) {
       user.password = update.password;

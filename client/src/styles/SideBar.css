@@ -280,6 +280,8 @@
 }
 
 .username-avatar-buttons-container {
+  box-sizing: border-box;
+  padding: 0 10px;
   display: flex;
   justify-content: space-between;
   width: 100%;
@@ -295,6 +297,7 @@
   height: 32px;
   border-radius: 32px;
   margin: 8px;
+  margin-left: 0;
 }
 
 .settings-button {
@@ -318,6 +321,11 @@
 .user-control-username {
   white-space: nowrap;
   color: #ffffff;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 5px;
+  width: 100%;
 }
 
 .settings-button:hover {

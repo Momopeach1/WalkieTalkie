@@ -7,6 +7,10 @@
 .username {
   white-space: nowrap;
   color: #ffffff;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 5px;
 }
 .member-group-title {
   text-transform: uppercase;
