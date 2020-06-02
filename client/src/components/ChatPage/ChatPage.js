@@ -10,7 +10,7 @@ import ActiveMemberBar from './ActiveMemberBar';
 import SidebarContainer from './sidebar/SidebarContainer';
 
 const ChatPage = () => {
-  useChat();
+  const [renderMain] = useChat();
 
   return (
     <div>
@@ -27,7 +27,7 @@ const ChatPage = () => {
           <Grid className="below-header-container" container spacing={0}>
             
             <Grid className="message-ui" item xs={12} sm={12} md={10}>
-              <Chat />
+              { renderMain() }
             </Grid>
             <Grid item sm={3} md={2}>
               <Hidden smDown>

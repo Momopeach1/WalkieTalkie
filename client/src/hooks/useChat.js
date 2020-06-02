@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import openSocket from 'socket.io-client';
 
 import server from '../apis/server';
@@ -13,6 +13,8 @@ import WebRTCContext from '../contexts/WebRTCContext';
 import textChannelSocket from '../sockets/textChannelSocket';
 import voiceChannelSocket from '../sockets/voiceChannelSocket';
 
+import WhiteBoard from '../components/ChatPage/whiteboard/WhiteBoard';
+import Chat from '../components/ChatPage/chat/Chat';
 
 const useChat = () => {
   const { setSocket } = useContext(SocketContext);
@@ -24,7 +26,7 @@ const useChat = () => {
   
   useEffect(() => {
     logsContext.fetchMessages();
-  }, [channelContext.selectedChannel])
+  }, [channelContext.selectedChannel.name])
   
   useEffect(() => {
     if (user.email !== null) {
@@ -60,7 +62,18 @@ const useChat = () => {
         logsContext.fetchMessages();
       });
     }
-  },[isAuth])
+  },[isAuth]);
+  
+  const renderMain = () => {
+    switch (channelContext.selectedChannel.type) {
+      case 'text':
+        return <Chat />
+      case 'whiteboard':
+        return <WhiteBoard />
+    }
+  }
+
+  return [renderMain];
 };
 
 export default useChat;

@@ -20,8 +20,8 @@ const useMessageBox = () => {
     e.preventDefault();
     if (message.text.trim().length === 0) return;
     message.text = message.text.trim();
-    socket.emit('send message', { message, displayName, photoURL, selectedChannel, createdAt: Date() });
-    server.post('/message', { content: message.text, createdAt: Date(), selectedChannel })
+    socket.emit('send message', { message, displayName, photoURL, selectedChannel: selectedChannel.name, createdAt: Date() });
+    server.post('/message', { content: message.text, createdAt: Date(), selectedChannel: selectedChannel.name })
   }
 
   const handleOnKeyPress = e => {

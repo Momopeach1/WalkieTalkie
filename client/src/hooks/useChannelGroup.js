@@ -39,7 +39,7 @@ const useChannelGroup = () => {
         return;
       }
       
-      setSelectedChannel(e.target.value);
+      setSelectedChannel({ name: e.target.value, type: 'text' });
       // document.querySelector('.log-container').scrollTop = document.querySelector('.log-container').scrollHeight;
     }
     
@@ -75,7 +75,7 @@ const useChannelGroup = () => {
   const renderChannels = (type, channels) => {
     return /*filteredChannels[`${type}Channels`]*/channels.map((ch, i) => {
       return (
-        <div style={{ display: !channelGroupsCollapse[type]? 'block' : isSame(ch.name, selectedChannel) }}>
+        <div style={{ display: !channelGroupsCollapse[type]? 'block' : isSame(ch.name, selectedChannel.name) }}>
           <input 
             defaultChecked={i === 0 && type ==='text' } 
             type="radio" 

@@ -15,7 +15,7 @@ const useLogs = () => {
 
   const renderLogs2 = () => {
     return logs.map((log, i) => {
-      if (log.channel.name !== selectedChannel) return null;
+      if (log.channel.name !== selectedChannel.name) return null;
 
       const previousUser = i > 0? logs[i-1].sender.email : null;
       const currentUser = log.sender.email;
@@ -56,10 +56,10 @@ const useLogs = () => {
       {/* picture here logo or something */}
       <div className="channel-welcome-title">
         Welcome to #
-      {selectedChannel}!
+      {selectedChannel.name}!
       </div>
       <div className="channel-welcome-subtext">
-        This is the start of the #{selectedChannel} channel.
+        This is the start of the #{selectedChannel.name} channel.
         <div className="edit-channel">
           Edit Channel
         </div>
