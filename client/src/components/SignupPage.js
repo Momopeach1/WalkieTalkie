@@ -32,13 +32,13 @@ const SignUp = () => {
     };
   
     const onChangeHandler = event => {
-      const { name, value } = event.currentTarget;
+      const { id, value } = event.target;
   
-      if (name === "userEmail") {
+      if (id === "userEmail") {
         setEmail(value);
-      } else if (name === "userPassword") {
+      } else if (id === "userPassword") {
         setPassword(value);
-      } else if (name === "displayName") {
+      } else if (id === "displayName") {
         setDisplayName(value);
       }
     };
@@ -56,37 +56,46 @@ const SignUp = () => {
                 </Typography>
                 {error !== null && <div>{error}</div>}
                 <form className="registration-form">
-                  <TextField
-                    required
-                    id="displayName"
-                    className="text-field"
-                    value={displayName}
-                    label="UserName"
-                    variant="outlined"
-                    placeholder="Name"
-                    onChange={(event) => onChangeHandler(event)}
-                  />
-                  <TextField
-                    required
-                    id="userEmail"
-                    className="text-field"
-                    value={email}
-                    label="Email"
-                    placeholder="Email"
-                    variant="outlined"
-                    onChange={(event) => onChangeHandler(event)}
-                  />
-                  <TextField 
-                    required
-                    id="userPassword"
-                    className="text-field"
-                    value={password}
-                    placeholder="Password"
-                    type="password"
-                    variant="outlined"
-                    onChange={(event) => onChangeHandler(event)}
-                  />
-                  <button onClick = {(event) => {createUserWithEmailAndPasswordHandler(event, email, password)}}>
+                  <div className="text-field">
+                    <TextField
+                      required
+                      id="displayName"
+                      className="text-field"
+                      value={displayName}
+                      label="UserName"
+                      variant="outlined"
+                      placeholder="Name"
+                      onChange={(event) => onChangeHandler(event)}
+                    />
+                  </div>
+                  <div className="text-field">
+                    <TextField
+                      required
+                      id="userEmail"
+                      className="text-field"
+                      value={email}
+                      label="Email"
+                      placeholder="Email"
+                      variant="outlined"
+                      onChange={(event) => onChangeHandler(event)}
+                    />
+                  </div>
+                  <div className="text-field">
+                    <TextField 
+                      required
+                      id="userPassword"
+                      className="text-field"
+                      value={password}
+                      placeholder="Password"
+                      type="password"
+                      variant="outlined"
+                      onChange={(event) => onChangeHandler(event)}
+                    />
+                  </div>
+                  <button 
+                  className="register-button"
+                  onClick = {(event) => {createUserWithEmailAndPasswordHandler(event, email, password)}}
+                  >
                     Register
                   </button>
                 </form>

@@ -30,10 +30,14 @@
 }
 
 .registration-form {
-  align-items: right;
+  display: block;
 }
 
 .text-field {
-  padding: 5px;
-  margin: 5px;
+  padding: 10px 0;
+  width: 100%;
+}
+
+.register-button {
+  display: block;
 }
