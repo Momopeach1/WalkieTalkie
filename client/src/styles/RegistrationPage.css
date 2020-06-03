@@ -6,13 +6,22 @@
   height: 100%;
 }
 
+.error-text {
+  color: red;
+  font-weight: bold;
+}
+
+.img {
+  width: 400px;
+}
+
 .registration-left {
   display: block;
 }
 
 .registration-block {
   text-align: left;
-  background-color: thistle;
+  background-color: #d8bfd8;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   border: 2px solid thistle;
   border-radius: 20px;
@@ -24,13 +33,9 @@
   display: flex;
 }
 
-.registration-title {
-  font-weight: bold;
-  padding-bottom: 50px;
-}
-
 .registration-form {
   display: block;
+  padding-left: 50px;
 }
 
 .text-field {
