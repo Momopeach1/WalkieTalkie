@@ -2,7 +2,6 @@ const router = require('express').Router();
 
 const passport = require('../middlewares/authentication');
 const privilege = require('../middlewares/privilege');
-const Channel = require('../models/channel');
 const User = require('../models/user');
 const Voice = require('../models/voice');
 

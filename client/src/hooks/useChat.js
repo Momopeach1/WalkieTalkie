@@ -35,6 +35,7 @@ const useChat = () => {
       logsContext.fetchMessages();
       channelContext.fetchTextChannels();
       channelContext.fetchVoiceChannels();
+      channelContext.fetchWhiteboardChannels();
   
       socket.on('generated socket id', async ({ socketId }, announceJoin) => {
         await server.put('/user', { email: user.email, socketId: socketId });
