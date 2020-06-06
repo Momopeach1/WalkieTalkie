@@ -15,6 +15,7 @@ import voiceChannelSocket from '../sockets/voiceChannelSocket';
 
 import WhiteBoard from '../components/ChatPage/whiteboard/WhiteBoard';
 import Chat from '../components/ChatPage/chat/Chat';
+import WhiteboardContext from '../contexts/WhiteboardContext';
 
 const useChat = () => {
   const { setSocket } = useContext(SocketContext);
@@ -23,6 +24,7 @@ const useChat = () => {
   const allUsersContext = useContext(AllUsersContext);
   const channelContext = useContext(ChannelContext);
   const webRTCContext = useContext(WebRTCContext);
+  const whiteboardContext = useContext(WhiteboardContext);
   
   useEffect(() => {
     logsContext.fetchMessages();
@@ -61,6 +63,29 @@ const useChat = () => {
         console.log('received refresh users');
         allUsersContext.fetchAllUsers();
         logsContext.fetchMessages();
+      });
+
+      //WHITE BOARD SOCKET
+
+      socket.on('drawing path', data => {
+        const { x0, x1, y0, y1, color } = data;
+        const canvas = document.querySelector('canvas').getBoundingClientRect();
+
+        whiteboardContext.draw(
+          x0 * window.innerWidth - canvas.left,
+          y0 * window.innerHeight - canvas.top,
+          x1 * window.innerWidth - canvas.left,
+          y1 * window.innerHeight - canvas.top,
+          color,
+          false,
+          null
+        )
+      });
+
+      socket.on('joined whiteboard', () => {
+        server.get('/whiteboard')
+          .then(response => whiteboardContext.setWhiteboards(response.data))
+          .catch(error => console.log(error));
       });
     }
   },[isAuth]);

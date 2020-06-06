@@ -32,15 +32,33 @@ const useChannelGroup = () => {
           } 
           getTheMedia(channelName);
           
-        })
-        return;
+        });
+      return;
+    } else if (type === 'whiteboard') {
+      console.log('selectedChannel', selectedChannel);
+      if (selectedChannel.type === 'whiteboard'){
+        server.delete('/whiteboard/leave', { data: { name: selectedChannel.name } })
+          .then(() => socket.emit('leave whiteboard', { channelName: selectedChannel.name }))
+          .catch(error => console.log(error));
       }
-      document.querySelectorAll('input[type="radio"]').forEach(e => {
-        if (e.name !== `${type}-radio`) e.checked = false;
-      });
-      setSelectedChannel({ name: e.target.value, type: type });
-      // document.querySelector('.log-container').scrollTop = document.querySelector('.log-container').scrollHeight;
+      server.put('/whiteboard/join', { name: channelName })
+        .then(()=> socket.emit('join whiteboard',  { channelName }))
+        .catch(error => console.log(error));
+      
+    } else {
+      // Clicked on Text Channel
+      console.log('selected coom', selectedChannel);
+      if (selectedChannel.type === 'whiteboard') 
+        server.delete('/whiteboard/leave', { data: { name: selectedChannel.name } })
+          .then(() => socket.emit('leave whiteboard', { channelName: selectedChannel.name }))
+          .catch(error => console.log(error));    
     }
+    document.querySelectorAll('input[type="radio"]').forEach(e => {
+      if (e.name !== `${type}-radio`) e.checked = false;
+    });
+    setSelectedChannel({ name: e.target.value, type: type });
+    // document.querySelector('.log-container').scrollTop = document.querySelector('.log-container').scrollHeight;
+  };
     
   const getTheMedia = channelName => {
     getMedia({ audio: true }, () => {

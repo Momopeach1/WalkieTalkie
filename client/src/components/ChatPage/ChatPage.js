@@ -13,7 +13,7 @@ const ChatPage = () => {
   const [renderMain] = useChat();
 
   return (
-    <div>
+    <div onClick={e => console.log(e.clientX, e.clientY)}>
       <Grid container spacing={0}>
         <Grid item className="sidebar" sm={4} md={2}>
           <Hidden xsDown>

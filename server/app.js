@@ -11,6 +11,7 @@ const io             = socket(server);
 const passport       = require('./middlewares/authentication');
 const User           = require('./models/user');
 const Voice          = require('./models/voice');
+const Whiteboard     = require('./models/whiteboard');
 
 app.use(express.json());
 app.use(expressSession({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: true }));
@@ -90,11 +91,40 @@ io.on('connection', (socket) => {
 
   socket.on('refresh users', () =>{
     io.in('General Room').emit('refresh users', {});
+  });
+
+  socket.on('join whiteboard', data => {
+    socket.join(data.channelName);
+    io.in('General Room').emit('joined whiteboard', {});
+  });
+
+  socket.on('drawing path', data => {
+    console.log('drawing path', data);
+    socket.to(data.channelName).emit('drawing path', data);
+  });
+
+  socket.on('leave whiteboard', data => {
+    socket.leave(data.channelName);
+    io.in('General Room').emit('joined whiteboard', {}); //for refreshing whiteboards change later
   })
 
   socket.on('disconnect', () => {
-    // leave current voice channel here.
     console.log('a user has disconnected', socket.id);
+    Whiteboard.find({}).populate('artists').exec((error, result) => {
+      if (!error) {
+        console.log("OWO");
+        result.forEach(w => {
+          console.log("a.socketId", w.artists[0]);
+          if (w.artists.find(a => a.socketId === socket.id)) {
+            console.log('found an equal');
+            w.artists = w.artists.filter(a => a.socketId !== socket.id);
+            w.save();
+          }
+        });
+      }
+    });
+    
+    // leave current voice channel here.
     User.findOne({ socketId: socket.id }, (error, result) => {
       if (error || !result) return;
       io.in('General Room').emit('user left', result);

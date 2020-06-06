@@ -13,8 +13,8 @@ router.get('/', (req, res) => {
     .exec((error, result) => {
       if (error) res.status(500).send(error);
       res.json(result);
-    })
-})
+    });
+});
 
 
 //@Route - POST /api/message

@@ -7,12 +7,13 @@ const WhiteBoard = () => {
    const [handleOnMouseDown, handleOnMouseUp, handleOnMouseMove] = useWhiteboard();
   return <div className="whiteboard-canvas">
     <canvas 
-      id="whiteboard" 
+      id="whiteboard"
       onMouseDown={handleOnMouseDown}
       onMouseMove={handleOnMouseMove}
       onMouseUp={handleOnMouseUp}
       onMouseOut={handleOnMouseUp}
-    />
+    >
+    </canvas>
   </div>
 };
 

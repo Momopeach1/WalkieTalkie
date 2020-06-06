@@ -7,6 +7,7 @@ import { LogsProvider } from '../contexts/LogsContext';
 import { AllUsersProvider } from '../contexts/AllUsersContext';
 import { ChannelProvider } from '../contexts/ChannelContext';
 import { WebRTCProvider } from '../contexts/WebRTCContext';
+import { WhiteboardProvider } from '../contexts/WhiteboardContext';
 
 import '../styles/App.css';
 import history from '../utilities/history';
@@ -42,6 +43,7 @@ const App = () => {
 }
 
 export default () => (
+  <WhiteboardProvider>
     <WebRTCProvider>
       <ChannelProvider>
         <AllUsersProvider>
@@ -55,5 +57,6 @@ export default () => (
         </AllUsersProvider>
       </ChannelProvider>
     </WebRTCProvider>
+  </WhiteboardProvider>
 );
 
