@@ -37,6 +37,9 @@ const useChannelGroup = () => {
     } else if (type === 'whiteboard') {
       console.log('selectedChannel', selectedChannel);
       if (selectedChannel.type === 'whiteboard'){
+        const canvas = document.querySelector('canvas');
+        const context = canvas.getContext('2d');
+        context.clearRect(0, 0, canvas.width, canvas.height);
         server.delete('/whiteboard/leave', { data: { name: selectedChannel.name } })
           .then(() => socket.emit('leave whiteboard', { channelName: selectedChannel.name }))
           .catch(error => console.log(error));

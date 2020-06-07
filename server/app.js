@@ -60,7 +60,6 @@ io.on('connection', (socket) => {
   });
 
   socket.on('joined voice', data => {
-    console.log('joined voice', data.channelName);
     socket.join(data.channelName);
     io.in('General Room').emit('joined voice', {});
     socket.to(data.channelName).emit('new talker joined', { socketId: data.socketId, channelName: data.channelName });
@@ -72,12 +71,11 @@ io.on('connection', (socket) => {
 
   socket.on('send answer', data => {
     io.to(data.targetSocketId).emit('complete connection', { sdp: data.sdp, socketId: socket.id });
-  })
+  });
 
   socket.on('send ice', data => {
-    console.log('send ice channel name', data.channelName)
-    socket.to(data.channelName).emit('send ice', { socketId: socket.id, ice: data.ice, channelName: data.channelName })
-  })
+    socket.to(data.channelName).emit('send ice', { socketId: socket.id, ice: data.ice, channelName: data.channelName });
+  });
 
   socket.on('exit voice', data => {
     socket.leave(data.channelName);
@@ -99,7 +97,6 @@ io.on('connection', (socket) => {
   });
 
   socket.on('drawing path', data => {
-    console.log('drawing path', data);
     socket.to(data.channelName).emit('drawing path', data);
   });
 
@@ -110,13 +107,11 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     console.log('a user has disconnected', socket.id);
+    //lazy way done here
     Whiteboard.find({}).populate('artists').exec((error, result) => {
       if (!error) {
-        console.log("OWO");
         result.forEach(w => {
-          console.log("a.socketId", w.artists[0]);
           if (w.artists.find(a => a.socketId === socket.id)) {
-            console.log('found an equal');
             w.artists = w.artists.filter(a => a.socketId !== socket.id);
             w.save();
           }

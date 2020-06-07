@@ -1,11 +1,12 @@
-import { useEffect, useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
 import SocketContext from '../contexts/SocketContext';
 import WhiteboardContext from '../contexts/WhiteboardContext';
 import ChannelContext from '../contexts/ChannelContext';
+import WhiteBoard from '../components/ChatPage/whiteboard/WhiteBoard';
 
 const useWhiteboard = () => {
   const { socket } = useContext(SocketContext);
-  const { contextRef, draw } = useContext(WhiteboardContext);
+  const { whiteboards, contextRef, draw } = useContext(WhiteboardContext);
   const { selectedChannel } = useContext(ChannelContext);
   let isDrawing = false;
   let x0 = null;
@@ -64,7 +65,19 @@ const useWhiteboard = () => {
     return [(x - canvas.left) /* / (window.innerWidth - 1) * (canvas.width - 1)*/, 
             (y - canvas.top) /* / (window.innerHeight - 1) * (canvas.height - 1)*/]
   }
-  return [handleOnMouseDown, handleOnMouseUp, handleOnMouseMove];
+
+  //for on canvas
+  const renderActiveArtists = () => {
+    // console.log('selectedchannel', selectedChannel, whiteboards);
+    // console.log('find', whiteboards.find(w => w.name === selectedChannel.name));
+    return whiteboards.length && whiteboards.find(w => w.name === selectedChannel.name).artists.map(a => {
+      return (
+        <img className="whiteboard-avatar" src={a.photoURL} />
+      );
+    });
+  };
+
+  return [handleOnMouseDown, handleOnMouseUp, handleOnMouseMove, renderActiveArtists];
 }
 
 
