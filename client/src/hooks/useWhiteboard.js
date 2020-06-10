@@ -3,16 +3,27 @@ import SocketContext from '../contexts/SocketContext';
 import WhiteboardContext from '../contexts/WhiteboardContext';
 import ChannelContext from '../contexts/ChannelContext';
 import WhiteBoard from '../components/ChatPage/whiteboard/WhiteBoard';
+import server from '../apis/server';
+
 
 const useWhiteboard = () => {
   const { socket } = useContext(SocketContext);
-  const { whiteboards, contextRef, draw } = useContext(WhiteboardContext);
-  const { selectedChannel } = useContext(ChannelContext);
+  const { whiteboards, contextRef, draw, color } = useContext(WhiteboardContext);
+  const { selectedChannel, whiteboardChannels } = useContext(ChannelContext);
   let isDrawing = false;
   let x0 = null;
   let y0 = null;
   
   useEffect(() => {
+    window.addEventListener("beforeunload", (ev) => {  
+        ev.preventDefault();
+        socket.emit('testing', {});
+        const canvas = document.querySelector('canvas');
+        //if (whiteboardChannels.find(w => w.name === selectedChannel.name).artists.length === 1)
+        server.put('/whiteboard/save', { name: selectedChannel.name, dataURL: canvas.toDataURL() })
+        //return ev.returnValue = 'Are you sure you want to close?';
+    });
+
     contextRef.current = document.querySelector('#whiteboard').getContext('2d');
     document.querySelector('canvas').style.width = '100%';
     document.querySelector('canvas').style.height = '100%';
@@ -46,7 +57,7 @@ const useWhiteboard = () => {
     if (isDrawing) {
       console.log("MOUSE MOVING!!!")
       const [x, y] = calculateCanvasCoord(e.clientX, e.clientY);
-      draw(x0, y0, x, y, 'yellow', true, socket, selectedChannel.name);
+      draw(x0, y0, x, y, '#' + color, true, socket, selectedChannel.name);
       x0 = x;
       y0 = y;
     }
@@ -57,7 +68,7 @@ const useWhiteboard = () => {
     console.log('Mouse Up pressed!!!');
     const [x, y] = calculateCanvasCoord(e.clientX, e.clientY);
     isDrawing = false;
-    draw(x0, y0, x, y, 'yellow', true, socket, selectedChannel.name);
+    draw(x0, y0, x, y, '#' + color, true, socket, selectedChannel.name);
   }
 
   const calculateCanvasCoord = (x, y) => {
@@ -68,9 +79,7 @@ const useWhiteboard = () => {
 
   //for on canvas
   const renderActiveArtists = () => {
-    // console.log('selectedchannel', selectedChannel, whiteboards);
-    // console.log('find', whiteboards.find(w => w.name === selectedChannel.name));
-    return whiteboards.length && whiteboards.find(w => w.name === selectedChannel.name).artists.map(a => {
+    return whiteboardChannels.length && whiteboardChannels.find(w => w.name === selectedChannel.name).artists.map(a => {
       return (
         <img className="whiteboard-avatar" src={a.photoURL} />
       );

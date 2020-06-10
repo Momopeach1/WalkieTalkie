@@ -4,12 +4,16 @@ import '../../../styles/Whiteboard.css';
 import useWhiteboard from '../../../hooks/useWhiteboard';
 import ToolBox from './ToolBox';
 import Island from './Island';
+import LeftIsland from './LeftIsland';
 
 const WhiteBoard = () => {
    const [handleOnMouseDown, handleOnMouseUp, handleOnMouseMove, renderActiveArtists] = useWhiteboard();
   return (
     <div className="whiteboard-canvas">
-      <Island />
+      <div className="archipelago">
+        <Island />
+        <LeftIsland />
+      </div>
       <ToolBox />
       <canvas 
         id="whiteboard"

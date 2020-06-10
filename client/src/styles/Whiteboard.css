@@ -38,3 +38,23 @@
   padding: 16px;
   margin-left: 5px;
 }
+
+.left-island {
+  position: absolute;
+}
+
+.archipelago {
+  position: relative;
+}
+
+.artist-icon {
+  width: 23px;
+  height: 23px;
+  border-radius: 23px;
+  /* position: absolute; */
+  /* right: 0; */
+}
+
+.artists-icon-container {
+  margin-left: auto;
+}

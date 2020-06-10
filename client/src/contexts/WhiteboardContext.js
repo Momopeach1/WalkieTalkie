@@ -5,6 +5,7 @@ const WhiteboardContext = React.createContext();
 export const WhiteboardProvider = ({ children }) => {
   const contextRef = useRef(null);
   const [whiteboards, setWhiteboards] = useState([]);
+  const [color, setColor] = useState('000');
   
   const draw = (x0, y0, x1, y1, color, emit, socket, channelName) => {
     if (contextRef.current) {
@@ -31,7 +32,7 @@ export const WhiteboardProvider = ({ children }) => {
     }
   }
 
-  return <WhiteboardContext.Provider value={{ contextRef, draw, whiteboards, setWhiteboards }}>
+  return <WhiteboardContext.Provider value={{ contextRef, draw, whiteboards, setWhiteboards, color, setColor }}>
     {children}
   </WhiteboardContext.Provider>
 }

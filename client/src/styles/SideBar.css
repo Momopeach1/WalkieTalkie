@@ -198,7 +198,10 @@
 
 .channel-group-container {
   padding-right: 8px;
+}
 
+.channel-group-container > div > label {
+  position: relative;
 }
 
 .voice-avatar {

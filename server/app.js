@@ -94,6 +94,13 @@ io.on('connection', (socket) => {
   socket.on('join whiteboard', data => {
     socket.join(data.channelName);
     io.in('General Room').emit('joined whiteboard', {});
+    socket.to(data.channelName).emit('request canvas', { requester: socket.id });   
+  });
+
+  socket.on('request canvas', data => {
+    io.to(data.requester).emit('receive canvas', {
+      dataURL: data.dataURL
+    });
   });
 
   socket.on('drawing path', data => {
@@ -103,6 +110,10 @@ io.on('connection', (socket) => {
   socket.on('leave whiteboard', data => {
     socket.leave(data.channelName);
     io.in('General Room').emit('joined whiteboard', {}); //for refreshing whiteboards change later
+  })
+
+  socket.on('testing', () => {
+    console.log('testing...')
   })
 
   socket.on('disconnect', () => {

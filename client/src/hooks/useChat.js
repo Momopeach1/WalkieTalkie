@@ -51,8 +51,9 @@ const useChat = () => {
       socket.on('user left', () => {
         allUsersContext.fetchAllUsers();
         // channelContext.fetchChannels();
-        channelContext.fetchTextChannels();
+        //channelContext.fetchTextChannels();
         channelContext.fetchVoiceChannels();
+        channelContext.fetchWhiteboardChannels();
       });
   
       socket.on('user joined', ()=> {
@@ -83,10 +84,25 @@ const useChat = () => {
       });
 
       socket.on('joined whiteboard', () => {
-        server.get('/whiteboard')
-          .then(response => whiteboardContext.setWhiteboards(response.data))
-          .catch(error => console.log(error));
+        channelContext.fetchWhiteboardChannels();
       });
+
+      socket.on('request canvas', data => {
+        socket.emit('request canvas', {
+          requester: data.requester,
+          dataURL: document.querySelector('canvas').toDataURL()
+        });
+      });
+
+      socket.on('receive canvas', data => {
+        const myCanvas = document.querySelector('canvas');
+        const ctx = myCanvas.getContext('2d');
+        const img = new Image;
+        img.onload = function(){
+          ctx.drawImage(img,0,0); // Or at whatever offset you like
+        };
+        img.src = data.dataURL;
+      })
     }
   },[isAuth]);
   

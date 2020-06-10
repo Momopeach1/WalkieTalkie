@@ -31,6 +31,27 @@ router.put('/join', passport.isLoggedIn(), (req, res) => {
   });
 });
 
+// @Route - PUT /api/whiteboard/save
+router.put('/save', (req, res) => {
+  console.log('making a save OwO');
+  Whiteboard.findOne({ name: req.body.name }, (finderr, findres) => {
+    if(finderr) res.status(500).send(finderr);
+    findres.img = req.body.dataURL;
+    findres.save((saveErr, saveRes) => {
+      if(saveErr) res.status(500).send(saveErr);
+      res.send("canvas saved");
+    });
+  });
+});
+
+// @Route - GET /api/whiteboard/load
+router.get('/load', passport.isLoggedIn(), (req, res) => {
+  Whiteboard.findOne({ name: req.query.name }, (finderr, findres) => {
+    if(finderr) res.status(500).send(finderr);
+    res.json({ img: findres.img });
+  });
+});
+
 // @Route - DELETE /api/whiteboard/leave
 router.delete('/leave', passport.isLoggedIn(), (req, res) => {
   console.log('request body', req.body);
