@@ -4,23 +4,26 @@ import WhiteboardContext from '../contexts/WhiteboardContext';
 import ChannelContext from '../contexts/ChannelContext';
 import WhiteBoard from '../components/ChatPage/whiteboard/WhiteBoard';
 import server from '../apis/server';
+import UserContext from '../contexts/UserContext';
 
 
 const useWhiteboard = () => {
   const { socket } = useContext(SocketContext);
   const { whiteboards, contextRef, draw, color } = useContext(WhiteboardContext);
   const { selectedChannel, whiteboardChannels } = useContext(ChannelContext);
+  const { user } = useContext(UserContext);
   let isDrawing = false;
   let x0 = null;
   let y0 = null;
   
   useEffect(() => {
-    window.addEventListener("beforeunload", (ev) => {  
+    window.addEventListener("beforeunload", async (ev) => {  
         ev.preventDefault();
         socket.emit('testing', {});
         const canvas = document.querySelector('canvas');
         //if (whiteboardChannels.find(w => w.name === selectedChannel.name).artists.length === 1)
-        server.put('/whiteboard/save', { name: selectedChannel.name, dataURL: canvas.toDataURL() })
+        await server.put('/whiteboard/save', { name: selectedChannel.name, dataURL: canvas.toDataURL()})
+        await server.delete('/whiteboard/leave', { data: { name: selectedChannel.name }})
         //return ev.returnValue = 'Are you sure you want to close?';
     });
 
@@ -54,6 +57,13 @@ const useWhiteboard = () => {
   }
 
   const handleOnMouseMove = e => {
+    const { left, top } = document.querySelector('canvas').getBoundingClientRect();
+    socket.emit('moving mouse', {
+      x: (e.clientX + left) / window.innerWidth,
+      y: (e.clientY + top) / window.innerHeight,
+      channelName: selectedChannel.name,
+      displayName: user.displayName
+    });
     if (isDrawing) {
       console.log("MOUSE MOVING!!!")
       const [x, y] = calculateCanvasCoord(e.clientX, e.clientY);

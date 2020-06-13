@@ -58,3 +58,7 @@
 .artists-icon-container {
   margin-left: auto;
 }
+
+.cursor-container {
+  pointer-events: none;
+}

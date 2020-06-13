@@ -16,6 +16,7 @@ import voiceChannelSocket from '../sockets/voiceChannelSocket';
 import WhiteBoard from '../components/ChatPage/whiteboard/WhiteBoard';
 import Chat from '../components/ChatPage/chat/Chat';
 import WhiteboardContext from '../contexts/WhiteboardContext';
+import ToolKit from '../components/ChatPage/whiteboard/ToolKit';
 
 const useChat = () => {
   const { setSocket } = useContext(SocketContext);
@@ -83,8 +84,34 @@ const useChat = () => {
         )
       });
 
-      socket.on('joined whiteboard', () => {
+      socket.on('joined whiteboard', data => {
         channelContext.fetchWhiteboardChannels();
+        if (channelContext.selectedChannelRef.current.type === 'whiteboard') {
+          const container = document.createElement("div");
+          container.style.minWidth = '32px';
+          container.style.height = '32px';
+          container.style.position = 'absolute';
+          container.setAttribute('id', `container-${data.socketId}`);
+          container.setAttribute('class', 'cursor-container');
+          
+          const img = document.createElement("IMG");
+          img.setAttribute('id', `cursor-${data.socketId}`);
+          container.appendChild(img);
+          
+          const name = document.createElement('div');
+          name.setAttribute('id', `name-${data.socketId}`);
+          name.style.marginLeft = "25px";
+          name.style.color = "white";
+          name.style.background = "#8bcd2f";
+          name.style.padding = "4px";
+          name.style.fontSize = "12px";
+          name.style.border = "0.5px solid darkgreen";
+          name.style.borderRadius = "3px";          
+
+          container.appendChild(name);
+
+          document.querySelector('body').appendChild(container);
+        }
       });
 
       socket.on('request canvas', data => {
@@ -102,7 +129,21 @@ const useChat = () => {
           ctx.drawImage(img,0,0); // Or at whatever offset you like
         };
         img.src = data.dataURL;
-      })
+      });
+
+      socket.on('moving mouse', data => {
+        const canvas = document.querySelector('canvas').getBoundingClientRect();
+        const cursor = document.getElementById(`cursor-${data.socketId}`);
+        const container = document.getElementById(`container-${data.socketId}`);
+        const name = document.getElementById(`name-${data.socketId}`);
+        name.innerHTML = data.displayName;
+        cursor.setAttribute('src', ToolKit.USER_POINTER);
+        // cursor.style.position = "absolute";
+        cursor.setAttribute('width', '30px');
+        cursor.setAttribute('height', 'auto');
+        container.style.top = `${data.y * window.innerHeight - canvas.top - 2}px`;
+        container.style.left = `${data.x * window.innerWidth - canvas.left - 6}px`;
+      });
     }
   },[isAuth]);
   

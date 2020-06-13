@@ -66,6 +66,38 @@ const useChannelGroup = () => {
               })
               .catch(() => console.log("FAILED TO LOAD"));
           }
+            
+          whiteboardChannels.find(w => w.name === channelName).artists.forEach(a => {
+            if (!document.getElementById(`cursor-${a.socketId}`)) {
+              // const cursor = document.createElement("IMG");
+              // cursor.setAttribute('id', `cursor-${a.socketId}`);
+              // document.querySelector('body').appendChild(cursor);
+              const container = document.createElement("div");
+              container.style.minWidth = '32px';
+              container.style.height = '32px';
+              container.style.position = 'absolute';
+              container.setAttribute('id', `container-${a.socketId}`);
+              container.setAttribute('class', 'cursor-container');
+              
+              const img = document.createElement("IMG");
+              img.setAttribute('id', `cursor-${a.socketId}`);
+              container.appendChild(img);
+              
+              const name = document.createElement('div');
+              name.setAttribute('id', `name-${a.socketId}`);
+              name.style.marginLeft = "25px";
+              name.style.color = "white";
+              name.style.background = "#8bcd2f";
+              name.style.padding = "4px";
+              name.style.fontSize = "12px";
+              name.style.border = "0.5px solid darkgreen";
+              name.style.borderRadius = "3px";
+    
+              container.appendChild(name);
+    
+              document.querySelector('body').appendChild(container);              
+            }
+          });
         })
         .catch(error => console.log(error));
     } else {

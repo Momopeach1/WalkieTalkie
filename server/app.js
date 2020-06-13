@@ -13,7 +13,7 @@ const User           = require('./models/user');
 const Voice          = require('./models/voice');
 const Whiteboard     = require('./models/whiteboard');
 
-app.use(express.json());
+app.use(express.json({limit: '500mb'})); //this might not be so good 
 app.use(expressSession({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -93,7 +93,7 @@ io.on('connection', (socket) => {
 
   socket.on('join whiteboard', data => {
     socket.join(data.channelName);
-    io.in('General Room').emit('joined whiteboard', {});
+    io.in('General Room').emit('joined whiteboard', { socketId: socket.id });
     socket.to(data.channelName).emit('request canvas', { requester: socket.id });   
   });
 
@@ -110,6 +110,10 @@ io.on('connection', (socket) => {
   socket.on('leave whiteboard', data => {
     socket.leave(data.channelName);
     io.in('General Room').emit('joined whiteboard', {}); //for refreshing whiteboards change later
+  })
+
+  socket.on('moving mouse', data => {
+    socket.to(data.channelName).emit('moving mouse', { ...data, socketId: socket.id });
   })
 
   socket.on('testing', () => {

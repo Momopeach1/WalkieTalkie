@@ -15,6 +15,9 @@ export const ChannelProvider = ({ children }) => {
   const [selectedVoice, setSelectedVoice] = useState('');
   const [filteredChannels, setFilteredChannels] = useState({ textChannels: [], voiceChannels: [] });
   const [talkers, setTalkers] = useState({});
+  const selectedChannelRef = useRef(selectedChannel);
+
+  selectedChannelRef.current = selectedChannel;
 
   const fetchTextChannels = () => {
     server.get('/text')
@@ -68,7 +71,8 @@ export const ChannelProvider = ({ children }) => {
       setVoiceChannels,
       fetchVoiceChannels,
       fetchWhiteboardChannels,
-      whiteboardChannels
+      whiteboardChannels,
+      selectedChannelRef
     }}>
       { children }
     </ChannelContext.Provider>
