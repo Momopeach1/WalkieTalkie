@@ -12,7 +12,7 @@ const WhiteBoard = () => {
     <div className="whiteboard-canvas">
       <div className="archipelago">
         <Island />
-        <LeftIsland />
+        {/* <LeftIsland /> */}
       </div>
       <ToolBox />
       <canvas 

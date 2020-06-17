@@ -114,6 +114,13 @@ const useChat = () => {
         }
       });
 
+      socket.on('leave whiteboard', data => {
+        channelContext.fetchWhiteboardChannels();
+        const cursor = document.querySelector(`#container-${data.socketId}`); 
+        if (cursor)
+          cursor.remove();
+      })
+
       socket.on('request canvas', data => {
         socket.emit('request canvas', {
           requester: data.requester,
@@ -144,6 +151,13 @@ const useChat = () => {
         container.style.top = `${data.y * window.innerHeight - canvas.top - 2}px`;
         container.style.left = `${data.x * window.innerWidth - canvas.left - 6}px`;
       });
+
+      socket.on('clear canvas', () => {
+        const canvas = document.querySelector('canvas').getBoundingClientRect();
+        const context = document.querySelector('canvas').getContext('2d');
+        context.clearRect(0, 0, canvas.width, canvas.height);
+      });
+
     }
   },[isAuth]);
   

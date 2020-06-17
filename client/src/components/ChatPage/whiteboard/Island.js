@@ -1,13 +1,16 @@
 import React from 'react';
 
 import ToolKit from './ToolKit';
-import Tool from './Tool'; 
+import SysTool from './SysTool'; 
+import useIsland from '../../../hooks/whiteboard/useIsland';
 
 const Island = () =>{
+  const [handleOnClear] = useIsland();
+
   return(
     <div className="whiteboard-island">
-      <Tool name="systool" id="island-delete">{ToolKit.DELETE}</Tool>
-      <Tool name="systool" id="island-save">{ToolKit.SAVE}</Tool>
+      <SysTool name="systool" id="island-delete" handleOnClick={handleOnClear}>{ToolKit.DELETE}</SysTool>
+      <SysTool name="systool" id="island-save">{ToolKit.SAVE}</SysTool>
     </div>
   )
 }

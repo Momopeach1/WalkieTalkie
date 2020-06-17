@@ -38,6 +38,7 @@ const useChannelGroup = () => {
         });
       return;
     } else if (type === 'whiteboard') {
+      document.querySelectorAll('.cursor-container').forEach(n => n.remove());
       if (selectedChannel.type === 'whiteboard'){
         const canvas = document.querySelector('canvas');
         const context = canvas.getContext('2d');
@@ -69,9 +70,6 @@ const useChannelGroup = () => {
             
           whiteboardChannels.find(w => w.name === channelName).artists.forEach(a => {
             if (!document.getElementById(`cursor-${a.socketId}`)) {
-              // const cursor = document.createElement("IMG");
-              // cursor.setAttribute('id', `cursor-${a.socketId}`);
-              // document.querySelector('body').appendChild(cursor);
               const container = document.createElement("div");
               container.style.minWidth = '32px';
               container.style.height = '32px';

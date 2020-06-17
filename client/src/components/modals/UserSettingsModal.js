@@ -48,6 +48,7 @@ const UserSettingsModal = ({ type }) => {
 
   const openModal = e => {
     e.stopPropagation();
+    document.querySelectorAll('.cursor-container').forEach(n => n.remove());
     setIsOpen(true)
   };
 
@@ -81,6 +82,22 @@ const UserSettingsModal = ({ type }) => {
     setForm({ ...form, photo: photo.files[0] });
   }
 
+  const renderProfileInfo = () => {
+    return(
+      <div className="profile-info-container">
+        <img className="settings-modal-avatar" src={user.photoURL} />
+        <div className="settings-modal-info">
+          <div className="settings-modal-subtitle">USERNAME</div>
+          <div className="settings-modal-subtitle-content">{user.displayName}</div>
+          <br></br>
+          <div className="settings-modal-subtitle">EMAIL</div>
+          <div className="settings-modal-subtitle-content">{user.email}</div>
+        </div>
+        <button className="settings-modal-edit" onClick={() => setIsEdit(true)}>Edit</button>
+      </div>
+    )
+  }
+
   const renderProfileEdit = () => {
     if (isEdit) {
       return (
@@ -97,11 +114,7 @@ const UserSettingsModal = ({ type }) => {
       </form>        
       )
     } else {
-      return (
-        <div>
-          <button onClick={() => setIsEdit(true)}>Edit</button>
-        </div>
-      )
+      return (renderProfileInfo())
     }
   }
 
@@ -122,6 +135,7 @@ const UserSettingsModal = ({ type }) => {
             <Grid item sm={8} md={10}>
               <div className="setting-flex-container">
                 <div className="setting-main">
+                  <h2 className="user-modal-title">MY ACCOUNT</h2>
                   {renderProfileEdit()}
                 </div>
                 <div className="setting-fixed-container">

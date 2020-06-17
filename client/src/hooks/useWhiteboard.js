@@ -28,24 +28,27 @@ const useWhiteboard = () => {
     });
 
     contextRef.current = document.querySelector('#whiteboard').getContext('2d');
-    document.querySelector('canvas').style.width = '100%';
-    document.querySelector('canvas').style.height = '100%';
+    document.querySelector('canvas').style.width = `${document.querySelector('.whiteboard-canvas').offsetWidth - 14}px`;
+    document.querySelector('canvas').style.height = `${document.querySelector('.whiteboard-canvas').offsetHeight}px`;
     document.querySelector('canvas').width = document.querySelector('canvas').offsetWidth;
     document.querySelector('canvas').height = document.querySelector('canvas').offsetHeight;
+
     window.addEventListener("resize", () => {
       var data = document.querySelector('canvas').toDataURL();
-      document.querySelector('canvas').width = document.querySelector('canvas').offsetWidth;
-      document.querySelector('canvas').height = document.querySelector('canvas').offsetHeight;
       const context = document.querySelector('canvas').getContext('2d');
       const img = new Image();
       img.onload = () => {
           context.drawImage(
-            img, 0, 0, img.width, img.height, 0, 0, 
-            document.querySelector('canvas').width, document.querySelector('canvas').height
+            img, 0, 0/*, canvas.width, canvas.height, 0, 0, 
+            document.querySelector('canvas').width, document.querySelector('canvas').height*/
           );
       }
       img.src = data;
     });
+
+    return () => {
+      document.querySelectorAll('.cursor-container').forEach(n => n.remove());
+    };
   }, [])
 
   const handleOnMouseDown = e => {

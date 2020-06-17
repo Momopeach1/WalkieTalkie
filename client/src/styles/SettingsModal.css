@@ -1,17 +1,18 @@
 .setting-flex-container {
   display: flex;
+
 }
 
 .setting-main {
   flex-grow: 1;
   width: 100%;
-  border: 1px solid red;
+  /* border: 1px solid red; */
 }
 
 .setting-fixed-container {
   position: relative;
   width: 50px;
-  border: 1px solid blue;
+  /* border: 1px solid blue; */
 }
 
 .setting-exit {
@@ -26,4 +27,47 @@
   width: 100px;
   height: 100px;
   border-radius: 100px;
+  margin-right: 10px;
+}
+
+.settings-modal-info{
+  margin-left: 10px;
+}
+
+.user-modal-title {
+  color:white;
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.profile-info-container {
+ background-color: rgba(32, 34, 37, 0.6);
+ padding: 20px;
+ border: 1px solid #202225;
+ border-radius: 5px;
+ display: flex;
+}
+
+.settings-modal-edit {
+  position: absolute;
+  right: 90px;
+  height: 32px;
+  min-width: 60px;
+  color: white;
+  background-color: #7289da;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.settings-modal-subtitle {
+  margin-bottom: 8px;
+  color: #8e9297;
+  font-size: 12px;
+}
+
+.settings-modal-subtitle-content {
+  color: #b9bbbe;
+  font-size: 14px;
 }
