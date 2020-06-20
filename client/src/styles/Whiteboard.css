@@ -1,6 +1,7 @@
 .whiteboard-canvas {
   height: 100%;
   position: relative;
+  overflow: auto;
 }
 
 .whiteboard-canvas > canvas {

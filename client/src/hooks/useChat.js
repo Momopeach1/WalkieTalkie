@@ -51,8 +51,6 @@ const useChat = () => {
   
       socket.on('user left', () => {
         allUsersContext.fetchAllUsers();
-        // channelContext.fetchChannels();
-        //channelContext.fetchTextChannels();
         channelContext.fetchVoiceChannels();
         channelContext.fetchWhiteboardChannels();
       });
@@ -68,16 +66,16 @@ const useChat = () => {
       });
 
       //WHITE BOARD SOCKET
-
       socket.on('drawing path', data => {
-        const { x0, x1, y0, y1, color } = data;
+        const { x0, x1, y0, y1, lineWidth, color } = data;
         const canvas = document.querySelector('canvas').getBoundingClientRect();
 
         whiteboardContext.draw(
-          x0 * window.innerWidth - canvas.left,
-          y0 * window.innerHeight - canvas.top,
-          x1 * window.innerWidth - canvas.left,
-          y1 * window.innerHeight - canvas.top,
+          x0/* * window.innerWidth - canvas.left*/,
+          y0/* * window.innerHeight - canvas.top*/,
+          x1/* * window.innerWidth - canvas.left*/,
+          y1/* * window.innerHeight - canvas.top*/,
+          lineWidth,
           color,
           false,
           null
@@ -110,7 +108,7 @@ const useChat = () => {
 
           container.appendChild(name);
 
-          document.querySelector('body').appendChild(container);
+          document.querySelector('.whiteboard-canvas').appendChild(container);
         }
       });
 
@@ -129,13 +127,26 @@ const useChat = () => {
       });
 
       socket.on('receive canvas', data => {
-        const myCanvas = document.querySelector('canvas');
-        const ctx = myCanvas.getContext('2d');
-        const img = new Image;
-        img.onload = function(){
-          ctx.drawImage(img,0,0); // Or at whatever offset you like
-        };
-        img.src = data.dataURL;
+        // const myCanvas = document.querySelector('canvas');
+        // const ctx = myCanvas.getContext('2d');
+        // const img = new Image;
+        // img.onload = function(){
+        //   ctx.drawImage(img,0,0); // Or at whatever offset you like
+        // };
+        // img.src = data.dataURL;
+        const canvas = document.querySelector('canvas');
+        const context = canvas.getContext('2d');
+        const dataURL = data.dataURL;
+        const img = new Image();
+
+        img.onload = () => {
+          canvas.style.width = img.width;
+          canvas.style.height = img.height;
+          canvas.width = img.width;
+          canvas.height = img.height;
+          context.drawImage(img, 0, 0);
+        }
+        img.src = dataURL;        
       });
 
       socket.on('moving mouse', data => {
@@ -145,11 +156,12 @@ const useChat = () => {
         const name = document.getElementById(`name-${data.socketId}`);
         name.innerHTML = data.displayName;
         cursor.setAttribute('src', ToolKit.USER_POINTER);
-        // cursor.style.position = "absolute";
         cursor.setAttribute('width', '30px');
         cursor.setAttribute('height', 'auto');
-        container.style.top = `${data.y * window.innerHeight - canvas.top - 2}px`;
-        container.style.left = `${data.x * window.innerWidth - canvas.left - 6}px`;
+        container.style.top = `${data.y}px`;
+        container.style.left = `${data.x}px`;
+        // container.style.top = `${data.y * window.innerHeight - canvas.top - 2}px`;
+        // container.style.left = `${data.x * window.innerWidth - canvas.left - 6}px`;
       });
 
       socket.on('clear canvas', () => {

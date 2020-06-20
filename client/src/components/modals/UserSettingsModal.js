@@ -1,6 +1,11 @@
 import React, { useState, useContext } from 'react';
 import Modal from 'react-modal';
 
+import Typography from "@material-ui/core/Typography";
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+
 import SettingsSidebar from '../modals/settings/SettingsSidebar';
 import { Grid } from '@material-ui/core';
 import server from '../../apis/server';
@@ -28,11 +33,61 @@ const customStyles = {
     backgroundColor       : "rgb(0, 0, 0)"
   }
 };
+
+const useStyles = makeStyles({
+  root: {
+    background: 'linear-gradient(45deg, #482861 30%, #6a82ab 90%)',
+    borderRadius: 3,
+    border: 0,
+    color: 'white',
+    height: 48,
+    padding: '0 30px',
+    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+    width: '100%',
+    fontSize: '1.2rem',
+    marginTop: '10px',
+    display: 'block',
+  },
+  label: {
+    textTransform: 'capitalize',
+    fontFamily: 'whitney-book',
+  },
+  textfield: {
+    background: '#b08bb0',
+    width: '100%',
+    borderRadius: 3,
+    marginBottom: '10px',
+  },
+  heading: {
+    fontWeight: 'bold',
+    paddingBottom: '30px',
+    paddingRight: '50px',
+    paddingTop: '50px',
+    fontFamily: 'whitney-book',
+    fontSize: '3rem',
+    color: 'rgb(50, 53, 59)',
+  },
+  signinButton: {
+    height: '48px',
+    padding: '0 30px',
+    color: '#653987',
+    fontSize: '1.2rem',
+    fontFamily: 'whitney-book',
+    marginLeft: '30px',
+  },
+  textfieldHeading: {
+    color: '#653987',
+    fontSize: '1.2rem',
+    fontFamily: 'whitney-book',
+    paddingBottom: '5px',
+  }
+});
  
 // Make sure to bind modal to your appElement (http://reactcommunity.org/react-modal/accessibility/)
 Modal.setAppElement('#user-settings-modal')
  
 const UserSettingsModal = ({ type }) => {
+  const classes = useStyles();
   const { user, setUser } = useContext(UserContext);
   const [form, setForm] = useState({ 
     photo: null, 
@@ -101,16 +156,79 @@ const UserSettingsModal = ({ type }) => {
   const renderProfileEdit = () => {
     if (isEdit) {
       return (
-      <form onSubmit={handleOnSubmit}>
+      <form className="profile-info-container" onSubmit={handleOnSubmit}>
         <input onChange={handleUploaderChange} className="avatar-uploader" type="file" name="photo" style={{ display: "none" }} />
         <div onClick={() => document.querySelector(".avatar-uploader").click()}>
           <img className="settings-modal-avatar" src={user.photoURL} />
         </div>
-        <input type="text" id="displayName" value={form.displayName} onChange={handleOnChange} />
-        <input type="email" id="email" value={form.email} onChange={handleOnChange} />
-        <input type="password" id="currentPassword" value={form.currentPassword} onChange={handleOnChange} />
-        <input type="password" id="password" value={form.password} onChange={handleOnChange} />
-        <button>Submit</button>
+        <div className="settings-modal-info">
+          {/* <input type="text" id="displayName" value={form.displayName} onChange={handleOnChange} /> */}
+          <Typography classes= {{root: classes.textfieldHeading}}>
+            UserName
+          </Typography>
+          <TextField 
+              required
+              id="displayName"
+              classes={{ root: classes.textfield}}
+              value={form.displayName}
+              autoComplete="off"
+              type="text"
+              variant="outlined"
+              onChange={(event) => handleOnChange(event)}
+            />
+          {/* <input type="email" id="email" value={form.email} onChange={handleOnChange} /> */}
+          <Typography classes= {{root: classes.textfieldHeading}}>
+            Email
+          </Typography>
+          <TextField 
+              required
+              id="email"
+              classes={{ root: classes.textfield}}
+              value={form.email}
+              autoComplete="off"
+              type="email"
+              variant="outlined"
+              onChange={(event) => handleOnChange(event)}
+            />
+          {/* <input type="password" id="currentPassword" value={form.currentPassword} onChange={handleOnChange} /> */}
+          <Typography classes= {{root: classes.textfieldHeading}}>
+            Current Password
+          </Typography>
+          <TextField 
+              required
+              id="currentPassword"
+              classes={{ root: classes.textfield}}
+              value={form.currentPassword}
+              autoComplete="off"
+              type="password"
+              variant="outlined"
+              onChange={(event) => handleOnChange(event)}
+            />
+          {/* <input type="password" id="password" value={form.password} onChange={handleOnChange} /> */}
+          <Typography classes= {{root: classes.textfieldHeading}}>
+            New Password
+          </Typography>
+          <TextField 
+              required
+              id="password"
+              classes={{ root: classes.textfield}}
+              value={form.password}
+              autoComplete="off"
+              type="password"
+              variant="outlined"
+              onChange={(event) => handleOnChange(event)}
+            />
+        </div>
+        {/* <button>Submit</button> */}
+        <Button 
+          classes={{
+            root: classes.root,
+            label: classes.label,
+          }}
+          onClick = {(event) => {handleOnSubmit(event)}}
+          >
+            Submit
+        </Button>
       </form>        
       )
     } else {

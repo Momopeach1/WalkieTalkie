@@ -57,10 +57,23 @@ const useChannelGroup = () => {
           if (whiteboardChannels.find(w => w.name === channelName).artists.length === 0) {
             server.get('/whiteboard/load', { params: { name: channelName } })
               .then(response => {
-                const context = document.querySelector('canvas').getContext('2d');
+                const canvas = document.querySelector('canvas');
+                const context = canvas.getContext('2d');
                 const dataURL = response.data.img;
+                const container = document.querySelector('.whiteboard-canvas');
                 const img = new Image();
+                if (!dataURL) {
+                  canvas.style.width = '7680px';
+                  canvas.style.height = '4320px';
+                  canvas.width = canvas.offsetWidth;
+                  canvas.height = canvas.offsetHeight;
+                }
+
                 img.onload = () => {
+                  canvas.style.width = img.width;
+                  canvas.style.height = img.height;
+                  canvas.width = img.width;
+                  canvas.height = img.height;
                   context.drawImage(img, 0, 0);
                 }
                 img.src = dataURL;
@@ -93,7 +106,7 @@ const useChannelGroup = () => {
     
               container.appendChild(name);
     
-              document.querySelector('body').appendChild(container);              
+              document.querySelector('.whiteboard-canvas').appendChild(container);              
             }
           });
         })

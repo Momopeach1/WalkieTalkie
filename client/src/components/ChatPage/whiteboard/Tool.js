@@ -1,18 +1,13 @@
 import React from 'react';
 
+import useTool from '../../../hooks/whiteboard/useTool';
+
 const Tool = ({ children, name, id, cursor }) =>{
-  var css = `canvas:hover{ cursor: ${cursor} }`;
-  var style = document.createElement('style');
-  
-  if (style.styleSheet) {
-      style.styleSheet.cssText = css;
-  } else {
-      style.appendChild(document.createTextNode(css));
-  }
+  const [handleOnToolSelect] = useTool(id, cursor);
 
   return(
     <label className="">
-      <input type="radio" name={name} id={id} onClick={() => document.querySelector('canvas').appendChild(style)} />
+      <input type="radio" name={name} id={id} onClick={/*() => document.querySelector('canvas').appendChild(style)*/handleOnToolSelect} />
       <div>
         { children }
       </div>

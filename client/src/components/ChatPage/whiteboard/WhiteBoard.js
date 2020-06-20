@@ -7,7 +7,7 @@ import Island from './Island';
 import LeftIsland from './LeftIsland';
 
 const WhiteBoard = () => {
-   const [handleOnMouseDown, handleOnMouseUp, handleOnMouseMove, renderActiveArtists] = useWhiteboard();
+   const [handleOnMouseDown, handleOnMouseUp, handleOnMouseMove, renderActiveArtists, throttle] = useWhiteboard();
   return (
     <div className="whiteboard-canvas">
       <div className="archipelago">
