@@ -2,7 +2,6 @@ import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import React from 'react';
 
-import Chat from './chat/Chat';
 import useChat from '../../hooks/useChat';
 import '../../styles/ChatPage.css';
 import ChannelHeader from './ChannelHeader';
@@ -38,7 +37,6 @@ const ChatPage = () => {
           </Grid>
         </Grid>
       </Grid>
-      {/* <button onClick={()=> history.push('/profile')}>profile</button> */}
     </div>
   );
 }

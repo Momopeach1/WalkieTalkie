@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const voiceSchema = mongoose.Schema({
-  name: String,
+  name: { type: String, unique: true },
   talkers: { type: Map, of: String }
 });
 

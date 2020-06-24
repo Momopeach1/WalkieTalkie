@@ -36,6 +36,7 @@ router.put('/save', (req, res) => {
   Whiteboard.findOne({ name: req.body.name }, (finderr, findres) => {
     if(finderr) return res.status(500).send(finderr);
     findres.img = req.body.dataURL;
+    findres.bgColor = req.body.bgColor;
     findres.save((saveErr, saveRes) => {
       if(saveErr) return res.status(500).send(saveErr);
       res.send("canvas saved");
@@ -54,13 +55,17 @@ router.get('/load', passport.isLoggedIn(), (req, res) => {
 
 // @Route - DELETE /api/whiteboard/leave
 router.delete('/leave', passport.isLoggedIn(), (req, res) => {
-  console.log('request body', req.body);
   Whiteboard.findOne({name: req.body.name}, (finderr, findres) => {
-    if(finderr) return res.status(500).send(finderr);
-    console.log(findres);
+    if (finderr) return res.status(500).send(finderr.errmsg);
     findres.artists = findres.artists.filter(a=> JSON.stringify(a._id) !== JSON.stringify(req.user._id));
+
+    if (findres.artists.length === 0) {
+      findres.img = req.body.dataURL;
+      findres.bgColor = req.body.bgColor;
+    }
+
     findres.save((saveErr, saveRes) => {
-      if(saveErr) return res.status(500).send(saveErr);
+      if(saveErr) return res.status(500).send(saveErr.errmsg);
       res.send("User removed from whiteboard");
     });
   });

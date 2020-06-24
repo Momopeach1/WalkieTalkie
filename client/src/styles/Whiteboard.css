@@ -62,4 +62,26 @@
 
 .cursor-container {
   pointer-events: none;
+  min-width: 32px;
+  height: 32px;
+  position: absolute;
+}
+
+.cursor-nametag {
+  margin-left: 25px;
+  color: white;
+  background: #8bcd2f;
+  padding: 4px;
+  font-size: 12px;
+  border: 0.5px solid darkgreen;
+  border-radius: 3px;
+}
+
+.radio-tools {
+  display: none;
+}
+
+
+.tool-icons {
+  margin: 5px;
 }

@@ -105,3 +105,21 @@
   color: #00b0f4;
   font-size: 14px;
 }
+
+.error-message-container {
+  color: white;
+  background: red;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+
+.error-close-button:hover {
+  cursor: pointer;
+}

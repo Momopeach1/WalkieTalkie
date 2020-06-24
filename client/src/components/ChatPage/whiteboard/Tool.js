@@ -6,8 +6,14 @@ const Tool = ({ children, name, id, cursor }) =>{
   const [handleOnToolSelect] = useTool(id, cursor);
 
   return(
-    <label className="">
-      <input type="radio" name={name} id={id} onClick={/*() => document.querySelector('canvas').appendChild(style)*/handleOnToolSelect} />
+    <label className="tool-icons">
+      <input 
+        className="radio-tools" 
+        type="radio" 
+        name={name} 
+        id={id} 
+        onClick={handleOnToolSelect} 
+      />
       <div>
         { children }
       </div>

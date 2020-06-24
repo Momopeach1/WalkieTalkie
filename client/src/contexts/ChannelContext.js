@@ -13,7 +13,6 @@ export const ChannelProvider = ({ children }) => {
   const [whiteboardChannels, setWhiteboardChannels] = useState([]);
   const [selectedChannel, setSelectedChannel] = useState({ name: '', type: '' });
   const [selectedVoice, setSelectedVoice] = useState('');
-  const [filteredChannels, setFilteredChannels] = useState({ textChannels: [], voiceChannels: [] });
   const [talkers, setTalkers] = useState({});
   const selectedChannelRef = useRef(selectedChannel);
 

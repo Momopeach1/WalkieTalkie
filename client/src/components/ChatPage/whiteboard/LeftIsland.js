@@ -27,7 +27,6 @@ const LeftIsland = () =>{
             variant="outlined"
             onChange={e => setColor(e.target.value)}
           >
-
           </TextField>
         </label>
       </div>

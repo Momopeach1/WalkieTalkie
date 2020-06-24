@@ -7,139 +7,106 @@ import Talker from '../components/ChatPage/sidebar/Talkers';
 import BrushIcon from '@material-ui/icons/Brush';
 import WhiteboardContext from '../contexts/WhiteboardContext';
 
+
 const useChannelGroup = () => {
   const [channelGroupsCollapse, setChannelGroupsCollapse] = useState({ text: false, voice: false });
 
-  const { whiteboards } = useContext(WhiteboardContext);
-  const { whiteboardChannels } = useContext(ChannelContext);
+  const { bgRef, removeAllCursors, appendCursor, leaveWhiteboard } = useContext(WhiteboardContext);
   const { socket } = useContext(SocketContext);
   const { getMedia, leaveVoice } = useContext(WebRTCContext);
   const { 
+    whiteboardChannels,
     setSelectedChannel, 
     selectedChannel, 
     talkers, 
     setSelectedVoice,
     selectedVoice
   } = useContext(ChannelContext);
-  
-  useEffect(() => {
-    // fetchChannels();
-  }, []);
-  
-  const handleOnClick = (e, type, channelName) => {
-    if (type === 'voice') {
-      server.put('/voice/join-voice', ({ socketId: socket.id, channelName }))
-        .then(() => {
-          if (selectedVoice !== '') { 
-            leaveVoice();
-          } 
-          getTheMedia(channelName);
-          
-        });
-      return;
-    } else if (type === 'whiteboard') {
-      document.querySelectorAll('.cursor-container').forEach(n => n.remove());
-      if (selectedChannel.type === 'whiteboard'){
-        const canvas = document.querySelector('canvas');
-        const context = canvas.getContext('2d');
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        server.delete('/whiteboard/leave', { data: { name: selectedChannel.name } })
-          .then(() => {
-            socket.emit('leave whiteboard', { channelName: selectedChannel.name });
-            if (whiteboardChannels.find(w => w.name === selectedChannel.name).artists.length === 1)
-              server.put('/whitebpard/save', { name: selectedChannel.name, dataURL:document.querySelector('canvas').toDataURL() });
-          })
-          .catch(error => console.log(error));
-      }
-      server.put('/whiteboard/join', { name: channelName })
-        .then(()=> { 
-          socket.emit('join whiteboard',  { channelName });
-          if (whiteboardChannels.find(w => w.name === channelName).artists.length === 0) {
-            server.get('/whiteboard/load', { params: { name: channelName } })
-              .then(response => {
-                const canvas = document.querySelector('canvas');
-                const context = canvas.getContext('2d');
-                const dataURL = response.data.img;
-                const container = document.querySelector('.whiteboard-canvas');
-                const img = new Image();
-                if (!dataURL) {
-                  canvas.style.width = '7680px';
-                  canvas.style.height = '4320px';
-                  canvas.width = canvas.offsetWidth;
-                  canvas.height = canvas.offsetHeight;
-                }
 
-                img.onload = () => {
-                  canvas.style.width = img.width;
-                  canvas.style.height = img.height;
-                  canvas.width = img.width;
-                  canvas.height = img.height;
-                  context.drawImage(img, 0, 0);
-                }
-                img.src = dataURL;
-              })
-              .catch(() => console.log("FAILED TO LOAD"));
-          }
-            
-          whiteboardChannels.find(w => w.name === channelName).artists.forEach(a => {
-            if (!document.getElementById(`cursor-${a.socketId}`)) {
-              const container = document.createElement("div");
-              container.style.minWidth = '32px';
-              container.style.height = '32px';
-              container.style.position = 'absolute';
-              container.setAttribute('id', `container-${a.socketId}`);
-              container.setAttribute('class', 'cursor-container');
-              
-              const img = document.createElement("IMG");
-              img.setAttribute('id', `cursor-${a.socketId}`);
-              container.appendChild(img);
-              
-              const name = document.createElement('div');
-              name.setAttribute('id', `name-${a.socketId}`);
-              name.style.marginLeft = "25px";
-              name.style.color = "white";
-              name.style.background = "#8bcd2f";
-              name.style.padding = "4px";
-              name.style.fontSize = "12px";
-              name.style.border = "0.5px solid darkgreen";
-              name.style.borderRadius = "3px";
-    
-              container.appendChild(name);
-    
-              document.querySelector('.whiteboard-canvas').appendChild(container);              
-            }
-          });
-        })
-        .catch(error => console.log(error));
-    } else {
-      // Clicked on Text Channel
-      if (selectedChannel.type === 'whiteboard') {
-        const canvas = document.querySelector('canvas');
-        server.delete('/whiteboard/leave', { data: { name: selectedChannel.name } })
-        .then(() => {
-          socket.emit('leave whiteboard', { channelName: selectedChannel.name });
-          if (whiteboardChannels.find(w => w.name === selectedChannel.name).artists.length === 1)
-            server.put('/whiteboard/save', { name: selectedChannel.name, dataURL: canvas.toDataURL() })
-              .then(() => console.log('SAVED!!!!!'))
-              .catch(() => console.log('SAVE ERROR'));
-        })
-          .catch(error => console.log(error));   
-      }
-    }
-    document.querySelectorAll('input[type="radio"]').forEach(e => {
-      if (e.name !== `${type}-radio`) e.checked = false;
-    });
-    setSelectedChannel({ name: e.target.value, type: type });
-    // document.querySelector('.log-container').scrollTop = document.querySelector('.log-container').scrollHeight;
-  };
-    
-  const getTheMedia = channelName => {
+  const onErrorClose = () => {
+    const error = document.querySelector('.error-message-container');
+    if (error) error.remove();
+  }
+
+  const onServerFailure = ({ response }) => {
+    onErrorClose();
+    const status = response.status;
+    const message = response.data;
+    const messageContainer = document.createElement('div');
+    const messageText = document.createElement('p');
+    const closeButton = document.createElement('div');
+    messageContainer.setAttribute('class', 'error-message-container');
+    messageText.setAttribute('class', 'error-message-text');
+    closeButton.setAttribute('class', 'error-close-button');
+    messageText.innerHTML = `Server Failure (${status}): ${message}`;
+    closeButton.innerHTML = 'X';
+    messageContainer.appendChild(messageText);
+    messageContainer.appendChild(closeButton);
+    document.querySelector('.message-ui').appendChild(messageContainer);
+    closeButton.addEventListener('click', onErrorClose);
+  }
+
+  const onJoinVoiceSuccess = channelName => {
+    if (selectedVoice) leaveVoice();
     getMedia({ audio: true }, () => {
       console.log('get media')
       socket.emit('joined voice', { channelName, socketId: socket.id });
       setSelectedVoice(channelName);    
-    })
-  }
+    })          
+  };
+
+  const onJoinWhiteboardSuccess = (channelName, removeAllCursors) => { 
+    socket.emit('join whiteboard',  { channelName });
+    removeAllCursors();
+    if (whiteboardChannels.find(w => w.name === channelName).artists.length === 0) {
+      server.get('/whiteboard/load', { params: { name: channelName } })
+        .then(response => {
+          bgRef.current = response.data.bgColor;
+          const canvas = document.querySelector('canvas');
+          const context = canvas.getContext('2d');
+          const dataURL = response.data.img;
+          const img = new Image();
+          img.onload = () => context.drawImage(img, 0, 0);
+          img.src = dataURL;
+        })
+        .catch(() => console.log("FAILED TO LOAD"));
+    }
+      
+    whiteboardChannels.find(w => w.name === channelName).artists.forEach(a => {
+      if (!document.getElementById(`cursor-${a.socketId}`))
+        appendCursor(a);
+    });
+  };
+  
+  const handleOnClick = (e, type, channelName) => {
+    switch(type) {
+      case 'voice':
+        return server.put('/voice/join-voice', ({ socketId: socket.id, channelName }))
+          .then(() => onJoinVoiceSuccess(channelName))
+          .catch(onServerFailure);
+      case 'whiteboard':
+        // Join from another whiteboard channel.
+        if (selectedChannel.type === 'whiteboard')
+          leaveWhiteboard(socket, selectedChannel);
+
+        server.put('/whiteboard/join', { name: channelName })
+          .then(() => onJoinWhiteboardSuccess(channelName, removeAllCursors))
+          .catch(onServerFailure);
+        break;
+      case 'text':
+        if (selectedChannel.type === 'whiteboard')
+          leaveWhiteboard(socket, selectedChannel);
+        break;
+      default:
+        return;
+    }
+
+    document.querySelectorAll('input[type="radio"]').forEach(e => {
+      if (e.name !== `${type}-radio`) e.checked = false;
+    });
+
+    setSelectedChannel({ name: e.target.value, type: type });
+  };
 
   const handleOnCollapse = type => {
     setChannelGroupsCollapse(prev => { return { ...prev, [type]: !prev[type] } });
@@ -164,22 +131,26 @@ const useChannelGroup = () => {
      }
   }
 
+  // Preview of artists inside whiteboard.
   const renderArtistIcons = ( channelName, channelType ) => {
     return channelType === 'whiteboard' && whiteboardChannels.length && 
-      <div className="artists-icon-container">{whiteboardChannels.find(w => w.name === channelName).artists.map((a, i) => {
-        return (
-          <img 
-            className="artist-icon" 
-            src={a.photoURL} 
-            style={{ position: "absolute", right: "0", transform: `translate(${-(50 * i)}%, -50%)` }} 
-          />
-        );
-      })
-      }</div>
+      <div className="artists-icon-container">
+        {
+          whiteboardChannels.find(w => w.name === channelName).artists.map((a, i) => {
+            return (
+              <img 
+                className="artist-icon" 
+                src={a.photoURL} 
+                style={{ position: "absolute", right: "0", transform: `translate(${-(50 * i)}%, -50%)` }} 
+              />
+            );
+          })
+      }
+    </div>
   }
 
   const renderChannels = (type, channels) => {
-    return /*filteredChannels[`${type}Channels`]*/channels.map((ch, i) => {
+    return channels.map((ch, i) => {
       return (
         <div style={{ display: !channelGroupsCollapse[type]? 'block' : isSame(ch.name, selectedChannel.name) }}>
           <input 

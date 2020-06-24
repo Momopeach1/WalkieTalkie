@@ -11,6 +11,7 @@ import { Grid } from '@material-ui/core';
 import server from '../../apis/server';
 import UserContext from '../../contexts/UserContext';
 import SocketContext from '../../contexts/SocketContext';
+import WhiteboardContext from '../../contexts/WhiteboardContext';
 
 import '../../styles/SettingsModal.css'
 
@@ -36,24 +37,30 @@ const customStyles = {
 
 const useStyles = makeStyles({
   root: {
-    background: 'linear-gradient(45deg, #482861 30%, #6a82ab 90%)',
+    background: '#43B581',
     borderRadius: 3,
     border: 0,
     color: 'white',
-    height: 48,
-    padding: '0 30px',
-    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-    width: '100%',
-    fontSize: '1.2rem',
-    marginTop: '10px',
+    lineHeight: '16px',
+    height: 32,
+    width: '60px',
+    minHeight: '32px',
+    minWidth: '60px',
     display: 'block',
+    marginLeft: '20px',
+    marginTop: '10px',
+    "&:hover": {
+      backgroundColor: "#43B581"
+    },
   },
   label: {
     textTransform: 'capitalize',
     fontFamily: 'whitney-book',
+    fontSize: '14px',
+    fontWeight: '500',
   },
   textfield: {
-    background: '#b08bb0',
+    background: '#dcddde',
     width: '100%',
     borderRadius: 3,
     marginBottom: '10px',
@@ -65,18 +72,27 @@ const useStyles = makeStyles({
     paddingTop: '50px',
     fontFamily: 'whitney-book',
     fontSize: '3rem',
-    color: 'rgb(50, 53, 59)',
+    color: 'white',
   },
-  signinButton: {
+  cancel: {
     height: '48px',
-    padding: '0 30px',
-    color: '#653987',
-    fontSize: '1.2rem',
+    padding: '2px 4px',
+    color: 'red',
+    fontSize: '14px',
     fontFamily: 'whitney-book',
-    marginLeft: '30px',
+    marginLeft: 'auto',
+    border: '1px solid red',
+    borderRadius: 3,
+    lineHeight: '16px',
+    height: 32,
+    width: '60px',
+    minHeight: '32px',
+    minWidth: '60px',
+    display: 'block',
+    marginTop: '10px',
   },
   textfieldHeading: {
-    color: '#653987',
+    color: '#8e9297',
     fontSize: '1.2rem',
     fontFamily: 'whitney-book',
     paddingBottom: '5px',
@@ -89,6 +105,8 @@ Modal.setAppElement('#user-settings-modal')
 const UserSettingsModal = ({ type }) => {
   const classes = useStyles();
   const { user, setUser } = useContext(UserContext);
+  const { removeAllCursors } = useContext(WhiteboardContext);
+  const { socket } = useContext(SocketContext);
   const [form, setForm] = useState({ 
     photo: null, 
     displayName: user.displayName, 
@@ -98,12 +116,13 @@ const UserSettingsModal = ({ type }) => {
   });
   const [isEdit, setIsEdit] = useState(false);
   const [modalIsOpen, setIsOpen] = useState(false);
-  const { socket } = useContext(SocketContext);
-  const settingsIcon = <svg aria-hidden="false" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M19.738 10H22V14H19.739C19.498 14.931 19.1 15.798 18.565 16.564L20 18L18 20L16.565 18.564C15.797 19.099 14.932 19.498 14 19.738V22H10V19.738C9.069 19.498 8.203 19.099 7.436 18.564L6 20L4 18L5.436 16.564C4.901 15.799 4.502 14.932 4.262 14H2V10H4.262C4.502 9.068 4.9 8.202 5.436 7.436L4 6L6 4L7.436 5.436C8.202 4.9 9.068 4.502 10 4.262V2H14V4.261C14.932 4.502 15.797 4.9 16.565 5.435L18 3.999L20 5.999L18.564 7.436C19.099 8.202 19.498 9.069 19.738 10ZM12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16Z"></path></svg>
+  const [changePassword, setChangePassword] = useState(false);
+
+  const settingsIcon = <svg aria-hidden="false" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M19.738 10H22V14H19.739C19.498 14.931 19.1 15.798 18.565 16.564L20 18L18 20L16.565 18.564C15.797 19.099 14.932 19.498 14 19.738V22H10V19.738C9.069 19.498 8.203 19.099 7.436 18.564L6 20L4 18L5.436 16.564C4.901 15.799 4.502 14.932 4.262 14H2V10H4.262C4.502 9.068 4.9 8.202 5.436 7.436L4 6L6 4L7.436 5.436C8.202 4.9 9.068 4.502 10 4.262V2H14V4.261C14.932 4.502 15.797 4.9 16.565 5.435L18 3.999L20 5.999L18.564 7.436C19.099 8.202 19.498 9.069 19.738 10ZM12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16Z"></path></svg>;
+  const escIcon = <i class="far fa-times-circle fa-2x"></i>;
 
   const openModal = e => {
     e.stopPropagation();
-    document.querySelectorAll('.cursor-container').forEach(n => n.remove());
     setIsOpen(true)
   };
 
@@ -129,7 +148,9 @@ const UserSettingsModal = ({ type }) => {
       .catch(error => console.log('failed update', error.response));
   }
  
-  const closeModal = () => setIsOpen(false);
+  const closeModal = () => {
+    setIsOpen(false);
+  }
 
   const handleUploaderChange = () => {
     const photo = document.querySelector('.avatar-uploader');
@@ -153,58 +174,10 @@ const UserSettingsModal = ({ type }) => {
     )
   }
 
-  const renderProfileEdit = () => {
-    if (isEdit) {
-      return (
-      <form className="profile-info-container" onSubmit={handleOnSubmit}>
-        <input onChange={handleUploaderChange} className="avatar-uploader" type="file" name="photo" style={{ display: "none" }} />
-        <div onClick={() => document.querySelector(".avatar-uploader").click()}>
-          <img className="settings-modal-avatar" src={user.photoURL} />
-        </div>
-        <div className="settings-modal-info">
-          {/* <input type="text" id="displayName" value={form.displayName} onChange={handleOnChange} /> */}
-          <Typography classes= {{root: classes.textfieldHeading}}>
-            UserName
-          </Typography>
-          <TextField 
-              required
-              id="displayName"
-              classes={{ root: classes.textfield}}
-              value={form.displayName}
-              autoComplete="off"
-              type="text"
-              variant="outlined"
-              onChange={(event) => handleOnChange(event)}
-            />
-          {/* <input type="email" id="email" value={form.email} onChange={handleOnChange} /> */}
-          <Typography classes= {{root: classes.textfieldHeading}}>
-            Email
-          </Typography>
-          <TextField 
-              required
-              id="email"
-              classes={{ root: classes.textfield}}
-              value={form.email}
-              autoComplete="off"
-              type="email"
-              variant="outlined"
-              onChange={(event) => handleOnChange(event)}
-            />
-          {/* <input type="password" id="currentPassword" value={form.currentPassword} onChange={handleOnChange} /> */}
-          <Typography classes= {{root: classes.textfieldHeading}}>
-            Current Password
-          </Typography>
-          <TextField 
-              required
-              id="currentPassword"
-              classes={{ root: classes.textfield}}
-              value={form.currentPassword}
-              autoComplete="off"
-              type="password"
-              variant="outlined"
-              onChange={(event) => handleOnChange(event)}
-            />
-          {/* <input type="password" id="password" value={form.password} onChange={handleOnChange} /> */}
+  const renderChangePassword = () => {
+    if(changePassword) 
+      return(
+        <>
           <Typography classes= {{root: classes.textfieldHeading}}>
             New Password
           </Typography>
@@ -218,17 +191,94 @@ const UserSettingsModal = ({ type }) => {
               variant="outlined"
               onChange={(event) => handleOnChange(event)}
             />
+        </>
+      );
+    else{
+      return(
+        <div 
+          className="change-password"
+          onClick={() => setChangePassword(true)}
+        >
+          Change Password?
+        </div>
+      )
+    }
+  };
+
+  const renderProfileEdit = () => {
+    if (isEdit) {
+      return (
+      <form className="profile-info-container" onSubmit={handleOnSubmit}>
+        <input onChange={handleUploaderChange} className="avatar-uploader" type="file" name="photo" style={{ display: "none" }} />
+        <div className="avatar-edit-container" onClick={() => document.querySelector(".avatar-uploader").click()}>
+          <img className="settings-modal-avatar" src={user.photoURL} />
+        </div>
+        <div className="settings-modal-info">
+          <Typography classes= {{root: classes.textfieldHeading}}>
+            UserName
+          </Typography>
+          <TextField 
+              required
+              id="displayName"
+              classes={{ root: classes.textfield}}
+              value={form.displayName}
+              autoComplete="off"
+              type="text"
+              variant="outlined"
+              onChange={(event) => handleOnChange(event)}
+          />
+          <Typography classes= {{root: classes.textfieldHeading}}>
+            Email
+          </Typography>
+          <TextField 
+              required
+              id="email"
+              classes={{ root: classes.textfield}}
+              value={form.email}
+              autoComplete="off"
+              type="email"
+              variant="outlined"
+              onChange={(event) => handleOnChange(event)}
+            />
+          <Typography classes= {{root: classes.textfieldHeading}}>
+            Current Password
+          </Typography>
+          <TextField 
+              required
+              id="currentPassword"
+              classes={{ root: classes.textfield}}
+              value={form.currentPassword}
+              autoComplete="off"
+              type="password"
+              variant="outlined"
+              onChange={(event) => handleOnChange(event)}
+          />
+          {renderChangePassword()}
+          <div className="button-container">
+            <Button
+              classes={{
+                root: classes.cancel,
+                label: classes.label,
+              }}
+              onClick = {() => {
+                setIsEdit(false);
+                setChangePassword(false);
+              }}
+            >
+              cancel
+            </Button>
+            <Button 
+              classes={{
+                root: classes.root,
+                label: classes.label,
+              }}
+              onClick = {(event) => {handleOnSubmit(event)}}
+              >
+                Submit
+            </Button>
+          </div>
         </div>
         {/* <button>Submit</button> */}
-        <Button 
-          classes={{
-            root: classes.root,
-            label: classes.label,
-          }}
-          onClick = {(event) => {handleOnSubmit(event)}}
-          >
-            Submit
-        </Button>
       </form>        
       )
     } else {
@@ -245,20 +295,30 @@ const UserSettingsModal = ({ type }) => {
         style={customStyles}
         contentLabel="Example Modal"
       >
-        <div className="modal-content">
+        <div className="settings-modal-content">
           <Grid container spacing={0}>
             <Grid item sm={4} md={2}>
               <SettingsSidebar/>
             </Grid>
-            <Grid item sm={8} md={10}>
-              <div className="setting-flex-container">
-                <div className="setting-main">
-                  <h2 className="user-modal-title">MY ACCOUNT</h2>
-                  {renderProfileEdit()}
+            <Grid className="right-grid" item sm={8} md={10}>
+
+              <div className="setting-main">
+                <h2 className="user-modal-title">MY ACCOUNT</h2>
+                {renderProfileEdit()}
+                <div className="two-factor-container">
+                  <h2>
+                    Two Factor Authentication
+                  </h2>
                 </div>
-                <div className="setting-fixed-container">
-                    <div className="setting-exit" onClick={closeModal}>X</div>
-                </div>
+              </div>
+
+              <div className="setting-fixed-container">
+                  <div className="setting-exit" onClick={closeModal}>
+                    {escIcon}
+                    <div className="exit-text">
+                      ESC
+                    </div>
+                  </div>
               </div>
             </Grid>
           </Grid>

@@ -3,15 +3,21 @@
 
 }
 
+.right-grid {
+ display: flex;
+}
 .setting-main {
   flex-grow: 1;
   width: 100%;
+  padding: 60px 40px 80px;
   /* border: 1px solid red; */
 }
 
 .setting-fixed-container {
   position: relative;
   width: 50px;
+  padding-top: 60px;
+  margin-right: 150px;
   /* border: 1px solid blue; */
 }
 
@@ -19,8 +25,15 @@
   position: fixed;
   width: inherit;
   text-align: center;
-  color: white;
+  color: #72767d;
   cursor: pointer;
+}
+
+.exit-text {
+  color: #72767d;
+  margin-top: 8px;
+  font-size: 13px;
+  text-align: center;
 }
 
 .settings-modal-avatar {
@@ -48,9 +61,10 @@
  display: flex;
 }
 
+/* button */
 .settings-modal-edit {
   position: absolute;
-  right: 90px;
+  right: 245px;
   height: 32px;
   min-width: 60px;
   color: white;
@@ -59,6 +73,12 @@
   border-radius: 5px;
   cursor: pointer;
   box-sizing: border-box;
+}
+
+.settings-modal-info {
+  display: block;
+  width:100%;
+  padding-right: 20px;
 }
 
 .settings-modal-subtitle {
@@ -70,4 +90,29 @@
 .settings-modal-subtitle-content {
   color: #b9bbbe;
   font-size: 14px;
+}
+
+.button-container {
+  align-items: center;
+  display: flex;
+  justify-content: right;
+}
+
+.avatar-edit-container {
+  max-height: 32px;
+}
+
+.change-password {
+  color: white;
+}
+
+.change-password:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.settings-sidebar {
+  margin-bottom: 2px;
+  padding: 60px 6px 60px 20px;
+  background: #2f3136;
 }

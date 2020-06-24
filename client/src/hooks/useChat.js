@@ -1,26 +1,27 @@
 import React, { useContext, useEffect } from 'react';
 import openSocket from 'socket.io-client';
 
-import server from '../apis/server';
+//Contexts
 import AllUsersContext from '../contexts/AllUsersContext';
 import LogsContext from '../contexts/LogsContext';
-import SocketContext, { SocketProvider } from '../contexts/SocketContext';
+import SocketContext from '../contexts/SocketContext';
 import UserContext from '../contexts/UserContext';
 import ChannelContext from '../contexts/ChannelContext';
 import WebRTCContext from '../contexts/WebRTCContext';
+import WhiteboardContext from '../contexts/WhiteboardContext';
 
 //Socket 
+import userSocket from '../sockets/userSocket';
 import textChannelSocket from '../sockets/textChannelSocket';
 import voiceChannelSocket from '../sockets/voiceChannelSocket';
+import whiteboardChannelSocket from '../sockets/whiteboardChannelSocket';
 
 import WhiteBoard from '../components/ChatPage/whiteboard/WhiteBoard';
 import Chat from '../components/ChatPage/chat/Chat';
-import WhiteboardContext from '../contexts/WhiteboardContext';
-import ToolKit from '../components/ChatPage/whiteboard/ToolKit';
 
 const useChat = () => {
   const { setSocket } = useContext(SocketContext);
-  const { user, isAuth } = useContext(UserContext);
+  const userContext = useContext(UserContext);
   const logsContext = useContext(LogsContext);
   const allUsersContext = useContext(AllUsersContext);
   const channelContext = useContext(ChannelContext);
@@ -32,7 +33,7 @@ const useChat = () => {
   }, [channelContext.selectedChannel.name])
   
   useEffect(() => {
-    if (user.email !== null) {
+    if (userContext.user.email !== null) {
       const socket = openSocket();
       setSocket(socket);
       logsContext.fetchMessages();
@@ -40,138 +41,12 @@ const useChat = () => {
       channelContext.fetchVoiceChannels();
       channelContext.fetchWhiteboardChannels();
   
-      socket.on('generated socket id', async ({ socketId }, announceJoin) => {
-        await server.put('/user', { email: user.email, socketId: socketId });
-        announceJoin();
-      });
-  
-      // (socket, { setLogs }) -> func.setLogs(ksnkjlnfdksnf)
-      textChannelSocket(socket, logsContext, channelContext) 
+      userSocket(socket, userContext, channelContext, logsContext, allUsersContext);
+      textChannelSocket(socket, logsContext, channelContext);
       voiceChannelSocket(socket, webRTCContext, channelContext);
-  
-      socket.on('user left', () => {
-        allUsersContext.fetchAllUsers();
-        channelContext.fetchVoiceChannels();
-        channelContext.fetchWhiteboardChannels();
-      });
-  
-      socket.on('user joined', ()=> {
-        allUsersContext.fetchAllUsers();
-      });
-
-      socket.on('refresh users', () => {
-        console.log('received refresh users');
-        allUsersContext.fetchAllUsers();
-        logsContext.fetchMessages();
-      });
-
-      //WHITE BOARD SOCKET
-      socket.on('drawing path', data => {
-        const { x0, x1, y0, y1, lineWidth, color } = data;
-        const canvas = document.querySelector('canvas').getBoundingClientRect();
-
-        whiteboardContext.draw(
-          x0/* * window.innerWidth - canvas.left*/,
-          y0/* * window.innerHeight - canvas.top*/,
-          x1/* * window.innerWidth - canvas.left*/,
-          y1/* * window.innerHeight - canvas.top*/,
-          lineWidth,
-          color,
-          false,
-          null
-        )
-      });
-
-      socket.on('joined whiteboard', data => {
-        channelContext.fetchWhiteboardChannels();
-        if (channelContext.selectedChannelRef.current.type === 'whiteboard') {
-          const container = document.createElement("div");
-          container.style.minWidth = '32px';
-          container.style.height = '32px';
-          container.style.position = 'absolute';
-          container.setAttribute('id', `container-${data.socketId}`);
-          container.setAttribute('class', 'cursor-container');
-          
-          const img = document.createElement("IMG");
-          img.setAttribute('id', `cursor-${data.socketId}`);
-          container.appendChild(img);
-          
-          const name = document.createElement('div');
-          name.setAttribute('id', `name-${data.socketId}`);
-          name.style.marginLeft = "25px";
-          name.style.color = "white";
-          name.style.background = "#8bcd2f";
-          name.style.padding = "4px";
-          name.style.fontSize = "12px";
-          name.style.border = "0.5px solid darkgreen";
-          name.style.borderRadius = "3px";          
-
-          container.appendChild(name);
-
-          document.querySelector('.whiteboard-canvas').appendChild(container);
-        }
-      });
-
-      socket.on('leave whiteboard', data => {
-        channelContext.fetchWhiteboardChannels();
-        const cursor = document.querySelector(`#container-${data.socketId}`); 
-        if (cursor)
-          cursor.remove();
-      })
-
-      socket.on('request canvas', data => {
-        socket.emit('request canvas', {
-          requester: data.requester,
-          dataURL: document.querySelector('canvas').toDataURL()
-        });
-      });
-
-      socket.on('receive canvas', data => {
-        // const myCanvas = document.querySelector('canvas');
-        // const ctx = myCanvas.getContext('2d');
-        // const img = new Image;
-        // img.onload = function(){
-        //   ctx.drawImage(img,0,0); // Or at whatever offset you like
-        // };
-        // img.src = data.dataURL;
-        const canvas = document.querySelector('canvas');
-        const context = canvas.getContext('2d');
-        const dataURL = data.dataURL;
-        const img = new Image();
-
-        img.onload = () => {
-          canvas.style.width = img.width;
-          canvas.style.height = img.height;
-          canvas.width = img.width;
-          canvas.height = img.height;
-          context.drawImage(img, 0, 0);
-        }
-        img.src = dataURL;        
-      });
-
-      socket.on('moving mouse', data => {
-        const canvas = document.querySelector('canvas').getBoundingClientRect();
-        const cursor = document.getElementById(`cursor-${data.socketId}`);
-        const container = document.getElementById(`container-${data.socketId}`);
-        const name = document.getElementById(`name-${data.socketId}`);
-        name.innerHTML = data.displayName;
-        cursor.setAttribute('src', ToolKit.USER_POINTER);
-        cursor.setAttribute('width', '30px');
-        cursor.setAttribute('height', 'auto');
-        container.style.top = `${data.y}px`;
-        container.style.left = `${data.x}px`;
-        // container.style.top = `${data.y * window.innerHeight - canvas.top - 2}px`;
-        // container.style.left = `${data.x * window.innerWidth - canvas.left - 6}px`;
-      });
-
-      socket.on('clear canvas', () => {
-        const canvas = document.querySelector('canvas').getBoundingClientRect();
-        const context = document.querySelector('canvas').getContext('2d');
-        context.clearRect(0, 0, canvas.width, canvas.height);
-      });
-
+      whiteboardChannelSocket(socket, channelContext, whiteboardContext);
     }
-  },[isAuth]);
+  },[userContext.isAuth]);
   
   const renderMain = () => {
     switch (channelContext.selectedChannel.type) {

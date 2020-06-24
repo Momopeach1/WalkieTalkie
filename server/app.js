@@ -109,7 +109,7 @@ io.on('connection', (socket) => {
 
   socket.on('leave whiteboard', data => {
     socket.leave(data.channelName);
-    io.in('General Room').emit('leave whiteboard', {socketId: socket.id}); //for refreshing whiteboards change later
+    io.in('General Room').emit('leave whiteboard', {socketId: socket.id}); 
   });
 
   socket.on('moving mouse', data => {
@@ -119,12 +119,6 @@ io.on('connection', (socket) => {
 
   socket.on('clear canvas', data => {
     io.in(data.channelName).emit('clear canvas', {});
-  });
-
-
-  //delete this
-  socket.on('testing', () => {
-    console.log('testing...')
   });
 
   socket.on('disconnect', () => {

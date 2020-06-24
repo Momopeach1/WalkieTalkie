@@ -8,15 +8,15 @@ const Voice = require('../models/voice');
 // @Route GET /api/voice
 router.get('/', passport.isLoggedIn(), (req, res) => {
   Voice.find({}, (findErr, findRes) => {
-    if (findErr) res.status(500).send(findErr);
+    if (findErr) res.status(500).send(findErr.errmsg);
     res.json(findRes);
   })
 });
 
 // @Route POST /api/voice
 router.post('/', passport.isLoggedIn(), (req, res) => {
-  Voice.create({ name: req.body.name }, (error, result) => {
-    if(error) return res.status(500).send(error);
+  Voice.create({ name: req.body.name }, (error) => {
+    if (error) return res.status(500).send(error.errmsg);
     res.json({ success: true })
   });
 })
@@ -27,17 +27,16 @@ router.put('/join-voice', passport.isLoggedIn(), (req, res) => {
   const currentVoiceChannel = req.body.channelName;
 
   Voice.findOne({ name: currentVoiceChannel }, (error, result) => {
-    if(error) res.status(500).send(error);
-    if (req.user.currentVoiceChannel === currentVoiceChannel) return res.status(409).send("You're already in this voice channel!");
-    console.log({ ...req.user });
+    if (req.user.currentVoiceChannel === currentVoiceChannel)
+      return res.status(200).send("You're already in this voice channel!");
     result.set(`talkers.${socketId}`, JSON.stringify({ ...req.user._doc, currentVoiceChannel })); //this needs to be in string format 
     result.save( (error, result) => {
-      if (error) res.status(500).send(error);
+      if (error) return res.status(500).send(error.errmsg);
 
       User.findOne({ email: req.user.email }, (error, result) => {
-        if(error) res.status(500).send(error);
+        if(error) return res.status(500).send(error.errmsg);
         Voice.findOne({ name: result.currentVoiceChannel }, (error, result) => {
-          if (error) return res.status(500).send(error);
+          if (error) return res.status(500).send(error.errmsg);
           if (!result) return;
 
           result.talkers.delete(socketId);
@@ -54,14 +53,14 @@ router.put('/join-voice', passport.isLoggedIn(), (req, res) => {
 // @Route PUT /api/voice/leave-voice
 router.put('/leave-voice', passport.isLoggedIn(), (req, res) => {
   Voice.findOne({ name: req.body.name }, (error, result) => {
-    if (error) return res.status(500).send(error);
+    if (error) return res.status(500).send(error.errmsg);
     result.talkers.delete(req.body.socketId);
     result.save((error, result) => {
-      if (error) return res.status(500).send(error);
+      if (error) return res.status(500).send(error.errmsg);
       User.findOne({email: req.user.email}, (error, result) => {
-        if (error) return res.status(500).send(error);
+        if (error) return res.status(500).send(error.errmsg);
         User.updateOne({ email: req.user.email }, { currentVoiceChannel: '' }, (error, result) => {
-          if (error) return res.status(500).send(error);
+          if (error) return res.status(500).send(error.errmsg);
           res.json(result);
         })
       })
@@ -72,14 +71,14 @@ router.put('/leave-voice', passport.isLoggedIn(), (req, res) => {
 // @Route PUT /api/voice/kick
 router.put('/kick', passport.isLoggedIn(), privilege.canKick(), (req, res) => {
   Voice.findOne({ name: req.body.name }, (error, result) => {
-    if (error) return res.status(500).send(error);
+    if (error) return res.status(500).send(error.errmsg);
     result.talkers.delete(req.body.socketId);
     result.save((error, result) => {
-      if (error) return res.status(500).send(error);
+      if (error) return res.status(500).send(error.errmsg);
       User.findOne({ email: req.body.email }, (error, result) => {
-        if (error) return res.status(500).send(error);
+        if (error) return res.status(500).send(error.errmsg);
         User.updateOne({ email: req.body.email }, { currentVoiceChannel: '' }, (error, result) => {
-          if (error) return res.status(500).send(error);
+          if (error) return res.status(500).send(error.errmsg);
           res.json(result);
         })
       })
@@ -91,9 +90,9 @@ router.put('/kick', passport.isLoggedIn(), privilege.canKick(), (req, res) => {
 // @Route PUT  /api/voice/reset
 router.put('/reset', (req, res) => {
   Voice.updateMany({}, { talkers: new Map() }, (error, result) => {
-    if (error) return res.status(500).send(error);
+    if (error) return res.status(500).send(error.errmsg);
     User.updateMany({}, { currentVoiceChannel: '' }, (error, result) => {
-      if (error) return res.status(500).send(error);
+      if (error) return res.status(500).send(error.errmsg);
       res.send(result);
     })
   });

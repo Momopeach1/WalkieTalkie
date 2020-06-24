@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Route, Router, Switch } from 'react-router-dom';
+import { Router, Switch } from 'react-router-dom';
 import { UserProvider } from '../contexts/UserContext';
 import { SocketProvider } from '../contexts/SocketContext';
 import { LogsProvider } from '../contexts/LogsContext';
