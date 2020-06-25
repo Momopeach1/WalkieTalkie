@@ -10,8 +10,8 @@ export const WhiteboardProvider = ({ children }) => {
   const contextRef = useRef(null);
   const [whiteboards, setWhiteboards] = useState([]);
   const [color, setColor] = useState('000');
-  const bgRef = useRef('#40444b');
-  const toolRef = useRef({ lineWidth: 2, name: 'tool-pointer', cursorImg: ToolKit.POINTER_ICON });
+  const [bgColor, setBgColor] = useState('#40444b');
+  const [tool, setTool] = useState({ lineWidth: 2, name: 'tool-pointer', cursorImg: ToolKit.POINTER_ICON })
 
   /*
     Used when:
@@ -34,7 +34,7 @@ export const WhiteboardProvider = ({ children }) => {
 
       if (!emit) return;
 
-      socket.emit("drawing path", {x0, y0, x1, y1, lineWidth: toolRef.current.lineWidth, color,channelName });
+      socket.emit("drawing path", {x0, y0, x1, y1, lineWidth, color,channelName });
     }
   }
 
@@ -56,7 +56,7 @@ export const WhiteboardProvider = ({ children }) => {
     const requestBody = {
       name: selectedChannel.name,
       dataURL: document.querySelector('canvas').toDataURL(),
-      bgColor: bgRef.current
+      bgColor
     }
 
     server.delete('/whiteboard/leave', { data: requestBody })
@@ -70,9 +70,11 @@ export const WhiteboardProvider = ({ children }) => {
     whiteboards, 
     setWhiteboards, 
     color, 
-    setColor, 
-    toolRef,
-    bgRef,
+    setColor,
+    tool,
+    setTool,
+    bgColor,
+    setBgColor,
     removeAllCursors,
     appendCursor,
     leaveWhiteboard

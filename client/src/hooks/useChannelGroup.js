@@ -11,7 +11,7 @@ import WhiteboardContext from '../contexts/WhiteboardContext';
 const useChannelGroup = () => {
   const [channelGroupsCollapse, setChannelGroupsCollapse] = useState({ text: false, voice: false });
 
-  const { bgRef, removeAllCursors, appendCursor, leaveWhiteboard } = useContext(WhiteboardContext);
+  const { setBgColor, removeAllCursors, appendCursor, leaveWhiteboard } = useContext(WhiteboardContext);
   const { socket } = useContext(SocketContext);
   const { getMedia, leaveVoice } = useContext(WebRTCContext);
   const { 
@@ -61,11 +61,13 @@ const useChannelGroup = () => {
     if (whiteboardChannels.find(w => w.name === channelName).artists.length === 0) {
       server.get('/whiteboard/load', { params: { name: channelName } })
         .then(response => {
-          bgRef.current = response.data.bgColor;
+          setBgColor(response.data.bgColor);
           const canvas = document.querySelector('canvas');
           const context = canvas.getContext('2d');
           const dataURL = response.data.img;
           const img = new Image();
+          console.log('bg color', response.data.bgColor);
+          canvas.style.background = response.data.bgColor;
           img.onload = () => context.drawImage(img, 0, 0);
           img.src = dataURL;
         })

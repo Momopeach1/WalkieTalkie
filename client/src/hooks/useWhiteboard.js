@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import SocketContext from '../contexts/SocketContext';
 import WhiteboardContext from '../contexts/WhiteboardContext';
 import ChannelContext from '../contexts/ChannelContext';
@@ -6,9 +6,10 @@ import UserContext from '../contexts/UserContext';
 
 const useWhiteboard = () => {
   const { socket } = useContext(SocketContext);
-  const { contextRef, draw, color, toolRef, bgRef, removeAllCursors, leaveWhiteboard } = useContext(WhiteboardContext);
+  const { contextRef, draw, color, bgColor, removeAllCursors, leaveWhiteboard, tool } = useContext(WhiteboardContext);
   const { selectedChannel, whiteboardChannels } = useContext(ChannelContext);
   const { user } = useContext(UserContext);
+  const [textToDraw, setTextToDraw] = useState('');
   let isDrawing = false;
   let x0 = null;
   let y0 = null;
@@ -20,9 +21,6 @@ const useWhiteboard = () => {
     });
 
     contextRef.current = document.querySelector('#whiteboard').getContext('2d');
-    
-    // Fill background with default color
-    document.querySelector('canvas').style.background = bgRef.current;
 
     return () => {
       removeAllCursors();
@@ -30,8 +28,17 @@ const useWhiteboard = () => {
   }, []);
 
   useEffect(() => {
-    // Continue here tomorrow.
-  }, [toolRef]);
+    const css = `canvas:hover{ cursor: ${tool.cursorImg} }`;
+    const style = document.createElement('style');
+
+    if (style.styleSheet) {
+      style.styleSheet.cssText = css;
+    } else {
+      style.appendChild(document.createTextNode(css));
+    }
+
+    document.querySelector('canvas').appendChild(style);
+  }, [tool]);
 
   const startDraw = e => {
     isDrawing = true;
@@ -54,10 +61,10 @@ const useWhiteboard = () => {
       const [x, y] = calculateCanvasCoord(e.clientX, e.clientY);
       let colorHex = color;
       
-      if (toolRef.current.name === 'tool-eraser') 
-        colorHex = bgRef.current.slice(1);
+      if (tool.name === 'tool-eraser') 
+        colorHex = bgColor.slice(1);
 
-      draw(x0, y0, x, y, toolRef.current.lineWidth, '#' + colorHex, true, socket, selectedChannel.name);
+      draw(x0, y0, x, y, tool.lineWidth, '#' + colorHex, true, socket, selectedChannel.name);
       x0 = x;
       y0 = y;
     }
@@ -66,12 +73,17 @@ const useWhiteboard = () => {
   const endDraw = e => {
     if (!isDrawing) return;
     const [x, y] = calculateCanvasCoord(e.clientX, e.clientY);
+    let colorHex = color;
     isDrawing = false;
-    draw(x0, y0, x, y, toolRef.current.lineWidth, '#' + color, true, socket, selectedChannel.name);
+
+    if (tool.name === 'tool-eraser') 
+      colorHex = bgColor.slice(1);
+
+    draw(x0, y0, x, y, tool.lineWidth, '#' + colorHex, true, socket, selectedChannel.name);
   }
 
   const mouseDownHelper = e => {
-    switch (toolRef.current.name) {
+    switch (tool.name) {
       case 'tool-pointer': 
         break;
       case 'tool-pencil':
@@ -81,12 +93,41 @@ const useWhiteboard = () => {
         startDraw(e)
         break;
       case 'tool-text':
-        break;
+        const drawTextForm= document.querySelector('.draw-text-form'); 
+        const canvas = document.querySelector('canvas').getBoundingClientRect();
+        const context = document.querySelector('canvas').getContext('2d');
+
+        if (!drawTextForm) {
+          const form = document.createElement('form');
+          const input = document.createElement('input');
+          x0 = e.clientX - canvas.left;
+          y0 = e.clientY - canvas.top;
+          input.setAttribute('type', 'text');
+          input.setAttribute('class', 'draw-text-input');
+          form.setAttribute('class', 'draw-text-form')
+          input.style.position = 'absolute';
+          input.style.left = `${x0}px`;
+          input.style.top = `${y0 - 10}px`;
+          input.addEventListener('input', e => console.log(e.target.value));
+          form.addEventListener('submit', e => {
+            e.preventDefault();
+            form.remove();
+            context.fillText(textToDraw, x0, y0);
+            // setTextToDraw('');
+          })
+          form.appendChild(input);
+          document.querySelector('.whiteboard-canvas').appendChild(form);
+          break;
+        } else {
+          drawTextForm.remove();
+          context.fillText(textToDraw, x0, y0);
+          setTextToDraw('');
+        }
     }
   }
 
   const mouseMoveHelper = e => {
-    switch (toolRef.current.name) {
+    switch (tool.name) {
       case 'tool-pointer': 
         break;
       case 'tool-pencil':
@@ -101,7 +142,7 @@ const useWhiteboard = () => {
   }
 
   const mouseUpHelper = e => {
-    switch (toolRef.current.name) {
+    switch (tool.name) {
       case 'tool-pointer': 
         break;
       case 'tool-pencil':
