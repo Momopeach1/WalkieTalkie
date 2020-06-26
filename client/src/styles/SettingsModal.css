@@ -112,7 +112,19 @@
 }
 
 .settings-sidebar {
-  margin-bottom: 2px;
+  box-sizing: border-box;
   padding: 60px 6px 60px 20px;
   background: #2f3136;
+  height: 100%;
+  max-height: 100%;
+  overflow-y: auto;
 }
+
+.settings-modal-content {
+  height: 100%;
+}
+
+.settings-modal-grid {
+  height: inherit;
+}
+

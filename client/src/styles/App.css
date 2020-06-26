@@ -47,6 +47,12 @@
   border-radius: 8px;
 }
 
+.settings-sidebar::-webkit-scrollbar-track-piece {
+  background-color: #2f3136;
+  border: none;
+  border-radius: 8px;
+}
+
 /* Other Globals */
 body {
   box-sizing: border-box;

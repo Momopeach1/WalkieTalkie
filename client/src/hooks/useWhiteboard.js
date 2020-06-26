@@ -9,7 +9,6 @@ const useWhiteboard = () => {
   const { contextRef, draw, color, bgColor, removeAllCursors, leaveWhiteboard, tool } = useContext(WhiteboardContext);
   const { selectedChannel, whiteboardChannels } = useContext(ChannelContext);
   const { user } = useContext(UserContext);
-  const [textToDraw, setTextToDraw] = useState('');
   let isDrawing = false;
   let x0 = null;
   let y0 = null;
@@ -93,7 +92,8 @@ const useWhiteboard = () => {
         startDraw(e)
         break;
       case 'tool-text':
-        const drawTextForm= document.querySelector('.draw-text-form'); 
+        const drawTextForm = document.querySelector('.draw-text-form');
+        const drawTextInput = document.querySelector('.draw-text-input');
         const canvas = document.querySelector('canvas').getBoundingClientRect();
         const context = document.querySelector('canvas').getContext('2d');
 
@@ -108,21 +108,19 @@ const useWhiteboard = () => {
           input.style.position = 'absolute';
           input.style.left = `${x0}px`;
           input.style.top = `${y0 - 10}px`;
-          input.addEventListener('input', e => console.log(e.target.value));
           form.addEventListener('submit', e => {
             e.preventDefault();
             form.remove();
-            context.fillText(textToDraw, x0, y0);
-            // setTextToDraw('');
+            context.fillText(input.value, x0, y0);
           })
           form.appendChild(input);
           document.querySelector('.whiteboard-canvas').appendChild(form);
-          break;
         } else {
+          context.fillText(drawTextInput.value, x0, y0);
           drawTextForm.remove();
-          context.fillText(textToDraw, x0, y0);
-          setTextToDraw('');
+          console.log(x0, y0);
         }
+        break;
     }
   }
 

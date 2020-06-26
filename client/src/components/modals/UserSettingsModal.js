@@ -5,6 +5,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
 
 import SettingsSidebar from '../modals/settings/SettingsSidebar';
 import { Grid } from '@material-ui/core';
@@ -296,12 +297,11 @@ const UserSettingsModal = ({ type }) => {
         contentLabel="Example Modal"
       >
         <div className="settings-modal-content">
-          <Grid container spacing={0}>
-            <Grid item sm={4} md={2}>
+          <Grid className="settings-modal-grid" container spacing={0}>
+            <Grid className="settings-modal-grid" item sm={4} md={2}>
               <SettingsSidebar/>
             </Grid>
             <Grid className="right-grid" item sm={8} md={10}>
-
               <div className="setting-main">
                 <h2 className="user-modal-title">MY ACCOUNT</h2>
                 {renderProfileEdit()}
