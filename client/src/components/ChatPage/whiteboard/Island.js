@@ -13,20 +13,31 @@ const Island = () =>{
 
   return(
     <div className="whiteboard-island">
-      <SysTool name="systool" id="island-delete" handleOnClick={handleOnClear}>{ToolKit.DELETE}</SysTool>
-      <SysTool name="systool" id="island-save">{ToolKit.SAVE}</SysTool>
-      <form onSubmit={e => handleOnSubmit(e) }>
-        <TextField
-              id="bgcolor"
-              error={hexError}
-              value={bgColor}
-              autoComplete="off"
-              variant="outlined"
-              helperText={hexError? 'Must be valid hex.' : ''}
-              onChange={e => setBgColor(e.target.value) }
-            >
-        </TextField>
-      </form>
+      <div className="row">
+        <div className="col-12">
+          <div className="systool-container">
+            <SysTool name="systool" id="island-delete" handleOnClick={handleOnClear}>{ToolKit.DELETE}</SysTool>
+            <SysTool name="systool" id="island-save">{ToolKit.SAVE}</SysTool>
+          </div>
+        </div>
+      </div>
+      <div className="row">
+        <div className="col-12">
+          <form onSubmit={e => handleOnSubmit(e) }>
+            <TextField
+                  id="bgcolor"
+                  className="hex-color-input"
+                  error={hexError}
+                  value={bgColor}
+                  autoComplete="off"
+                  variant="outlined"
+                  helperText={hexError? 'Must be valid hex.' : ''}
+                  onChange={e => setBgColor(e.target.value) }
+                >
+            </TextField>
+          </form>
+        </div>
+      </div>
     </div>
   )
 }

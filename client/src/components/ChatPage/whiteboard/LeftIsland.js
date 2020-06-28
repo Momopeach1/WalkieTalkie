@@ -9,18 +9,18 @@ import TextField from '@material-ui/core/TextField';
 const LeftIsland = () =>{
   const {color, setColor} = useContext(WhiteBoardContext);
 
-
   return(
     <div className="left-island">
-      <h3>Stroke</h3>
+      <div className="stroke-label">Stroke</div>
       <div className="color-input-container">
-        <button></button>
+        {/* <button></button> */}
         <label>
-          <div>
+          {/* <div>
             #
-          </div>
+          </div> */}
           <TextField
-            id="color"
+            id="stroke-color-hex"
+            className="stroke-color-input"
             //classes={{ root: classes.textfield}}
             value={color}
             autoComplete="off"
