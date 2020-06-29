@@ -27,11 +27,7 @@
 }
 
 .whiteboard-island {
-  /* position: absolute; */
-  /* display: flex; */
-  /* padding: 16px; */
-  /* margin-left: 5px; */
-  width: 150px;
+  width: 185px;
   background: rgba(255, 255, 255, 0.9);
   box-shadow: 0 1px 5px rgba(0,0,0,0.15);
   border-radius: 5px;
@@ -140,12 +136,39 @@
   padding: 6px 6px 7px;
 }
 
-#bgcolor:focus + fieldset, #stroke-color-hex:focus + fieldset {
+/* #bgcolor:focus + fieldset, #stroke-color-hex:focus + fieldset {
   border: 2px solid lightskyblue;
+} */
+#bgcolor + fieldset, #stroke-color-hex + fieldset {
+  display: none;
 }
 
-/* @media screen and (max-width: 900px) {
-  .whiteboard-island {
+.lightskyblue-border {
+  /* border: 2px solid lightskyblue;
+  border-radius: 7px; */
+  box-shadow: 0 0 0 2px lightskyblue inset;
+}
+
+.draw-ui {
+  pointer-events: none;
+}
+
+.whiteboard-island, .left-island, .tool-box {
+  pointer-events: all;
+}
+
+.hex-symbol {
+  background: #DEE2E6;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px 0 0 5px;
+}
+
+@media screen and (max-width: 850px) {
+  .whiteboard-island, .left-island {
     display: none;
   }
-} */
+}

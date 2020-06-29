@@ -24,17 +24,22 @@ const Island = () =>{
       <div className="row">
         <div className="col-12">
           <form onSubmit={e => handleOnSubmit(e) }>
-            <TextField
-                  id="bgcolor"
-                  className="hex-color-input"
-                  error={hexError}
-                  value={bgColor}
-                  autoComplete="off"
-                  variant="outlined"
-                  helperText={hexError? 'Must be valid hex.' : ''}
-                  onChange={e => setBgColor(e.target.value) }
-                >
-            </TextField>
+            <div className="hex-input-container">
+              <div className="hex-symbol">#</div>
+              <TextField
+                    id="bgcolor"
+                    className="hex-color-input"
+                    error={hexError}
+                    value={bgColor}
+                    autoComplete="off"
+                    variant="outlined"
+                    helperText={hexError? 'Must be valid hex.' : ''}
+                    onChange={e => setBgColor(e.target.value) }
+                    onFocus={() => document.querySelector('.hex-input-container').classList.add('lightskyblue-border')}
+                    onBlur={() => document.querySelector('.hex-input-container').classList.remove('lightskyblue-border')}
+                    >
+              </TextField>
+            </div>
           </form>
         </div>
       </div>
