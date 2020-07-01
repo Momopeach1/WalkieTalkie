@@ -14,7 +14,7 @@ const WhiteBoard = () => {
       const drawUI = document.querySelector('.draw-ui');
       const whiteboardCanvas = document.querySelector('.whiteboard-canvas');
       drawUI.style.top = `${whiteboardCanvas.scrollTop}px`;
-      drawUI.style.left = `${whiteboardCanvas.scrollLeft}px`
+      drawUI.style.left = `${whiteboardCanvas.scrollLeft}px`;
     }}>
 
       <div className="row draw-ui" style={{ position: "absolute", top: "0", left: "0" }}>

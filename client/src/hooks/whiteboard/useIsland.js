@@ -8,7 +8,7 @@ const useIsland = () => {
 
   const { socket } = useContext(SocketContext);
   const { selectedChannel } = useContext(ChannelContext);
-  const { bgColor, setBgColor } = useContext(WhiteboardContext);
+  const { bgColor } = useContext(WhiteboardContext);
   const [hexError, setHexError] = useState(false);
 
   const handleOnClear = () =>{
@@ -17,14 +17,14 @@ const useIsland = () => {
   }
   const handleOnSubmit = e => {
     e.preventDefault();
-    if (!/^#[0-9A-F]{6}$/i.test(bgColor)) return setHexError(true);
+    if (!/^#[0-9A-F]{6}$/i.test('#' + bgColor)) return setHexError(true);
     if (window.confirm('OwO?')) {
       setHexError(false);
       const canvas = document.querySelector('canvas');
       const context = canvas.getContext('2d');
       const canvasRect = canvas.getBoundingClientRect();
       context.clearRect(0, 0, canvasRect.width, canvasRect.height);
-      document.querySelector('canvas').style.background = bgColor;       
+      document.querySelector('canvas').style.background = '#' + bgColor;       
     }
   }
 

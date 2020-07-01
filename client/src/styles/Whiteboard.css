@@ -26,7 +26,7 @@
   margin-bottom: 2px;
 }
 
-.whiteboard-island {
+.whiteboard-island, .left-island {
   width: 185px;
   background: rgba(255, 255, 255, 0.9);
   box-shadow: 0 1px 5px rgba(0,0,0,0.15);
@@ -36,15 +36,6 @@
 
 .island-row {
   margin-bottom: 10px;
-}
-
-.left-island {
-  /* position: absolute; */
-  width: 150px;
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 1px 5px rgba(0,0,0,0.15);
-  border-radius: 5px;
-  padding: 10px 10px;
 }
 
 .stroke-label {
@@ -77,8 +68,6 @@
   width: 23px;
   height: 23px;
   border-radius: 23px;
-  /* position: absolute; */
-  /* right: 0; */
 }
 
 .artists-icon-container {
@@ -107,9 +96,6 @@
 }
 
 .tool-box {
-  /* left: 50%; */
-  /* position: absolute; */
-  /* transform: translateX(-50%); */
   display: inline-flex;
   background: rgba(255, 255, 255, 0.9);
   box-shadow: 0 1px 5px rgba(0,0,0,0.15);
@@ -128,25 +114,26 @@
   justify-content: center;
 }
 
-.hex-color-input, .stroke-color-input {
-  width: 120px;
+.hex-input-container {
+  position: relative;
 }
 
-#bgcolor, #stroke-color-hex {
+.hex-color-input, .hex-color-input > div {
+  width: 120px;
+  position: static!important;
+}
+
+.hex-color-input > div > input {
   padding: 6px 6px 7px;
 }
 
-/* #bgcolor:focus + fieldset, #stroke-color-hex:focus + fieldset {
-  border: 2px solid lightskyblue;
-} */
-#bgcolor + fieldset, #stroke-color-hex + fieldset {
-  display: none;
+.hex-color-input > div > fieldset {
+  border: none;
+  height: 37px;
 }
 
-.lightskyblue-border {
-  /* border: 2px solid lightskyblue;
-  border-radius: 7px; */
-  box-shadow: 0 0 0 2px lightskyblue inset;
+.hex-color-input > div > input:focus + fieldset {
+  border: 2px solid lightskyblue!important;
 }
 
 .draw-ui {
@@ -165,6 +152,12 @@
   justify-content: center;
   align-items: center;
   border-radius: 5px 0 0 5px;
+}
+
+[id$="-helper-text"] {
+  position: relative;
+  left: -42px;
+  white-space: nowrap;
 }
 
 @media screen and (max-width: 850px) {

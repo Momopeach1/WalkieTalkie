@@ -61,7 +61,7 @@ const useWhiteboard = () => {
       let colorHex = color;
       
       if (tool.name === 'tool-eraser') 
-        colorHex = bgColor.slice(1);
+        colorHex = bgColor;
 
       draw(x0, y0, x, y, tool.lineWidth, '#' + colorHex, true, socket, selectedChannel.name);
       x0 = x;
@@ -76,7 +76,7 @@ const useWhiteboard = () => {
     isDrawing = false;
 
     if (tool.name === 'tool-eraser') 
-      colorHex = bgColor.slice(1);
+      colorHex = bgColor;
 
     draw(x0, y0, x, y, tool.lineWidth, '#' + colorHex, true, socket, selectedChannel.name);
   }

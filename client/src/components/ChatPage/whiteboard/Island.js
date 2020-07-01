@@ -1,11 +1,10 @@
 import React, { useContext, useState } from 'react';
 
 import ToolKit from './ToolKit';
-import SysTool from './SysTool'; 
+import SysTool from './SysTool';
+import HexInput from './HexInput';
 import useIsland from '../../../hooks/whiteboard/useIsland';
 import WhiteboardContext from '../../../contexts/WhiteboardContext';
-
-import TextField from '@material-ui/core/TextField';
 
 const Island = () =>{
   const [handleOnClear, handleOnSubmit, hexError] = useIsland();
@@ -24,22 +23,16 @@ const Island = () =>{
       <div className="row">
         <div className="col-12">
           <form onSubmit={e => handleOnSubmit(e) }>
-            <div className="hex-input-container">
-              <div className="hex-symbol">#</div>
-              <TextField
-                    id="bgcolor"
-                    className="hex-color-input"
-                    error={hexError}
-                    value={bgColor}
-                    autoComplete="off"
-                    variant="outlined"
-                    helperText={hexError? 'Must be valid hex.' : ''}
-                    onChange={e => setBgColor(e.target.value) }
-                    onFocus={() => document.querySelector('.hex-input-container').classList.add('lightskyblue-border')}
-                    onBlur={() => document.querySelector('.hex-input-container').classList.remove('lightskyblue-border')}
-                    >
-              </TextField>
-            </div>
+            <HexInput
+              id="bgcolor"
+              className="hex-color-input"
+              error={hexError}
+              value={bgColor}
+              autoComplete="off"
+              variant="outlined"
+              helperText={hexError? 'Must be valid hex.' : ''}
+              onChange={e => setBgColor(e.target.value) }
+            />
           </form>
         </div>
       </div>

@@ -9,8 +9,8 @@ const WhiteboardContext = React.createContext();
 export const WhiteboardProvider = ({ children }) => {
   const contextRef = useRef(null);
   const [whiteboards, setWhiteboards] = useState([]);
-  const [color, setColor] = useState('000');
-  const [bgColor, setBgColor] = useState('#40444b');
+  const [color, setColor] = useState('000000');
+  const [bgColor, setBgColor] = useState('40444b');
   const [tool, setTool] = useState({ lineWidth: 2, name: 'tool-pointer', cursorImg: ToolKit.POINTER_ICON })
 
   /*
@@ -56,7 +56,7 @@ export const WhiteboardProvider = ({ children }) => {
     const requestBody = {
       name: selectedChannel.name,
       dataURL: document.querySelector('canvas').toDataURL(),
-      bgColor
+      bgColor: '#' + bgColor
     }
 
     server.delete('/whiteboard/leave', { data: requestBody })

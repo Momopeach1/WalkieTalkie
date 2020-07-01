@@ -61,12 +61,11 @@ const useChannelGroup = () => {
     if (whiteboardChannels.find(w => w.name === channelName).artists.length === 0) {
       server.get('/whiteboard/load', { params: { name: channelName } })
         .then(response => {
-          setBgColor(response.data.bgColor);
+          setBgColor(response.data.bgColor.slice(1));
           const canvas = document.querySelector('canvas');
           const context = canvas.getContext('2d');
           const dataURL = response.data.img;
           const img = new Image();
-          console.log('bg color', response.data.bgColor);
           canvas.style.background = response.data.bgColor;
           img.onload = () => context.drawImage(img, 0, 0);
           img.src = dataURL;
