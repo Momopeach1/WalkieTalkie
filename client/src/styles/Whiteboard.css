@@ -27,7 +27,7 @@
 }
 
 .whiteboard-island, .left-island {
-  width: 185px;
+  width: 210px;
   background: rgba(255, 255, 255, 0.9);
   box-shadow: 0 1px 5px rgba(0,0,0,0.15);
   border-radius: 5px;
@@ -42,6 +42,7 @@
   font-size: 1em;
   font-weight: bold;
   margin-bottom: 8px;
+  margin-left: 2px;
 }
 
 .systool-container {
@@ -115,6 +116,7 @@
 }
 
 .hex-input-container {
+  display: inline-block;
   position: relative;
 }
 
@@ -128,7 +130,8 @@
 }
 
 .hex-color-input > div > fieldset {
-  border: none;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
   height: 37px;
 }
 
@@ -158,6 +161,41 @@
   position: relative;
   left: -42px;
   white-space: nowrap;
+}
+
+.hex-selector {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  display: inline-block;
+  position: relative;
+  margin-left: 2px;
+  margin-right: 4px;
+}
+
+.hex-wrapper {
+  display: inline-flex;
+}
+
+.palette-grid {
+  position: absolute;
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  width: 120px;
+  height: 120px;
+  gap: 4px;
+  z-index: 1;
+  top: 100%;
+  background: #ffffff;
+  padding: 4px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.25);
+  border-radius: 5px;
+}
+
+.palette-color {
+  background: lightblue;
+  border-radius: 4px;
 }
 
 @media screen and (max-width: 850px) {
