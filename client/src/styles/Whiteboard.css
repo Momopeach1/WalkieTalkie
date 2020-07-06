@@ -194,8 +194,8 @@
 }
 
 .palette-color {
-  background: lightblue;
   border-radius: 4px;
+  border: 1px solid #ddd;
 }
 
 @media screen and (max-width: 850px) {

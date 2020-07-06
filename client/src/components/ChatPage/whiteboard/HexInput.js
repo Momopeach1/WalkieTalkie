@@ -16,10 +16,12 @@ const HexInput = props => {
 
   return (
     <div className="hex-wrapper">
-      <div className="hex-selector" onClick={handleOnSelectorClick}>
+      <div className="hex-selector" onClick={handleOnSelectorClick} style={{ background: '#' + props.value }}>
         <Palette 
+          handleOnColorClick={props.handleOnColorClick}
           showPalette={showPalette} 
-          handleClosePalette={handleClosePalette} 
+          handleClosePalette={handleClosePalette}
+          colors={props.colors}
         />
       </div>
       <div className="hex-input-container">

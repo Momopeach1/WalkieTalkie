@@ -13,7 +13,7 @@ const whiteboardChannelSocket = (socket, channelContext, whiteboardContext) => {
 
   socket.on('joined whiteboard', data => {
     fetchWhiteboardChannels();
-    if (selectedChannelRef.current.type === 'whiteboard')
+    if (selectedChannelRef.current.type === 'whiteboard' && data.socketId !== socket.id)
       appendCursor(data);
   });
 

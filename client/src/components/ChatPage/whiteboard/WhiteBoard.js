@@ -13,8 +13,10 @@ const WhiteBoard = () => {
     <div className="whiteboard-canvas" onScroll={() => {
       const drawUI = document.querySelector('.draw-ui');
       const whiteboardCanvas = document.querySelector('.whiteboard-canvas');
+      const activeArtists = document.querySelector('.active-artists');
       drawUI.style.top = `${whiteboardCanvas.scrollTop}px`;
       drawUI.style.left = `${whiteboardCanvas.scrollLeft}px`;
+      activeArtists.style.top = `${whiteboardCanvas.scrollTop + whiteboardCanvas.clientHeight - 45}px`;
     }}>
 
       <div className="row draw-ui" style={{ position: "absolute", top: "0", left: "0" }}>

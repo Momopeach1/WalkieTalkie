@@ -74,7 +74,7 @@ const useChannelGroup = () => {
     }
       
     whiteboardChannels.find(w => w.name === channelName).artists.forEach(a => {
-      if (!document.getElementById(`cursor-${a.socketId}`))
+      if (!document.getElementById(`cursor-${a.socketId}`) && socket.id !== a.socketId)
         appendCursor(a);
     });
   };

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
+import useIsland from '../../../hooks/whiteboard/useIsland';
 
-const Palette = ({ showPalette, handleClosePalette }) => {
+const Palette = ({ showPalette, handleClosePalette, handleOnColorClick, colors }) => {
   const wrapperRef = useRef(null);
 
   useEffect(() => {
@@ -13,20 +14,22 @@ const Palette = ({ showPalette, handleClosePalette }) => {
     document.addEventListener('mousedown', handleClickOutside);
 
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [])
+  }, []);
+
+  const renderColors = () => {
+    return colors.map(color => 
+      <div 
+        onClick ={e => handleOnColorClick(e, color.slice(1))} 
+        className="palette-color" 
+        style={{ background: color }} 
+      />
+    );
+  };
 
   const renderPalette = () => {
     return showPalette && (
       <div ref={wrapperRef} className="palette-grid">
-        <div className="palette-color"></div>
-        <div className="palette-color"></div>
-        <div className="palette-color"></div>
-        <div className="palette-color"></div>
-        <div className="palette-color"></div>
-        <div className="palette-color"></div>
-        <div className="palette-color"></div>
-        <div className="palette-color"></div>
-        <div className="palette-color"></div>
+        { renderColors() }
       </div>
     );
   };
