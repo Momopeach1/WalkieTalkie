@@ -35,7 +35,7 @@ const App = () => {
         <GuestRoute path="/signup" component={SignupPage}/>
         <ProtectedRoute path ="/profile" component={ProfilePage} />
         <ProtectedRoute path="/chat" component={ChatPage} />
-        <GuestRoute path="/" component={HomePage} />
+        <GuestRoute path="/" component={SignupPage} />
         <ProtectedRoute path="/signout" component={SignOutPage} />
       </Switch>
     </Router>

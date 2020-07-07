@@ -168,11 +168,6 @@ const SignUp = () => {
                     Sign In
                   </Button>
                 </form>
-                {/* <p>
-                  <Link to="passwordReset">
-                    Forgot Password?
-                  </Link>
-                </p> */}
               </Grid>
               <Grid item xs={6}>
                 <img 
