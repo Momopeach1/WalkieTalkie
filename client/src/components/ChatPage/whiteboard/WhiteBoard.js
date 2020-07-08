@@ -19,7 +19,7 @@ const WhiteBoard = () => {
       activeArtists.style.top = `${whiteboardCanvas.scrollTop + whiteboardCanvas.clientHeight - 45}px`;
     }}>
 
-      <div className="row draw-ui" style={{ position: "absolute", top: "0", left: "0" }}>
+      <div className="row draw-ui" >
         <div className="col-4">
           <div className="row island-row">
             <div className="col-12">

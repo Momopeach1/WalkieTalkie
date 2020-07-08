@@ -13,7 +13,6 @@ const LeftIsland = () =>{
   return(
     <div className="left-island">
       <div className="stroke-label">Stroke</div>
-
       <HexInput
         id="strokecolor"
         className="hex-color-input"
@@ -31,6 +30,36 @@ const LeftIsland = () =>{
         // helperText={hexError? 'Must be valid hex.' : ''}
         onChange={e => setColor(e.target.value) }
       />
+      <div className="stroke-options">
+        {/* stroke width  */}
+        <div>Stroke Width</div>
+        <label className="stroke-option-label" >
+          <input className="stroke-radio" type="radio" />
+          Thin
+        </label>
+        <label className="stroke-option-label" >
+          <input className="stroke-radio" type="radio" />
+          Bold
+        </label>
+        <label className="stroke-option-label" >
+          <input className="stroke-radio" type="radio" />
+          Thick
+        </label>
+        {/* Stroke Style */}
+        <div>Stroke Style</div>
+        <label className="stroke-option-label" >
+          <input className="stroke-radio" type="radio" />
+          Solid
+        </label>
+        <label className="stroke-option-label" >
+          <input className="stroke-radio" type="radio" />
+          Dashed
+        </label>
+        <label className="stroke-option-label" >
+          <input className="stroke-radio" type="radio" />
+          Dotted
+        </label>
+      </div>
     </div>
   )
 }
