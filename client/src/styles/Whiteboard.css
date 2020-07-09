@@ -260,6 +260,21 @@
   visibility: hidden;
 }
 
+.mobile-slideup-menu-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.mobile-slideup-menu {
+  position: absolute;
+  width: 100%;
+  bottom: 100%;
+  left: 0;
+  background: #fff;
+  padding: 15px;
+}
+
 @media screen and (max-width: 850px) {
   .whiteboard-island, .left-island, .active-artists {
     display: none;
