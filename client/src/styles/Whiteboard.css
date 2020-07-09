@@ -234,8 +234,38 @@
   background: #8e9297;
 }
 
+.mobile-menu-container {
+  width: 90%;
+  height: 64px;
+  position: absolute;
+  left: 50%;
+  bottom: 8px;
+  transform: translateX(-50%);
+  background: #ffffff;
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.15);
+}
+
+.mobile-menu-btn {
+  height: 40px;
+  width: 40px;
+  background: #e9ecef;
+  border-radius: 5px;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
 @media screen and (max-width: 850px) {
-  .whiteboard-island, .left-island {
+  .whiteboard-island, .left-island, .active-artists {
     display: none;
+  }
+
+  .mobile-menu-container {
+    display: inline-flex;
   }
 }

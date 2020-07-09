@@ -5,6 +5,7 @@ import useWhiteboard from '../../../hooks/useWhiteboard';
 import ToolBox from './ToolBox';
 import Island from './Island';
 import LeftIsland from './LeftIsland';
+import MobileMenu from './MobileMenu';
 
 const WhiteBoard = () => {
   const [handleOnMouseDown, handleOnMouseUp, handleOnMouseMove, renderActiveArtists] = useWhiteboard();
@@ -14,9 +15,11 @@ const WhiteBoard = () => {
       const drawUI = document.querySelector('.draw-ui');
       const whiteboardCanvas = document.querySelector('.whiteboard-canvas');
       const activeArtists = document.querySelector('.active-artists');
+      const mobileMenu = document.querySelector('.mobile-menu-container');
       drawUI.style.top = `${whiteboardCanvas.scrollTop}px`;
       drawUI.style.left = `${whiteboardCanvas.scrollLeft}px`;
       activeArtists.style.top = `${whiteboardCanvas.scrollTop + whiteboardCanvas.clientHeight - 45}px`;
+      mobileMenu.style.top = `${whiteboardCanvas.scrollTop + whiteboardCanvas.clientHeight - mobileMenu.clientHeight - 8}px`;
     }}>
 
       <div className="row draw-ui" >
@@ -48,6 +51,9 @@ const WhiteBoard = () => {
         height="4320"
       >
       </canvas>
+
+      <MobileMenu />
+
       <div className="active-artists">
         {renderActiveArtists()}
       </div>
