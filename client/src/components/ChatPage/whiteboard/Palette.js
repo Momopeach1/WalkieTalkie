@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-import useIsland from '../../../hooks/whiteboard/useIsland';
 
 const Palette = ({ showPalette, handleClosePalette, handleOnColorClick, colors }) => {
   const wrapperRef = useRef(null);

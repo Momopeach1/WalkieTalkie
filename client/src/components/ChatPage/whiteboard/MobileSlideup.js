@@ -1,12 +1,10 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
-import DrawContent from './menu-contents/DrawContent';
-
-const MobileSlideup = () => {
+const MobileSlideup = ({ children }) => {
 
   return (
     <div className="mobile-slideup-menu">
-      <DrawContent />
+      { children }
     </div>
   );
 };
