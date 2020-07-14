@@ -53,11 +53,15 @@ export const WhiteboardProvider = ({ children }) => {
   }
 
   const leaveWhiteboard = (socket, selectedChannel) => {
+    const canvas = document.querySelector('canvas');
+
     const requestBody = {
       name: selectedChannel.name,
-      dataURL: document.querySelector('canvas').toDataURL(),
+      dataURL: canvas.toDataURL(),
       bgColor: '#' + bgColor
     }
+
+    canvas.getContext('2d').clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
 
     server.delete('/whiteboard/leave', { data: requestBody })
       .then(() => socket.emit('leave whiteboard', { channelName: selectedChannel.name }))

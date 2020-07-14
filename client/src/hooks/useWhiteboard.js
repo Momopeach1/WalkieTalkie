@@ -14,17 +14,20 @@ const useWhiteboard = () => {
   let y0 = null;
   
   useEffect(() => {
+    contextRef.current = document.querySelector('#whiteboard').getContext('2d');
+    
+    return () => {
+      removeAllCursors();
+    };
+  }, []);
+  
+  useEffect(() => {
     window.addEventListener("beforeunload", ev => {  
       ev.preventDefault();
       leaveWhiteboard(socket, selectedChannel);
     });
 
-    contextRef.current = document.querySelector('#whiteboard').getContext('2d');
-
-    return () => {
-      removeAllCursors();
-    };
-  }, []);
+  }, [bgColor, selectedChannel])
 
   useEffect(() => {
     const css = `canvas:hover{ cursor: ${tool.cursorImg} }`;

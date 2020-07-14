@@ -58,6 +58,7 @@ const useChannelGroup = () => {
   const onJoinWhiteboardSuccess = (channelName, removeAllCursors) => { 
     socket.emit('join whiteboard',  { channelName });
     removeAllCursors();
+    onErrorClose();
     if (whiteboardChannels.find(w => w.name === channelName).artists.length === 0) {
       server.get('/whiteboard/load', { params: { name: channelName } })
         .then(response => {
@@ -87,8 +88,9 @@ const useChannelGroup = () => {
           .catch(onServerFailure);
       case 'whiteboard':
         // Join from another whiteboard channel.
-        if (selectedChannel.type === 'whiteboard')
+        if (selectedChannel.type === 'whiteboard' && channelName !== selectedChannel.name) {
           leaveWhiteboard(socket, selectedChannel);
+        }
 
         server.put('/whiteboard/join', { name: channelName })
           .then(() => onJoinWhiteboardSuccess(channelName, removeAllCursors))

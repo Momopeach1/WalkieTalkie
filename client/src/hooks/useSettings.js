@@ -6,14 +6,19 @@ import UserContext from '../contexts/UserContext';
 import SocketContext from '../contexts/SocketContext';
 import WebRTCContext from '../contexts/WebRTCContext';
 import ChannelContext from '../contexts/ChannelContext';
+import WhiteboardContext from '../contexts/WhiteboardContext';
 
 const useSettings = () => {
   const { setIsAuth, setUser } = useContext(UserContext);
   const { socket } = useContext(SocketContext);
   const { leaveVoice } = useContext(WebRTCContext);
-  const { selectedVoice, setSelectedVoice, setTalkers } = useContext(ChannelContext);
+  const { selectedVoice, setSelectedVoice, setTalkers, selectedChannel } = useContext(ChannelContext);
+  const { leaveWhiteboard } = useContext(WhiteboardContext);
 
   const handleOnSignout = () => {
+    if (selectedChannel.type === 'whiteboard')
+      leaveWhiteboard(socket, selectedChannel);
+    
     server.post('/user/signout')
       .then(() => {
         setIsAuth(false);

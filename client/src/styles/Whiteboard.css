@@ -289,7 +289,7 @@ input[name=mobile-tool-radio]:checked + .mobile-tool-style {
   background: pink;
 }
 
-@media screen and (max-width: 850px) {
+@media screen and (max-width: 930px) {
   .whiteboard-island, .left-island, .active-artists {
     display: none;
   }
