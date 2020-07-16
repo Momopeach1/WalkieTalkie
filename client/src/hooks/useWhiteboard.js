@@ -6,10 +6,23 @@ import UserContext from '../contexts/UserContext';
 
 const useWhiteboard = () => {
   const { socket } = useContext(SocketContext);
-  const { contextRef, draw, color, bgColor, removeAllCursors, leaveWhiteboard, tool } = useContext(WhiteboardContext);
   const { selectedChannel, whiteboardChannels } = useContext(ChannelContext);
   const { user } = useContext(UserContext);
+  const { 
+    contextRef, 
+    draw, 
+    color, 
+    bgColor, 
+    removeAllCursors, 
+    leaveWhiteboard, 
+    tool,
+    cacheShape,
+    redrawCanvas,
+    isMouseOnShape,
+    shapes
+  } = useContext(WhiteboardContext);
   let isDrawing = false;
+  let shapeIndex = null;
   let x0 = null;
   let y0 = null;
   
@@ -47,6 +60,7 @@ const useWhiteboard = () => {
     const [x, y] = calculateCanvasCoord(e.clientX, e.clientY);
     x0 = x;
     y0 = y;
+    shapeIndex = shapes.length;
   }
 
   const continueDraw = e => {
@@ -67,6 +81,7 @@ const useWhiteboard = () => {
         colorHex = bgColor;
 
       draw(x0, y0, x, y, tool.lineWidth, '#' + colorHex, true, socket, selectedChannel.name);
+      cacheShape(x0, y0, x, y, shapeIndex);
       x0 = x;
       y0 = y;
     }
@@ -82,11 +97,15 @@ const useWhiteboard = () => {
       colorHex = bgColor;
 
     draw(x0, y0, x, y, tool.lineWidth, '#' + colorHex, true, socket, selectedChannel.name);
+    cacheShape(x0, y0, x, y, shapeIndex);
+    redrawCanvas();
   }
 
   const mouseDownHelper = e => {
     switch (tool.name) {
-      case 'tool-pointer': 
+      case 'tool-pointer':
+        const [x, y] = calculateCanvasCoord(e.clientX, e.clientY);
+        isMouseOnShape(x, y);
         break;
       case 'tool-pencil':
         startDraw(e);
