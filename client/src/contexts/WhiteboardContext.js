@@ -26,6 +26,21 @@ export const WhiteboardProvider = ({ children }) => {
     cursorImg: ToolKit.POINTER_ICON
   });
 
+  const onStrokeStyleChange = segments => {
+    const ctx = document.querySelector('canvas').getContext('2d');
+    ctx.setLineDash(segments);
+  }
+
+  const changeStrokeWidth = strokeWidth => {
+    setTool(prevTool => {
+      return { ...prevTool, lineWidth: strokeWidth };
+    });
+  };
+
+  const onStrokeWidthChange = width => {
+    changeStrokeWidth(width);
+  }
+
   /*
     Used when:
       - Exit whiteboard channel. (useWhiteboard.js)
@@ -152,7 +167,9 @@ export const WhiteboardProvider = ({ children }) => {
     cacheShape,
     redrawCanvas,
     isMouseOnShape,
-    shapes
+    shapes,
+    onStrokeWidthChange,
+    onStrokeStyleChange
   }}>
     {children}
   </WhiteboardContext.Provider>

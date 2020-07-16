@@ -33,13 +33,16 @@ const useWhiteboard = () => {
       removeAllCursors();
     };
   }, []);
+
+  const onBeforeUnload = ev => {
+    ev.preventDefault();
+    leaveWhiteboard(socket, selectedChannel);
+  }
   
   useEffect(() => {
-    window.addEventListener("beforeunload", ev => {  
-      ev.preventDefault();
-      leaveWhiteboard(socket, selectedChannel);
-    });
+    window.addEventListener("beforeunload", onBeforeUnload);
 
+    return () => window.removeEventListener("beforeunload", onBeforeUnload);
   }, [bgColor, selectedChannel])
 
   useEffect(() => {

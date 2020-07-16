@@ -4,7 +4,7 @@ import HexInput from '../HexInput';
 import WhiteboardContext from '../../../../contexts/WhiteboardContext';
 
 const DrawContent = () => {
-  const { color, setColor } = useContext(WhiteboardContext);
+  const { color, setColor, onStrokeWidthChange, onStrokeStyleChange, tool } = useContext(WhiteboardContext);
 
   return (
     <>
@@ -29,29 +29,29 @@ const DrawContent = () => {
       <div className="stroke-options">
         {/* stroke width  */}
         <div>Stroke Width</div>
-        <label className="stroke-option-label" >
-          <input className="stroke-radio" type="radio" />
+        <label onClick={() => onStrokeWidthChange(2)} className="stroke-option-label" >
+          <input  className="stroke-radio" type="radio" />
           Thin
         </label>
-        <label className="stroke-option-label" >
+        <label onClick={() => onStrokeWidthChange(4)} className="stroke-option-label" >
           <input className="stroke-radio" type="radio" />
           Bold
         </label>
-        <label className="stroke-option-label" >
+        <label onClick={() => onStrokeWidthChange(6)} className="stroke-option-label" >
           <input className="stroke-radio" type="radio" />
           Thick
         </label>
         {/* Stroke Style */}
         <div>Stroke Style</div>
-        <label className="stroke-option-label" >
+        <label onClick={() => onStrokeStyleChange([])} className="stroke-option-label" >
           <input className="stroke-radio" type="radio" />
           Solid
         </label>
-        <label className="stroke-option-label" >
+        <label onClick={() => onStrokeStyleChange([20,15])} className="stroke-option-label" >
           <input className="stroke-radio" type="radio" />
           Dashed
         </label>
-        <label className="stroke-option-label" >
+        <label onClick={() => onStrokeStyleChange([tool.lineWidth,10])} className="stroke-option-label" >
           <input className="stroke-radio" type="radio" />
           Dotted
         </label>

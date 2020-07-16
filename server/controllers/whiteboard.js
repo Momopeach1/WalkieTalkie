@@ -58,6 +58,7 @@ router.get('/load', passport.isLoggedIn(), (req, res) => {
 router.delete('/leave', passport.isLoggedIn(), (req, res) => {
   console.log('called leave whiteboard')
   console.log('leaving room: ', req.body.name)
+  console.log('background color:', req.body.bgColor);
   Whiteboard.findOne({name: req.body.name}, (finderr, findres) => {
     if (finderr) return res.status(500).send(finderr.errmsg);
     findres.artists = findres.artists.filter(a=> JSON.stringify(a._id) !== JSON.stringify(req.user._id));
