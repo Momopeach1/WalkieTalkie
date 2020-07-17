@@ -9,26 +9,49 @@ export const WhiteboardProvider = ({ children }) => {
   const contextRef = useRef(null);
   /* 
       Shapes Def [{ 
+        x: number,
+        y: number,
         points: [{ x: number, y: number }, ...], 
         color: string, 
-        width: number 
+        width: number,
+        style: string 
       }]
   */
   const shapesRef = useRef([]);
   const shapes = shapesRef.current;
-  console.log('shapes from context', shapes);
   const [whiteboards, setWhiteboards] = useState([]);
   const [color, setColor] = useState('000000');
   const [bgColor, setBgColor] = useState('40444b');
   const [tool, setTool] = useState({
     lineWidth: 2,
     name: 'tool-pointer',
-    cursorImg: ToolKit.POINTER_ICON
+    cursorImg: ToolKit.POINTER_ICON,
+    lineStyle: 'solid'
   });
 
-  const onStrokeStyleChange = segments => {
+  const changeStrokeStyle = strokeStyle => {
+    setTool(prevTool => {
+      return { ...prevTool, lineStyle: strokeStyle }
+    });
+  };
+
+  const getSegments = strokeStyle => {
+    switch (strokeStyle) {
+      case 'solid':
+        return [];
+      case 'dashed':
+        return [20, 15];
+      case 'dotted':
+        return [1, 10];
+      default:
+        return [];
+    }
+  }
+
+  const onStrokeStyleChange = strokeStyle => {
     const ctx = document.querySelector('canvas').getContext('2d');
-    ctx.setLineDash(segments);
+    changeStrokeStyle(strokeStyle);
+    ctx.setLineDash(getSegments(strokeStyle));
   }
 
   const changeStrokeWidth = strokeWidth => {
@@ -50,24 +73,23 @@ export const WhiteboardProvider = ({ children }) => {
     document.querySelectorAll('.cursor-container').forEach(n => n.remove());
 
 
-  const cacheShape = (x0, y0, x1, y1, i) => {
+  const cacheShape = (x0, y0, x1, y1, i, color, width, style) => {
     if (!shapes[i]) {
-      shapes[i] = { x: x0, y: y0, points: [] };
+      shapes[i] = { x: x0, y: y0, points: [], color, width, style };
     } else {
       shapes[i].points.push({ x: x1, y: y1 });
     }
   }
 
-  const defineShape = (shape, isPath = false) => {
+  const defineShape = (shape) => {
     const ctx = document.querySelector('canvas').getContext('2d');
+
     ctx.beginPath();
     ctx.moveTo(shape.x, shape.y);
+
     for (let point of shape.points) {
       ctx.lineTo(point.x, point.y);
-      // if (isPath)
-      //   ctx.moveTo(point.x, point.y);
     }
-    // ctx.closePath();
   }
 
   const redrawCanvas = () => {
@@ -76,9 +98,11 @@ export const WhiteboardProvider = ({ children }) => {
     ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
     for (let shape of shapes) {
       ctx.lineJoin = 'round';
-      ctx.strokeStyle = '#000000';
-      ctx.lineWidth = 2;
-      defineShape(shape, true);
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = shape.color;
+      ctx.lineWidth = shape.width;
+      ctx.setLineDash(getSegments(shape.style));
+      defineShape(shape);
       ctx.stroke();
     }
   }

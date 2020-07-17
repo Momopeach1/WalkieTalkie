@@ -113,7 +113,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('moving mouse', data => {
-    console.log('moving mouse data:', data);
+    // console.log('moving mouse data:', data);
     socket.to(data.channelName).emit('moving mouse', { ...data, socketId: socket.id });
   });
 

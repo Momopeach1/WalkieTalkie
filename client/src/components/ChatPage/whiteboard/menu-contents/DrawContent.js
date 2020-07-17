@@ -43,15 +43,15 @@ const DrawContent = () => {
         </label>
         {/* Stroke Style */}
         <div>Stroke Style</div>
-        <label onClick={() => onStrokeStyleChange([])} className="stroke-option-label" >
+        <label onClick={() => onStrokeStyleChange('solid'/*[]*/)} className="stroke-option-label" >
           <input className="stroke-radio" type="radio" />
           Solid
         </label>
-        <label onClick={() => onStrokeStyleChange([20,15])} className="stroke-option-label" >
+        <label onClick={() => onStrokeStyleChange('dashed'/*[20,15]*/)} className="stroke-option-label" >
           <input className="stroke-radio" type="radio" />
           Dashed
         </label>
-        <label onClick={() => onStrokeStyleChange([tool.lineWidth,10])} className="stroke-option-label" >
+        <label onClick={() => onStrokeStyleChange('dotted'/*[tool.lineWidth,10]*/)} className="stroke-option-label" >
           <input className="stroke-radio" type="radio" />
           Dotted
         </label>

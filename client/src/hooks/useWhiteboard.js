@@ -84,7 +84,7 @@ const useWhiteboard = () => {
         colorHex = bgColor;
 
       draw(x0, y0, x, y, tool.lineWidth, '#' + colorHex, true, socket, selectedChannel.name);
-      cacheShape(x0, y0, x, y, shapeIndex);
+      cacheShape(x0, y0, x, y, shapeIndex, '#' + colorHex, tool.lineWidth, tool.lineStyle);
       x0 = x;
       y0 = y;
     }
@@ -99,8 +99,9 @@ const useWhiteboard = () => {
     if (tool.name === 'tool-eraser') 
       colorHex = bgColor;
 
+    
     draw(x0, y0, x, y, tool.lineWidth, '#' + colorHex, true, socket, selectedChannel.name);
-    cacheShape(x0, y0, x, y, shapeIndex);
+    cacheShape(x0, y0, x, y, shapeIndex, '#' + colorHex, tool.lineWidth, tool.lineStyle);
     redrawCanvas();
   }
 
