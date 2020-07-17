@@ -64,10 +64,10 @@ export const WhiteboardProvider = ({ children }) => {
     ctx.moveTo(shape.x, shape.y);
     for (let point of shape.points) {
       ctx.lineTo(point.x, point.y);
-      if (isPath)
-        ctx.moveTo(point.x, point.y);
+      // if (isPath)
+      //   ctx.moveTo(point.x, point.y);
     }
-    ctx.closePath();
+    // ctx.closePath();
   }
 
   const redrawCanvas = () => {
@@ -75,10 +75,10 @@ export const WhiteboardProvider = ({ children }) => {
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
     for (let shape of shapes) {
-      defineShape(shape, true);
       ctx.lineJoin = 'round';
       ctx.strokeStyle = '#000000';
       ctx.lineWidth = 2;
+      defineShape(shape, true);
       ctx.stroke();
     }
   }
