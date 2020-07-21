@@ -14,7 +14,11 @@ export const WhiteboardProvider = ({ children }) => {
         points: [{ x: number, y: number }, ...], 
         color: string, 
         width: number,
-        style: string 
+        style: string,
+        maxX: number,
+        minX: number,
+        minY: number,
+        maxY: number
       }]
   */
   const shapesRef = useRef([]);
@@ -75,21 +79,48 @@ export const WhiteboardProvider = ({ children }) => {
 
   const cacheShape = (x0, y0, x1, y1, i, color, width, style) => {
     if (!shapes[i]) {
-      shapes[i] = { x: x0, y: y0, points: [], color, width, style };
+      shapes[i] = { /*x: x0, y: y0,*/ points: [{ x: x0, y: y0 }], color, width, style, minX: x0, maxX: x0, minY: y0, maxY: y0 };
     } else {
+      const { minX, maxX, minY, maxY } = shapes[i];
+
+      shapes[i].minX = Math.min(minX, x1);
+      shapes[i].maxX = Math.max(maxX, x1);
+      shapes[i].minY = Math.min(minY, y1);
+      shapes[i].maxY = Math.max(maxY, y1);
+
       shapes[i].points.push({ x: x1, y: y1 });
     }
   }
 
-  const defineShape = (shape) => {
+  const defineShape = shape => {
     const ctx = document.querySelector('canvas').getContext('2d');
 
     ctx.beginPath();
-    ctx.moveTo(shape.x, shape.y);
+    // ctx.moveTo(shape.x, shape.y);
+    ctx.moveTo(shape.points[0].x, shape.points[0].y);
 
-    for (let point of shape.points) {
+    for (let i = 1; i < shape.points.length; ++i) {
+      const point = shape.points[i];
       ctx.lineTo(point.x, point.y);
     }
+  }
+
+  const defineBoundingRect = shape => {
+    const ctx = document.querySelector('canvas').getContext('2d');
+    // a  b
+    // c  d
+    const padding = { top: 10, bottom: 10, left: 10, right: 10 };
+    const a = { x: shape.minX - padding.left, y: shape.minY - padding.top };
+    const b = { x: shape.maxX + padding.right, y: shape.minY - padding.top };
+    const c = { x: shape.minX - padding.left, y: shape.maxY + padding.bottom };
+    const d = { x: shape.maxX + padding.right, y: shape.maxY + padding.bottom };
+
+    ctx.beginPath();
+    ctx.moveTo(a.x, a.y);
+    ctx.lineTo(b.x, b.y);
+    ctx.lineTo(d.x, d.y);
+    ctx.lineTo(c.x, c.y);
+    ctx.closePath();
   }
 
   const redrawCanvas = () => {
@@ -104,40 +135,38 @@ export const WhiteboardProvider = ({ children }) => {
       ctx.setLineDash(getSegments(shape.style));
       defineShape(shape);
       ctx.stroke();
+
+
     }
+  }
+  
+  const drawBoundingRect = shapeIdx => {
+    const ctx = document.querySelector('canvas').getContext('2d');
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = '#000';
+    ctx.setLineDash([10, 10]);
+    defineBoundingRect(shapes[shapeIdx]);
+    ctx.stroke();
   }
 
   const isMouseOnShape = (x, y) => {
-    const ctx = document.querySelector('canvas').getContext('2d');
+    for (let i = 0; i < shapes.length; ++i) {
+      const shape = shapes[i];
+      const padding = { top: 10, bottom: 10, left: 10, right: 10 };
+      const a = { x: shape.minX - padding.left, y: shape.minY - padding.top };
+      const b = { x: shape.maxX + padding.right, y: shape.minY - padding.top };
+      const c = { x: shape.minX - padding.left, y: shape.maxY + padding.bottom };
+      const d = { x: shape.maxX + padding.right, y: shape.maxY + padding.bottom };
 
-    for (let shape of shapes) {
-      ctx.beginPath();
-      ctx.moveTo(shape.x, shape.y);
-      for (let point of shape.points) {
-        ctx.lineTo(point.x, point.y);
-        // ctx.moveTo(point.x, point.y);
-      }
-      ctx.closePath();
-
-      console.log('is point in path', ctx.isPointInPath(x, y));
-      if (ctx.isPointInPath(x, y))
-        return true;
+      if (x >= a.x && x <= b.x && y >= a.y && y <= c.y)
+        return i;
     }
-    return false;
+    return -1;
   }
 
   const draw = (x0, y0, x1, y1, lineWidth, color, emit, socket, channelName) => {
     if (contextRef.current) {
-      let context = contextRef.current;
-      context.lineWidth = lineWidth;
-      context.lineJoin = 'round';
-      context.beginPath();
-      context.moveTo(x0, y0);
-      context.lineTo(x1, y1);
-      context.strokeStyle = color;
-      context.closePath();
-      context.stroke();
-
+      redrawCanvas();
       if (!emit) return;
 
       socket.emit("drawing path", { x0, y0, x1, y1, lineWidth, color, channelName });
@@ -174,6 +203,14 @@ export const WhiteboardProvider = ({ children }) => {
     // .catch(onServerFailure);
   }
 
+  const dragShape = (shapeIdx, x, y) => {
+    shapes[shapeIdx].points.forEach(point => {
+      point.x += (x - point.x);
+      point.y += (y - point.y);
+    });
+    redrawCanvas();
+  }
+
   return <WhiteboardContext.Provider value={{
     contextRef,
     draw,
@@ -193,7 +230,9 @@ export const WhiteboardProvider = ({ children }) => {
     isMouseOnShape,
     shapes,
     onStrokeWidthChange,
-    onStrokeStyleChange
+    onStrokeStyleChange,
+    drawBoundingRect,
+    dragShape
   }}>
     {children}
   </WhiteboardContext.Provider>

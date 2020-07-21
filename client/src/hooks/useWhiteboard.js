@@ -19,7 +19,9 @@ const useWhiteboard = () => {
     cacheShape,
     redrawCanvas,
     isMouseOnShape,
-    shapes
+    shapes,
+    drawBoundingRect,
+    dragShape
   } = useContext(WhiteboardContext);
   let isDrawing = false;
   let shapeIndex = null;
@@ -102,14 +104,21 @@ const useWhiteboard = () => {
     
     draw(x0, y0, x, y, tool.lineWidth, '#' + colorHex, true, socket, selectedChannel.name);
     cacheShape(x0, y0, x, y, shapeIndex, '#' + colorHex, tool.lineWidth, tool.lineStyle);
-    redrawCanvas();
+    // redrawCanvas();
   }
 
   const mouseDownHelper = e => {
     switch (tool.name) {
       case 'tool-pointer':
         const [x, y] = calculateCanvasCoord(e.clientX, e.clientY);
-        isMouseOnShape(x, y);
+        shapeIndex = isMouseOnShape(x, y);
+        if (shapeIndex > -1) {
+          drawBoundingRect(shapeIndex);
+          isDrawing = true;
+        } else {
+          redrawCanvas();
+          isDrawing = false;
+        }
         break;
       case 'tool-pencil':
         startDraw(e);
@@ -151,8 +160,11 @@ const useWhiteboard = () => {
   }
 
   const mouseMoveHelper = e => {
+    const [x, y] = calculateCanvasCoord(e.clientX, e.clientY);
     switch (tool.name) {
-      case 'tool-pointer': 
+      case 'tool-pointer':
+        if (isDrawing)
+          dragShape(shapeIndex, x, y);
         break;
       case 'tool-pencil':
         continueDraw(e);
@@ -167,7 +179,8 @@ const useWhiteboard = () => {
 
   const mouseUpHelper = e => {
     switch (tool.name) {
-      case 'tool-pointer': 
+      case 'tool-pointer':
+        isDrawing = false;
         break;
       case 'tool-pencil':
         endDraw(e);
