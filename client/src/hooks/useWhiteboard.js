@@ -115,6 +115,8 @@ const useWhiteboard = () => {
         if (shapeIndex > -1) {
           drawBoundingRect(shapeIndex);
           isDrawing = true;
+          x0 = x;
+          y0 = y;
         } else {
           redrawCanvas();
           isDrawing = false;
@@ -163,8 +165,11 @@ const useWhiteboard = () => {
     const [x, y] = calculateCanvasCoord(e.clientX, e.clientY);
     switch (tool.name) {
       case 'tool-pointer':
-        if (isDrawing)
-          dragShape(shapeIndex, x, y);
+        if (isDrawing) {
+          dragShape(shapeIndex, x0, y0, x, y);
+          x0 = x;
+          y0 = y;
+        }
         break;
       case 'tool-pencil':
         continueDraw(e);

@@ -9,8 +9,8 @@ export const WhiteboardProvider = ({ children }) => {
   const contextRef = useRef(null);
   /* 
       Shapes Def [{ 
-        x: number,
-        y: number,
+        x_0: number,
+        y_0: number,
         points: [{ x: number, y: number }, ...], 
         color: string, 
         width: number,
@@ -79,16 +79,16 @@ export const WhiteboardProvider = ({ children }) => {
 
   const cacheShape = (x0, y0, x1, y1, i, color, width, style) => {
     if (!shapes[i]) {
-      shapes[i] = { /*x: x0, y: y0,*/ points: [{ x: x0, y: y0 }], color, width, style, minX: x0, maxX: x0, minY: y0, maxY: y0 };
+      shapes[i] = { x_0: 0, y_0: 0, points: [{ x: x0, y: y0 }], color, width, style, minX: x0, maxX: x0, minY: y0, maxY: y0 };
     } else {
-      const { minX, maxX, minY, maxY } = shapes[i];
+      const { minX, maxX, minY, maxY, x_0, y_0 } = shapes[i];
 
       shapes[i].minX = Math.min(minX, x1);
       shapes[i].maxX = Math.max(maxX, x1);
       shapes[i].minY = Math.min(minY, y1);
       shapes[i].maxY = Math.max(maxY, y1);
 
-      shapes[i].points.push({ x: x1, y: y1 });
+      shapes[i].points.push({ x: x_0 + x1, y: y_0 + y1 });
     }
   }
 
@@ -96,12 +96,11 @@ export const WhiteboardProvider = ({ children }) => {
     const ctx = document.querySelector('canvas').getContext('2d');
 
     ctx.beginPath();
-    // ctx.moveTo(shape.x, shape.y);
-    ctx.moveTo(shape.points[0].x, shape.points[0].y);
+    ctx.moveTo(shape.x_0 + shape.points[0].x, shape.y_0 + shape.points[0].y);
 
     for (let i = 1; i < shape.points.length; ++i) {
       const point = shape.points[i];
-      ctx.lineTo(point.x, point.y);
+      ctx.lineTo(shape.x_0 + point.x, shape.y_0 + point.y);
     }
   }
 
@@ -203,11 +202,20 @@ export const WhiteboardProvider = ({ children }) => {
     // .catch(onServerFailure);
   }
 
-  const dragShape = (shapeIdx, x, y) => {
-    shapes[shapeIdx].points.forEach(point => {
-      point.x += (x - point.x);
-      point.y += (y - point.y);
-    });
+  const dragShape = (shapeIdx, x0, y0, x1, y1) => {
+    const xOffset = x1 - x0;
+    const yOffset = y1 - y0;
+    
+    // Update shape cooridnates.
+    shapes[shapeIdx].x_0 += xOffset;
+    shapes[shapeIdx].y_0 += yOffset;
+
+    // Update bounding rectangle coordinates.
+    shapes[shapeIdx].minX += xOffset;
+    shapes[shapeIdx].maxX += xOffset;
+    shapes[shapeIdx].minY += yOffset;
+    shapes[shapeIdx].maxY += yOffset;
+
     redrawCanvas();
   }
 
