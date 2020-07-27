@@ -49,31 +49,27 @@ router.put('/save', (req, res) => {
 router.get('/load', passport.isLoggedIn(), (req, res) => {
   Whiteboard.findOne({ name: req.query.name }).populate('artists').exec((finderr, findres) => {
     if(finderr) return res.status(500).send(finderr);
-    // res.json({ img: findres.img });
-    res.json(findres);
+    const { name, artists, bgColor, shapes } = findres;
+    res.json({ name, artists, bgColor, shapes });
   });
 });
 
 // @Route - DELETE /api/whiteboard/leave
 router.delete('/leave', passport.isLoggedIn(), (req, res) => {
-  console.log('called leave whiteboard')
-  console.log('leaving room: ', req.body.name)
-  console.log('background color:', req.body.bgColor);
   Whiteboard.findOne({name: req.body.name}, (finderr, findres) => {
     if (finderr) return res.status(500).send(finderr.errmsg);
     findres.artists = findres.artists.filter(a=> JSON.stringify(a._id) !== JSON.stringify(req.user._id));
-    console.log('user id', req.user._id);
-    console.log('artists', findres.artists);
+    
     if (findres.artists.length === 0) {
       findres.img = req.body.dataURL;
       findres.bgColor = req.body.bgColor;
+      console.log('shapes', req.body.shapes);
+      findres.shapes = req.body.shapes;
     }
 
     findres.save((saveErr, saveRes) => {
       if(saveErr) return res.status(500).send(saveErr.errmsg);
       res.send("User removed from whiteboard");
-      console.log('successfully left whiteboard');
-      // Call socket to send 'leave whiteboard' to everyone.
     });
   });
 });

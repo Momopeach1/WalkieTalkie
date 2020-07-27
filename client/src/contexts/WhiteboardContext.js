@@ -18,7 +18,9 @@ export const WhiteboardProvider = ({ children }) => {
         maxX: number,
         minX: number,
         minY: number,
-        maxY: number
+        maxY: number,
+        type: string ['path' | 'text' | 'rectangle' | 'circle' | 'line']
+        text: string
       }]
   */
   const shapesRef = useRef([]);
@@ -26,12 +28,23 @@ export const WhiteboardProvider = ({ children }) => {
   const [whiteboards, setWhiteboards] = useState([]);
   const [color, setColor] = useState('000000');
   const [bgColor, setBgColor] = useState('40444b');
+  const [hexError, setHexError] = useState(false);
   const [tool, setTool] = useState({
     lineWidth: 2,
     name: 'tool-pointer',
     cursorImg: ToolKit.POINTER_ICON,
     lineStyle: 'solid'
   });
+
+  const onBackgroundChange = color => {
+    setHexError(false);
+    setBgColor(color);
+    const canvas = document.querySelector('canvas');
+    const context = canvas.getContext('2d');
+    const canvasRect = canvas.getBoundingClientRect();
+    context.clearRect(0, 0, canvasRect.width, canvasRect.height);
+    document.querySelector('canvas').style.background = '#' + color;   
+  };
 
   const changeStrokeStyle = strokeStyle => {
     setTool(prevTool => {
@@ -77,19 +90,35 @@ export const WhiteboardProvider = ({ children }) => {
     document.querySelectorAll('.cursor-container').forEach(n => n.remove());
 
 
-  const cacheShape = (x0, y0, x1, y1, i, color, width, style) => {
-    if (!shapes[i]) {
-      shapes[i] = { x_0: 0, y_0: 0, points: [{ x: x0, y: y0 }], color, width, style, minX: x0, maxX: x0, minY: y0, maxY: y0 };
+  const cacheShape = (x0, y0, x1, y1, i, color, width, style, type, text = '') => {
+    if (!shapesRef.current[i]) {
+      shapesRef.current[i] = { 
+        x_0: 0, 
+        y_0: 0, 
+        points: [{ x: x0, y: y0 }], 
+        color, 
+        width, 
+        style, 
+        minX: x0, 
+        maxX: x0, 
+        minY: y0, 
+        maxY: y0,
+        type,
+        text
+      };
     } else {
-      const { minX, maxX, minY, maxY, x_0, y_0 } = shapes[i];
+      const { minX, maxX, minY, maxY, x_0, y_0 } = shapesRef.current[i];
 
-      shapes[i].minX = Math.min(minX, x1);
-      shapes[i].maxX = Math.max(maxX, x1);
-      shapes[i].minY = Math.min(minY, y1);
-      shapes[i].maxY = Math.max(maxY, y1);
+      shapesRef.current[i].minX = Math.min(minX, x1);
+      shapesRef.current[i].maxX = Math.max(maxX, x1);
+      shapesRef.current[i].minY = Math.min(minY, y1);
+      shapesRef.current[i].maxY = Math.max(maxY, y1);
 
-      shapes[i].points.push({ x: x_0 + x1, y: y_0 + y1 });
+      shapesRef.current[i].points.push({ x: x_0 + x1, y: y_0 + y1 });
     }
+    console.log('shapes', shapesRef.current);
+
+    redrawCanvas();
   }
 
   const defineShape = shape => {
@@ -126,16 +155,37 @@ export const WhiteboardProvider = ({ children }) => {
     const canvas = document.querySelector('canvas');
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
-    for (let shape of shapes) {
-      ctx.lineJoin = 'round';
-      ctx.lineCap = 'round';
-      ctx.strokeStyle = shape.color;
-      ctx.lineWidth = shape.width;
-      ctx.setLineDash(getSegments(shape.style));
-      defineShape(shape);
-      ctx.stroke();
 
+    for (let shape of shapesRef.current) {
+      if (shape.type === 'path') {
+        ctx.lineJoin = 'round';
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = shape.color;
+        ctx.lineWidth = shape.width;
+        ctx.setLineDash(getSegments(shape.style));
+        defineShape(shape);
+        ctx.stroke();
+      } else if (shape.type === 'text') {
+        ctx.fillText(shape.text, shape.x_0 + shape.points[0].x, shape.y_0 + shape.points[0].y);
+        console.log('printing shape from text', shape);
+      }
 
+      // switch(shape.type) {
+      //   case 'path':
+      //     ctx.lineJoin = 'round';
+      //     ctx.lineCap = 'round';
+      //     ctx.strokeStyle = shape.color;
+      //     ctx.lineWidth = shape.width;
+      //     ctx.setLineDash(getSegments(shape.style));
+      //     defineShape(shape);
+      //     ctx.stroke();
+      //     continue;
+      //   case 'text':
+      //     // console.log('shape:', shape);
+      //     // ctx.fillText(shape.x_0 + shape.points[0].x, shape.y_0 + points[0].y, shape.text);
+      //   default:
+      //     break;
+      // }
     }
   }
   
@@ -163,12 +213,13 @@ export const WhiteboardProvider = ({ children }) => {
     return -1;
   }
 
-  const draw = (x0, y0, x1, y1, lineWidth, color, emit, socket, channelName) => {
+  const draw = (x0, y0, x1, y1, shapeIndex, strokeColor, lineWidth, lineStyle) => {
     if (contextRef.current) {
+      cacheShape(x0, y0, x1, y1, shapeIndex, strokeColor, lineWidth, tool.lineStyle)
       redrawCanvas();
-      if (!emit) return;
+      // if (!emit) return;
 
-      socket.emit("drawing path", { x0, y0, x1, y1, lineWidth, color, channelName });
+      // socket.emit("drawing path", { x0, y0, x1, y1, lineWidth, color, channelName });
     }
   }
 
@@ -192,8 +243,9 @@ export const WhiteboardProvider = ({ children }) => {
     const requestBody = {
       name: selectedChannel.name,
       dataURL: canvas.toDataURL(),
-      bgColor: '#' + bgColor
-    }
+      bgColor: '#' + bgColor,
+      shapes: shapesRef.current
+    };
 
     canvas.getContext('2d').clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
 
@@ -207,14 +259,14 @@ export const WhiteboardProvider = ({ children }) => {
     const yOffset = y1 - y0;
     
     // Update shape cooridnates.
-    shapes[shapeIdx].x_0 += xOffset;
-    shapes[shapeIdx].y_0 += yOffset;
+    shapesRef.current[shapeIdx].x_0 += xOffset;
+    shapesRef.current[shapeIdx].y_0 += yOffset;
 
     // Update bounding rectangle coordinates.
-    shapes[shapeIdx].minX += xOffset;
-    shapes[shapeIdx].maxX += xOffset;
-    shapes[shapeIdx].minY += yOffset;
-    shapes[shapeIdx].maxY += yOffset;
+    shapesRef.current[shapeIdx].minX += xOffset;
+    shapesRef.current[shapeIdx].maxX += xOffset;
+    shapesRef.current[shapeIdx].minY += yOffset;
+    shapesRef.current[shapeIdx].maxY += yOffset;
 
     redrawCanvas();
   }
@@ -236,11 +288,15 @@ export const WhiteboardProvider = ({ children }) => {
     cacheShape,
     redrawCanvas,
     isMouseOnShape,
+    shapesRef,
     shapes,
     onStrokeWidthChange,
     onStrokeStyleChange,
     drawBoundingRect,
-    dragShape
+    dragShape,
+    onBackgroundChange,
+    hexError,
+    setHexError
   }}>
     {children}
   </WhiteboardContext.Provider>

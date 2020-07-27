@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useContext } from 'react';
 import SocketContext from '../contexts/SocketContext';
 import WhiteboardContext from '../contexts/WhiteboardContext';
 import ChannelContext from '../contexts/ChannelContext';
@@ -21,20 +21,29 @@ const useWhiteboard = () => {
     isMouseOnShape,
     shapes,
     drawBoundingRect,
-    dragShape
+    shapesRef
   } = useContext(WhiteboardContext);
   let isDrawing = false;
   let shapeIndex = null;
   let x0 = null;
   let y0 = null;
   
+  const onkeydown = e => {
+    if (e.keyCode == 90 && e.ctrlKey) {
+      socket.emit('undo', { channelName: selectedChannel.name });
+    }
+  }
+
   useEffect(() => {
     contextRef.current = document.querySelector('#whiteboard').getContext('2d');
+    window.addEventListener('keydown', onkeydown);
     
     return () => {
       removeAllCursors();
+      window.removeEventListener('keydown', onkeydown);
     };
   }, []);
+  
 
   const onBeforeUnload = ev => {
     ev.preventDefault();
@@ -85,8 +94,19 @@ const useWhiteboard = () => {
       if (tool.name === 'tool-eraser') 
         colorHex = bgColor;
 
-      draw(x0, y0, x, y, tool.lineWidth, '#' + colorHex, true, socket, selectedChannel.name);
-      cacheShape(x0, y0, x, y, shapeIndex, '#' + colorHex, tool.lineWidth, tool.lineStyle);
+      socket.emit('drawing path', { 
+        x0, 
+        y0, 
+        x, 
+        y, 
+        shapeIndex, 
+        strokeColor: '#' + colorHex, 
+        lineWidth: tool.lineWidth, 
+        lineStyle: tool.lineStyle,
+        channelName: selectedChannel.name,
+        type: 'path'
+      });
+      
       x0 = x;
       y0 = y;
     }
@@ -102,8 +122,8 @@ const useWhiteboard = () => {
       colorHex = bgColor;
 
     
-    draw(x0, y0, x, y, tool.lineWidth, '#' + colorHex, true, socket, selectedChannel.name);
-    cacheShape(x0, y0, x, y, shapeIndex, '#' + colorHex, tool.lineWidth, tool.lineStyle);
+    // draw(x0, y0, x, y, tool.lineWidth, '#' + colorHex, true, socket, selectedChannel.name);
+    // cacheShape(x0, y0, x, y, shapeIndex, '#' + colorHex, tool.lineWidth, tool.lineStyle);
     // redrawCanvas();
   }
 
@@ -148,15 +168,23 @@ const useWhiteboard = () => {
           form.addEventListener('submit', e => {
             e.preventDefault();
             form.remove();
-            context.fillText(input.value, x0, y0);
+            // context.fillText(input.value, x0, y0);
+            shapeIndex = shapesRef.current.length;
+            cacheShape(x0, y0, x0, y0, shapeIndex, '#000000', 2, 'solid', 'text', input.value);
+            redrawCanvas();
           })
           form.appendChild(input);
           document.querySelector('.whiteboard-canvas').appendChild(form);
         } else {
-          context.fillText(drawTextInput.value, x0, y0);
+          // context.fillText(drawTextInput.value, x0, y0);
+          shapeIndex = shapesRef.current.length;
+          cacheShape(x0, y0, x0, y0, shapeIndex, '#000000', 2, 'solid', 'text', drawTextInput.value);
+          redrawCanvas();
           drawTextForm.remove();
-          console.log(x0, y0);
         }
+
+
+
         break;
     }
   }
@@ -166,7 +194,9 @@ const useWhiteboard = () => {
     switch (tool.name) {
       case 'tool-pointer':
         if (isDrawing) {
-          dragShape(shapeIndex, x0, y0, x, y);
+          //dragShape(shapeIndex, x0, y0, x, y);
+          socket.emit('drag shape', { shapeIndex, x0, y0, x, y, channelName: selectedChannel.name });
+          drawBoundingRect(shapeIndex);
           x0 = x;
           y0 = y;
         }

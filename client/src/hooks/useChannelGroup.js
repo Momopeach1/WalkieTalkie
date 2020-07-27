@@ -11,7 +11,7 @@ import WhiteboardContext from '../contexts/WhiteboardContext';
 const useChannelGroup = () => {
   const [channelGroupsCollapse, setChannelGroupsCollapse] = useState({ text: false, voice: false });
 
-  const { setBgColor, removeAllCursors, appendCursor, leaveWhiteboard } = useContext(WhiteboardContext);
+  const { setBgColor, removeAllCursors, appendCursor, leaveWhiteboard, shapesRef, redrawCanvas } = useContext(WhiteboardContext);
   const { socket } = useContext(SocketContext);
   const { getMedia, leaveVoice } = useContext(WebRTCContext);
   const { 
@@ -64,14 +64,19 @@ const useChannelGroup = () => {
         .then(response => {
           setBgColor(response.data.bgColor.slice(1));
           const canvas = document.querySelector('canvas');
-          const context = canvas.getContext('2d');
-          const dataURL = response.data.img;
-          const img = new Image();
+          // const context = canvas.getContext('2d');
+          // const dataURL = response.data.img;
+          // const img = new Image();
           canvas.style.background = response.data.bgColor;
-          img.onload = () => context.drawImage(img, 0, 0);
-          img.src = dataURL;
+          // img.onload = () => context.drawImage(img, 0, 0);
+          // img.src = dataURL;
+          console.log('shapes in data', response.data.shapes);
+          shapesRef.current = response.data.shapes;
+
+          console.log('shapes in cb', shapesRef.current);
+          redrawCanvas();
         })
-        .catch(() => console.log("FAILED TO LOAD"));
+        .catch(e => console.log(e));
     }
       
     whiteboardChannels.find(w => w.name === channelName).artists.forEach(a => {

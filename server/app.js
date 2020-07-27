@@ -99,12 +99,18 @@ io.on('connection', (socket) => {
 
   socket.on('request canvas', data => {
     io.to(data.requester).emit('receive canvas', {
-      dataURL: data.dataURL
+      dataURL: data.dataURL,
+      bgColor: data.bgColor
     });
   });
 
   socket.on('drawing path', data => {
-    socket.to(data.channelName).emit('drawing path', data);
+    io.in(data.channelName).emit('drawing path', data);
+  });
+
+  socket.on('drag shape', data => {
+    const { channelName, ...newData } = data;
+    io.in(data.channelName).emit('shape dragged', { ...newData });
   });
 
   socket.on('leave whiteboard', data => {
@@ -113,13 +119,20 @@ io.on('connection', (socket) => {
   });
 
   socket.on('moving mouse', data => {
-    // console.log('moving mouse data:', data);
     socket.to(data.channelName).emit('moving mouse', { ...data, socketId: socket.id });
   });
 
   socket.on('clear canvas', data => {
     io.in(data.channelName).emit('clear canvas', {});
   });
+
+  socket.on('canvas background change', data => {
+    io.in(data.channelName).emit('canvas background changed', data);
+  });
+
+  socket.on('undo', data => {
+    io.in(data.channelName).emit('undid', {});
+  })
 
   socket.on('disconnect', () => {
     console.log('a user has disconnected', socket.id);

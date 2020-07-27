@@ -1,14 +1,22 @@
 import ToolKit from '../components/ChatPage/whiteboard/ToolKit';
 
+
+
 const whiteboardChannelSocket = (socket, channelContext, whiteboardContext) => {
 
-  const { appendCursor, draw } = whiteboardContext;
+  const { appendCursor, shapesRef, setBgColor, onBackgroundChange, cacheShape, dragShape, redrawCanvas } = whiteboardContext;
   const { fetchWhiteboardChannels, selectedChannelRef } = channelContext;
 
 
+
   socket.on('drawing path', data => {
-    const { x0, x1, y0, y1, lineWidth, color } = data;
-    draw(x0, y0, x1, y1, lineWidth, color, false, null);
+    const { x0, y0, x, y, shapeIndex, strokeColor, lineWidth, lineStyle, type } = data;
+    cacheShape(x0, y0, x, y, shapeIndex, strokeColor, lineWidth, lineStyle, type);
+  });
+
+  socket.on('shape dragged', data => {
+    const { shapeIndex, x0, y0, x, y } = data;
+    dragShape(shapeIndex, x0, y0, x, y);
   });
 
   socket.on('joined whiteboard', data => {
@@ -24,9 +32,14 @@ const whiteboardChannelSocket = (socket, channelContext, whiteboardContext) => {
   });
 
   socket.on('request canvas', data => {
+    let bgColor = null;
+
+    setBgColor(prevBgColor => bgColor = prevBgColor);
+
     socket.emit('request canvas', {
       requester: data.requester,
-      dataURL: document.querySelector('canvas').toDataURL()
+      dataURL: document.querySelector('canvas').toDataURL(),
+      bgColor: '#' + bgColor
     });
   });
 
@@ -36,6 +49,8 @@ const whiteboardChannelSocket = (socket, channelContext, whiteboardContext) => {
     const dataURL = data.dataURL;
     const img = new Image();
 
+    canvas.style.background = data.bgColor;
+
     img.onload = () => {
       canvas.style.width = img.width;
       canvas.style.height = img.height;
@@ -43,7 +58,9 @@ const whiteboardChannelSocket = (socket, channelContext, whiteboardContext) => {
       canvas.height = img.height;
       context.drawImage(img, 0, 0);
     }
-    img.src = dataURL;        
+    img.src = dataURL;
+
+    setBgColor(data.bgColor);
   });
 
   socket.on('moving mouse', data => {
@@ -62,7 +79,18 @@ const whiteboardChannelSocket = (socket, channelContext, whiteboardContext) => {
     const canvas = document.querySelector('canvas').getBoundingClientRect();
     const context = document.querySelector('canvas').getContext('2d');
     context.clearRect(0,0,canvas.width, canvas.height);
+    shapesRef.current = [];
   });
-}
+
+  socket.on('canvas background changed', data => {
+    onBackgroundChange(data.color);
+  });
+
+  socket.on('undid', () => {
+    shapesRef.current.pop();
+    redrawCanvas();
+  });
+
+};
 
 export default whiteboardChannelSocket;

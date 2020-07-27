@@ -9,8 +9,7 @@ import HexInput from '../HexInput';
 const MiscContent = () => {
   const { socket } = useContext(SocketContext);
   const { selectedChannel } = useContext(ChannelContext);
-  const [hexError, setHexError] = useState(false);
-  const { bgColor, setBgColor } = useContext(WhiteboardContext);
+  const { bgColor, setBgColor, hexError, setHexError } = useContext(WhiteboardContext);
 
   const handleOnClear = () =>{
     if(window.confirm('This will clear the whole canvas. Are you sure?'))
@@ -20,13 +19,7 @@ const MiscContent = () => {
     e.preventDefault();
     if (!/^#[0-9A-F]{6}$/i.test('#' + color)) return setHexError(true);
     if (window.confirm('This will clear the whole canvas. Are you sure?')) {
-      setHexError(false);
-      setBgColor(color);
-      const canvas = document.querySelector('canvas');
-      const context = canvas.getContext('2d');
-      const canvasRect = canvas.getBoundingClientRect();
-      context.clearRect(0, 0, canvasRect.width, canvasRect.height);
-      document.querySelector('canvas').style.background = '#' + color;       
+      socket.emit('canvas background change', { color, channelName: selectedChannel.name });      
     }
   };
 
