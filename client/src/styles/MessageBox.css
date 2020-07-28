@@ -19,7 +19,7 @@
   width: 97%;
 }
 
-textarea {
+.message-box > div:last-child {
   color: white!important;
   max-height: initial;
 }

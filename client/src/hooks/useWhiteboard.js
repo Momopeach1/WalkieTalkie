@@ -149,38 +149,62 @@ const useWhiteboard = () => {
         startDraw(e)
         break;
       case 'tool-text':
+        const drawTextArea = document.querySelector('.draw-textarea');
         const drawTextForm = document.querySelector('.draw-text-form');
         const drawTextInput = document.querySelector('.draw-text-input');
         const canvas = document.querySelector('canvas').getBoundingClientRect();
         const context = document.querySelector('canvas').getContext('2d');
 
-        if (!drawTextForm) {
-          const form = document.createElement('form');
-          const input = document.createElement('input');
+        if (!/*drawTextForm*/ drawTextArea) {
+          const MIN_WIDTH = 50;
+
+          const textarea = document.createElement('textarea');
+          textarea.style.position = 'absolute';
           x0 = e.clientX - canvas.left;
           y0 = e.clientY - canvas.top;
-          input.setAttribute('type', 'text');
-          input.setAttribute('class', 'draw-text-input');
-          form.setAttribute('class', 'draw-text-form')
-          input.style.position = 'absolute';
-          input.style.left = `${x0}px`;
-          input.style.top = `${y0 - 10}px`;
-          form.addEventListener('submit', e => {
-            e.preventDefault();
-            form.remove();
-            // context.fillText(input.value, x0, y0);
-            shapeIndex = shapesRef.current.length;
-            cacheShape(x0, y0, x0, y0, shapeIndex, '#000000', 2, 'solid', 'text', input.value);
-            redrawCanvas();
-          })
-          form.appendChild(input);
-          document.querySelector('.whiteboard-canvas').appendChild(form);
+          textarea.style.left = `${x0}px`;
+          textarea.style.top = `${y0 - 10}px`;
+          textarea.style.color = '#000';
+          textarea.style.fontFamily = 'whitney-medium';
+          textarea.style.fontSize = '20px';
+          textarea.style.whiteSpace = 'pre';
+          textarea.setAttribute('class', 'draw-textarea');
+
+          
+          document.querySelector('.whiteboard-canvas').appendChild(textarea);
+          
+          textarea.addEventListener('input', e => {
+            textarea.style.width = textarea.scrollWidth + 'px';
+            textarea.style.height = textarea.scrollHeight + 'px';
+          });
+          // const form = document.createElement('form');
+          // const input = document.createElement('input');
+          // x0 = e.clientX - canvas.left;
+          // y0 = e.clientY - canvas.top;
+          // input.setAttribute('type', 'text');
+          // input.setAttribute('class', 'draw-text-input');
+          // form.setAttribute('class', 'draw-text-form')
+          // input.style.position = 'absolute';
+          // input.style.left = `${x0}px`;
+          // input.style.top = `${y0 - 10}px`;
+          // form.addEventListener('submit', e => {
+          //   e.preventDefault();
+          //   form.remove();
+          //   // context.fillText(input.value, x0, y0);
+          //   shapeIndex = shapesRef.current.length;
+          //   cacheShape(x0, y0, x0, y0, shapeIndex, '#000000', 2, 'solid', 'text', input.value);
+          //   redrawCanvas();
+          // })
+          // form.appendChild(input);
+          // document.querySelector('.whiteboard-canvas').appendChild(form);
         } else {
+          drawTextArea.remove();
           // context.fillText(drawTextInput.value, x0, y0);
-          shapeIndex = shapesRef.current.length;
-          cacheShape(x0, y0, x0, y0, shapeIndex, '#000000', 2, 'solid', 'text', drawTextInput.value);
-          redrawCanvas();
-          drawTextForm.remove();
+          
+          // shapeIndex = shapesRef.current.length;
+          // cacheShape(x0, y0, x0, y0, shapeIndex, '#000000', 2, 'solid', 'text', drawTextInput.value);
+          // redrawCanvas();
+          // drawTextForm.remove();
         }
 
 
