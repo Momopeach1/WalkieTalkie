@@ -166,8 +166,13 @@ export const WhiteboardProvider = ({ children }) => {
         defineShape(shape);
         ctx.stroke();
       } else if (shape.type === 'text') {
-        ctx.fillText(shape.text, shape.x_0 + shape.points[0].x, shape.y_0 + shape.points[0].y);
-        console.log('printing shape from text', shape);
+        const texts = shape.text.split('\n');
+        let lineHeight = 20;
+        ctx.font = `${lineHeight}px whitney-medium`;
+        ctx.textBaseline = 'hanging';
+        for (let i = 0; i < texts.length; ++i) {
+          ctx.fillText(texts[i], shape.x_0 + shape.points[0].x, shape.y_0 + (shape.points[0].y + i * lineHeight));
+        }
       }
 
       // switch(shape.type) {

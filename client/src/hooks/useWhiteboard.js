@@ -155,11 +155,10 @@ const useWhiteboard = () => {
         const canvas = document.querySelector('canvas').getBoundingClientRect();
         const context = document.querySelector('canvas').getContext('2d');
 
-        if (!/*drawTextForm*/ drawTextArea) {
-          const MIN_WIDTH = 50;
-
+        if (!drawTextArea) {
           const textarea = document.createElement('textarea');
-          textarea.style.position = 'absolute';
+          textarea.setAttribute('class', 'draw-textarea');
+
           x0 = e.clientX - canvas.left;
           y0 = e.clientY - canvas.top;
           textarea.style.left = `${x0}px`;
@@ -198,7 +197,11 @@ const useWhiteboard = () => {
           // form.appendChild(input);
           // document.querySelector('.whiteboard-canvas').appendChild(form);
         } else {
+          shapeIndex = shapesRef.current.length;
+          console.log('textarea value', drawTextArea.value)
+          cacheShape(x0, y0, x0 + drawTextArea.offsetWidth, y0 + drawTextArea.offsetHeight, shapeIndex, '#000000', 2, 'solid', 'text', drawTextArea.value);
           drawTextArea.remove();
+          redrawCanvas();
           // context.fillText(drawTextInput.value, x0, y0);
           
           // shapeIndex = shapesRef.current.length;

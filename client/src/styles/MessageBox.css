@@ -45,3 +45,19 @@ textarea::placeholder {
   vertical-align: baseline;
   margin-left: .25rem;
 }
+
+.draw-textarea {
+  position: absolute;
+  color: #000000;
+  font-family: 'whitney-medium';
+  font-size: 20px;
+  white-space: pre;
+  border: none;
+  padding: 0px;
+  resize: none;
+  background: transparent;
+}
+
+.draw-textarea:focus {
+  outline: none;
+}
