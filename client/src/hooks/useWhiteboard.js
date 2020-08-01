@@ -120,11 +120,6 @@ const useWhiteboard = () => {
 
     if (tool.name === 'tool-eraser') 
       colorHex = bgColor;
-
-    
-    // draw(x0, y0, x, y, tool.lineWidth, '#' + colorHex, true, socket, selectedChannel.name);
-    // cacheShape(x0, y0, x, y, shapeIndex, '#' + colorHex, tool.lineWidth, tool.lineStyle);
-    // redrawCanvas();
   }
 
   const mouseDownHelper = e => {
@@ -132,13 +127,13 @@ const useWhiteboard = () => {
       case 'tool-pointer':
         const [x, y] = calculateCanvasCoord(e.clientX, e.clientY);
         shapeIndex = isMouseOnShape(x, y);
+        redrawCanvas();
         if (shapeIndex > -1) {
           drawBoundingRect(shapeIndex);
           isDrawing = true;
           x0 = x;
           y0 = y;
         } else {
-          redrawCanvas();
           isDrawing = false;
         }
         break;
@@ -150,10 +145,7 @@ const useWhiteboard = () => {
         break;
       case 'tool-text':
         const drawTextArea = document.querySelector('.draw-textarea');
-        const drawTextForm = document.querySelector('.draw-text-form');
-        const drawTextInput = document.querySelector('.draw-text-input');
         const canvas = document.querySelector('canvas').getBoundingClientRect();
-        const context = document.querySelector('canvas').getContext('2d');
 
         if (!drawTextArea) {
           const textarea = document.createElement('textarea');
@@ -176,47 +168,18 @@ const useWhiteboard = () => {
           document.querySelector('.whiteboard-canvas').appendChild(textarea);
           setTimeout(() => textarea.focus(), 0);
           
-          
           textarea.addEventListener('input', e => {
             textarea.style.width = textarea.scrollWidth + 'px';
             textarea.style.height = textarea.scrollHeight + 'px';
           });
 
-          // const form = document.createElement('form');
-          // const input = document.createElement('input');
-          // x0 = e.clientX - canvas.left;
-          // y0 = e.clientY - canvas.top;
-          // input.setAttribute('type', 'text');
-          // input.setAttribute('class', 'draw-text-input');
-          // form.setAttribute('class', 'draw-text-form')
-          // input.style.position = 'absolute';
-          // input.style.left = `${x0}px`;
-          // input.style.top = `${y0 - 10}px`;
-          // form.addEventListener('submit', e => {
-          //   e.preventDefault();
-          //   form.remove();
-          //   // context.fillText(input.value, x0, y0);
-          //   shapeIndex = shapesRef.current.length;
-          //   cacheShape(x0, y0, x0, y0, shapeIndex, '#000000', 2, 'solid', 'text', input.value);
-          //   redrawCanvas();
-          // })
-          // form.appendChild(input);
-          // document.querySelector('.whiteboard-canvas').appendChild(form);
         } else {
           shapeIndex = shapesRef.current.length;
           console.log('textareaheight', drawTextArea.offsetHeight)
           cacheShape(x0, y0, x0 + drawTextArea.offsetWidth, y0 + drawTextArea.offsetHeight - 15, shapeIndex, '#000000', 2, 'solid', 'text', drawTextArea.value);
           drawTextArea.remove();
           redrawCanvas();
-          // context.fillText(drawTextInput.value, x0, y0);
-          
-          // shapeIndex = shapesRef.current.length;
-          // cacheShape(x0, y0, x0, y0, shapeIndex, '#000000', 2, 'solid', 'text', drawTextInput.value);
-          // redrawCanvas();
-          // drawTextForm.remove();
         }
-
-
 
         break;
     }
@@ -248,6 +211,10 @@ const useWhiteboard = () => {
   const mouseUpHelper = e => {
     switch (tool.name) {
       case 'tool-pointer':
+        if (shapeIndex !== null && shapeIndex >= 0) {
+          console.log('mouse up detected')
+          drawBoundingRect(shapeIndex);
+        }
         isDrawing = false;
         break;
       case 'tool-pencil':

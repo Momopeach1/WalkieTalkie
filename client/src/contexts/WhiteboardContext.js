@@ -175,23 +175,6 @@ export const WhiteboardProvider = ({ children }) => {
           ctx.fillText(texts[i], shape.x_0 + shape.points[0].x, shape.y_0 + textCursorOffset + (shape.points[0].y + i * lineHeight));
         }
       }
-
-      // switch(shape.type) {
-      //   case 'path':
-      //     ctx.lineJoin = 'round';
-      //     ctx.lineCap = 'round';
-      //     ctx.strokeStyle = shape.color;
-      //     ctx.lineWidth = shape.width;
-      //     ctx.setLineDash(getSegments(shape.style));
-      //     defineShape(shape);
-      //     ctx.stroke();
-      //     continue;
-      //   case 'text':
-      //     // console.log('shape:', shape);
-      //     // ctx.fillText(shape.x_0 + shape.points[0].x, shape.y_0 + points[0].y, shape.text);
-      //   default:
-      //     break;
-      // }
     }
   }
   
