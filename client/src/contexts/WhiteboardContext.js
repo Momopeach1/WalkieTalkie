@@ -100,9 +100,9 @@ export const WhiteboardProvider = ({ children }) => {
         width, 
         style, 
         minX: x0, 
-        maxX: x0, 
+        maxX: x1, 
         minY: y0, 
-        maxY: y0,
+        maxY: y1,
         type,
         text
       };
@@ -168,10 +168,11 @@ export const WhiteboardProvider = ({ children }) => {
       } else if (shape.type === 'text') {
         const texts = shape.text.split('\n');
         let lineHeight = 20;
+        const textCursorOffset = 8;
         ctx.font = `${lineHeight}px whitney-medium`;
-        ctx.textBaseline = 'hanging';
+        //ctx.textBaseline = 'hanging';
         for (let i = 0; i < texts.length; ++i) {
-          ctx.fillText(texts[i], shape.x_0 + shape.points[0].x, shape.y_0 + (shape.points[0].y + i * lineHeight));
+          ctx.fillText(texts[i], shape.x_0 + shape.points[0].x, shape.y_0 + textCursorOffset + (shape.points[0].y + i * lineHeight));
         }
       }
 

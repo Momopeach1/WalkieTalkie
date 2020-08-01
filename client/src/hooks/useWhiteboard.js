@@ -166,16 +166,22 @@ const useWhiteboard = () => {
           textarea.style.color = '#000';
           textarea.style.fontFamily = 'whitney-medium';
           textarea.style.fontSize = '20px';
+          textarea.style.lineHeight = '20px';
           textarea.style.whiteSpace = 'pre';
+          textarea.style.height = '20px';
           textarea.setAttribute('class', 'draw-textarea');
-
+          textarea.autofocus = true;
           
+          //this needed because querySelector is async so new text areas wont focus.
           document.querySelector('.whiteboard-canvas').appendChild(textarea);
+          setTimeout(() => textarea.focus(), 0);
+          
           
           textarea.addEventListener('input', e => {
             textarea.style.width = textarea.scrollWidth + 'px';
             textarea.style.height = textarea.scrollHeight + 'px';
           });
+
           // const form = document.createElement('form');
           // const input = document.createElement('input');
           // x0 = e.clientX - canvas.left;
@@ -198,8 +204,8 @@ const useWhiteboard = () => {
           // document.querySelector('.whiteboard-canvas').appendChild(form);
         } else {
           shapeIndex = shapesRef.current.length;
-          console.log('textarea value', drawTextArea.value)
-          cacheShape(x0, y0, x0 + drawTextArea.offsetWidth, y0 + drawTextArea.offsetHeight, shapeIndex, '#000000', 2, 'solid', 'text', drawTextArea.value);
+          console.log('textareaheight', drawTextArea.offsetHeight)
+          cacheShape(x0, y0, x0 + drawTextArea.offsetWidth, y0 + drawTextArea.offsetHeight - 15, shapeIndex, '#000000', 2, 'solid', 'text', drawTextArea.value);
           drawTextArea.remove();
           redrawCanvas();
           // context.fillText(drawTextInput.value, x0, y0);
