@@ -1,4 +1,5 @@
 import ToolKit from '../components/ChatPage/whiteboard/ToolKit';
+import { SocketProvider } from '../contexts/SocketContext';
 
 
 
@@ -39,7 +40,8 @@ const whiteboardChannelSocket = (socket, channelContext, whiteboardContext) => {
     socket.emit('request canvas', {
       requester: data.requester,
       dataURL: document.querySelector('canvas').toDataURL(),
-      bgColor: '#' + bgColor
+      bgColor: '#' + bgColor,
+      shapes: shapesRef.current
     });
   });
 
@@ -50,15 +52,19 @@ const whiteboardChannelSocket = (socket, channelContext, whiteboardContext) => {
     const img = new Image();
 
     canvas.style.background = data.bgColor;
+    console.log('data shapes', data.shapes);
+    shapesRef.current = data.shapes;
 
-    img.onload = () => {
-      canvas.style.width = img.width;
-      canvas.style.height = img.height;
-      canvas.width = img.width;
-      canvas.height = img.height;
-      context.drawImage(img, 0, 0);
-    }
-    img.src = dataURL;
+    redrawCanvas();
+
+    // img.onload = () => {
+    //   canvas.style.width = img.width;
+    //   canvas.style.height = img.height;
+    //   canvas.width = img.width;
+    //   canvas.height = img.height;
+    //   context.drawImage(img, 0, 0);
+    // }
+    // img.src = dataURL;
 
     setBgColor(data.bgColor);
   });
@@ -90,6 +96,12 @@ const whiteboardChannelSocket = (socket, channelContext, whiteboardContext) => {
     shapesRef.current.pop();
     redrawCanvas();
   });
+
+  socket.on('drawing text', data =>{
+    console.log('OwOasdasdas')
+    const { x0, y0, x1, y1, shapeIndex, color, fontSize, fontStyle, type, text } = data;
+    cacheShape(x0, y0, x1, y1, shapeIndex, color, fontSize, fontStyle, type, text);
+  })
 
 };
 

@@ -10,16 +10,13 @@ const useWhiteboard = () => {
   const { user } = useContext(UserContext);
   const { 
     contextRef, 
-    draw, 
     color, 
     bgColor, 
     removeAllCursors, 
     leaveWhiteboard, 
     tool,
-    cacheShape,
     redrawCanvas,
     isMouseOnShape,
-    shapes,
     drawBoundingRect,
     shapesRef
   } = useContext(WhiteboardContext);
@@ -74,7 +71,7 @@ const useWhiteboard = () => {
     const [x, y] = calculateCanvasCoord(e.clientX, e.clientY);
     x0 = x;
     y0 = y;
-    shapeIndex = shapes.length;
+    shapeIndex = shapesRef.current.length;
   }
 
   const continueDraw = e => {
@@ -128,7 +125,8 @@ const useWhiteboard = () => {
         const [x, y] = calculateCanvasCoord(e.clientX, e.clientY);
         shapeIndex = isMouseOnShape(x, y);
         redrawCanvas();
-        if (shapeIndex > -1) {
+        if (shapeIndex !== null && shapeIndex > -1) {
+          console.log('mouse down pointer')
           drawBoundingRect(shapeIndex);
           isDrawing = true;
           x0 = x;
@@ -175,10 +173,22 @@ const useWhiteboard = () => {
 
         } else {
           shapeIndex = shapesRef.current.length;
-          console.log('textareaheight', drawTextArea.offsetHeight)
-          cacheShape(x0, y0, x0 + drawTextArea.offsetWidth, y0 + drawTextArea.offsetHeight - 15, shapeIndex, '#000000', 2, 'solid', 'text', drawTextArea.value);
+          socket.emit('draw text', {
+            x0, 
+            y0, 
+            x1: x0 + drawTextArea.offsetWidth, 
+            y1: y0 + drawTextArea.offsetHeight - 15, 
+            shapeIndex, 
+            color: '#000000', 
+            fontSize: 20, 
+            fontStyle: 'solid', 
+            type: 'text', 
+            text: drawTextArea.value,
+            channelName: selectedChannel.name
+          });
+          // cacheShape(x0, y0, x0 + drawTextArea.offsetWidth, y0 + drawTextArea.offsetHeight - 15, shapeIndex, '#000000', 2, 'solid', 'text', drawTextArea.value);
           drawTextArea.remove();
-          redrawCanvas();
+          // redrawCanvas();
         }
 
         break;

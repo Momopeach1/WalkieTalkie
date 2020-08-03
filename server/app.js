@@ -98,9 +98,10 @@ io.on('connection', (socket) => {
   });
 
   socket.on('request canvas', data => {
-    io.to(data.requester).emit('receive canvas', {
+    io.to(data.requester).emit('receive canvas', { 
       dataURL: data.dataURL,
-      bgColor: data.bgColor
+      bgColor: data.bgColor,
+      shapes: data.shapes
     });
   });
 
@@ -112,6 +113,11 @@ io.on('connection', (socket) => {
     const { channelName, ...newData } = data;
     io.in(data.channelName).emit('shape dragged', { ...newData });
   });
+
+  socket.on('draw text', data => {
+    const { channelName, ...newData } = data;
+    io.in(data.channelName).emit('drawing text', { ...newData });
+  })
 
   socket.on('leave whiteboard', data => {
     socket.leave(data.channelName);

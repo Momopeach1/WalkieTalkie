@@ -24,7 +24,6 @@ export const WhiteboardProvider = ({ children }) => {
       }]
   */
   const shapesRef = useRef([]);
-  const shapes = shapesRef.current;
   const [whiteboards, setWhiteboards] = useState([]);
   const [color, setColor] = useState('000000');
   const [bgColor, setBgColor] = useState('40444b');
@@ -92,6 +91,23 @@ export const WhiteboardProvider = ({ children }) => {
 
   const cacheShape = (x0, y0, x1, y1, i, color, width, style, type, text = '') => {
     if (!shapesRef.current[i]) {
+      console.log('current shapes', shapesRef.current);
+      console.log('shape index', i);
+      console.log('current shape', shapesRef.current[i]);
+      console.log('drawing:', { 
+        x_0: 0, 
+        y_0: 0, 
+        points: [{ x: x0, y: y0 }], 
+        color, 
+        width, 
+        style, 
+        minX: x0, 
+        maxX: x1, 
+        minY: y0, 
+        maxY: y1,
+        type,
+        text
+      })
       shapesRef.current[i] = { 
         x_0: 0, 
         y_0: 0, 
@@ -155,7 +171,7 @@ export const WhiteboardProvider = ({ children }) => {
     const canvas = document.querySelector('canvas');
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
-
+    console.log('redrawing canvas current shapes:', shapesRef.current)
     for (let shape of shapesRef.current) {
       if (shape.type === 'path') {
         ctx.lineJoin = 'round';
@@ -183,13 +199,13 @@ export const WhiteboardProvider = ({ children }) => {
     ctx.lineWidth = 1;
     ctx.strokeStyle = '#000';
     ctx.setLineDash([10, 10]);
-    defineBoundingRect(shapes[shapeIdx]);
+    defineBoundingRect(shapesRef.current[shapeIdx]);
     ctx.stroke();
   }
 
   const isMouseOnShape = (x, y) => {
-    for (let i = 0; i < shapes.length; ++i) {
-      const shape = shapes[i];
+    for (let i = 0; i < shapesRef.current.length; ++i) {
+      const shape = shapesRef.current[i];
       const padding = { top: 10, bottom: 10, left: 10, right: 10 };
       const a = { x: shape.minX - padding.left, y: shape.minY - padding.top };
       const b = { x: shape.maxX + padding.right, y: shape.minY - padding.top };
@@ -278,7 +294,6 @@ export const WhiteboardProvider = ({ children }) => {
     redrawCanvas,
     isMouseOnShape,
     shapesRef,
-    shapes,
     onStrokeWidthChange,
     onStrokeStyleChange,
     drawBoundingRect,
