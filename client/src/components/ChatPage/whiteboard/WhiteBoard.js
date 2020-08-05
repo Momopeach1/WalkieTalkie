@@ -43,10 +43,10 @@ const WhiteBoard = () => {
       
       <canvas 
         id="whiteboard"
-        onMouseDown={throttle(handleOnMouseDown, 10)}
-        onMouseMove={throttle(handleOnMouseMove, 10)}
-        onMouseUp={throttle(handleOnMouseUp, 10)}
-        onMouseOut={throttle(handleOnMouseUp, 10)}
+        onMouseDown={throttle(handleOnMouseDown, 50)}
+        onMouseMove={throttle(handleOnMouseMove, 50)}
+        onMouseUp={throttle(handleOnMouseUp, 50)}
+        onMouseOut={throttle(handleOnMouseUp, 50)}
         width="7680"
         height="4320"
       >
