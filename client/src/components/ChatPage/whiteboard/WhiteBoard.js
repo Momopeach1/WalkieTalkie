@@ -8,7 +8,7 @@ import LeftIsland from './LeftIsland';
 import MobileMenu from './MobileMenu';
 
 const WhiteBoard = () => {
-  const [handleOnMouseDown, handleOnMouseUp, handleOnMouseMove, renderActiveArtists] = useWhiteboard();
+  const [handleOnMouseDown, handleOnMouseUp, handleOnMouseMove, renderActiveArtists, throttle] = useWhiteboard();
 
   return (
     <div className="whiteboard-canvas" onScroll={() => {
@@ -43,10 +43,10 @@ const WhiteBoard = () => {
       
       <canvas 
         id="whiteboard"
-        onMouseDown={handleOnMouseDown}
-        onMouseMove={handleOnMouseMove}
-        onMouseUp={handleOnMouseUp}
-        onMouseOut={handleOnMouseUp}
+        onMouseDown={throttle(handleOnMouseDown, 100)}
+        onMouseMove={throttle(handleOnMouseMove, 100)}
+        onMouseUp={throttle(handleOnMouseUp, 100)}
+        onMouseOut={throttle(handleOnMouseUp, 100)}
         width="7680"
         height="4320"
       >
