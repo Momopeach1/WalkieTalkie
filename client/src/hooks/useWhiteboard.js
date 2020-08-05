@@ -18,7 +18,8 @@ const useWhiteboard = () => {
     redrawCanvas,
     isMouseOnShape,
     drawBoundingRect,
-    shapesRef
+    shapesRef,
+    cacheShape
   } = useContext(WhiteboardContext);
   let isDrawing = false;
   let shapeIndex = null;
@@ -91,6 +92,7 @@ const useWhiteboard = () => {
       if (tool.name === 'tool-eraser') 
         colorHex = bgColor;
 
+      cacheShape(x0, y0, x, y, shapeIndex, '#' + colorHex, tool.lineWidth, tool.lineStyle, 'path');
       socket.emit('drawing path', { 
         x0, 
         y0, 

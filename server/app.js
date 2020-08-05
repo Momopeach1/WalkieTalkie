@@ -106,7 +106,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('drawing path', data => {
-    io.in(data.channelName).emit('drawing path', data);
+    socket.to(data.channelName).emit('drawing path', data);
   });
 
   socket.on('drag shape', data => {
