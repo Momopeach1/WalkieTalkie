@@ -19,7 +19,8 @@ const useWhiteboard = () => {
     isMouseOnShape,
     drawBoundingRect,
     shapesRef,
-    cacheShape
+    cacheShape,
+    dragShape
   } = useContext(WhiteboardContext);
   let isDrawing = false;
   let shapeIndex = null;
@@ -202,7 +203,7 @@ const useWhiteboard = () => {
     switch (tool.name) {
       case 'tool-pointer':
         if (isDrawing) {
-          //dragShape(shapeIndex, x0, y0, x, y);
+          dragShape(shapeIndex, x0, y0, x, y);
           socket.emit('drag shape', { shapeIndex, x0, y0, x, y, channelName: selectedChannel.name });
           drawBoundingRect(shapeIndex);
           x0 = x;

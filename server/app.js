@@ -111,7 +111,7 @@ io.on('connection', (socket) => {
 
   socket.on('drag shape', data => {
     const { channelName, ...newData } = data;
-    io.in(data.channelName).emit('shape dragged', { ...newData });
+    socket.to(data.channelName).emit('shape dragged', { ...newData });
   });
 
   socket.on('draw text', data => {
