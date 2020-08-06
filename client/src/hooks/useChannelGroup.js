@@ -6,6 +6,7 @@ import WebRTCContext from '../contexts/WebRTCContext';
 import Talker from '../components/ChatPage/sidebar/Talkers';
 import BrushIcon from '@material-ui/icons/Brush';
 import WhiteboardContext from '../contexts/WhiteboardContext';
+import ChannelMenuWrapper from '../components/ContextMenus/ChannelMenuWrapper';
 
 
 const useChannelGroup = () => {
@@ -160,27 +161,29 @@ const useChannelGroup = () => {
   const renderChannels = (type, channels) => {
     return channels.map((ch, i) => {
       return (
-        <div style={{ display: !channelGroupsCollapse[type]? 'block' : isSame(ch.name, selectedChannel.name) }}>
-          <input 
-            defaultChecked={i === 0 && type ==='text' } 
-            type="radio" 
-            id={`${type}-${i}`} 
-            name={`${type}-radio`} 
-            className={type === 'voice'? 'voice-radio' : 'channel-radio'}
-            value={ch.name} 
-            onClick={e => handleOnClick(e, type, ch.name)} 
-          />
-          <label htmlFor={`${type}-${i}`}>
-            { renderChannelIcon(type) }
-            <div>{ch.name}</div>
-            { renderArtistIcons(ch.name, type) || null }
-          </label>
-          { type === 'voice' && talkers[ch.name] &&
-            <div className="talkers-container">
-              { renderTalkers(ch.name) }
-            </div>
-          }
-        </div>
+        <ChannelMenuWrapper channelID={ch._id} channelName={ch.name} channelType={type}>
+          <div style={{ display: !channelGroupsCollapse[type]? 'block' : isSame(ch.name, selectedChannel.name) }}>
+            <input 
+              defaultChecked={i === 0 && type ==='text' } 
+              type="radio" 
+              id={`${type}-${i}`} 
+              name={`${type}-radio`} 
+              className={type === 'voice'? 'voice-radio' : 'channel-radio'}
+              value={ch.name} 
+              onClick={e => handleOnClick(e, type, ch.name)} 
+            />
+            <label htmlFor={`${type}-${i}`}>
+              { renderChannelIcon(type) }
+              <div>{ch.name}</div>
+              { renderArtistIcons(ch.name, type) || null }
+            </label>
+            { type === 'voice' && talkers[ch.name] &&
+              <div className="talkers-container">
+                { renderTalkers(ch.name) }
+              </div>
+            }
+          </div>
+        </ChannelMenuWrapper>
       )
     })
   }

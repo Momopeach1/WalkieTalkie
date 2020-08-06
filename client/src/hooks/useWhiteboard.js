@@ -77,14 +77,9 @@ const useWhiteboard = () => {
   }
 
   const continueDraw = e => {
-    const { left, top } = document.querySelector('canvas').getBoundingClientRect();
+    
 
-    socket.emit('moving mouse', {
-      x: e.clientX - left,
-      y: e.clientY - top,
-      channelName: selectedChannel.name,
-      displayName: user.displayName
-    });
+    
 
     if (isDrawing) {
       const [x, y] = calculateCanvasCoord(e.clientX, e.clientY);
@@ -219,6 +214,15 @@ const useWhiteboard = () => {
       case 'tool-text':
         break;
     }
+
+    const { left, top } = document.querySelector('canvas').getBoundingClientRect();
+    socket.emit('moving mouse', {
+      x: e.clientX - left,
+      y: e.clientY - top,
+      channelName: selectedChannel.name,
+      displayName: user.displayName
+    });
+    
   }
 
   const mouseUpHelper = e => {

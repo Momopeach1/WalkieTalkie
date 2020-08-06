@@ -4,6 +4,8 @@ const passport = require('../middlewares/authentication');
 const privilege = require('../middlewares/privilege');
 const Text = require('../models/text');
 const User = require('../models/user');
+const Message = require('../models/message');
+const { response } = require('express');
 
 // @Route GET /api/text
 router.get('/', passport.isLoggedIn(), (req, res) => {
@@ -19,6 +21,18 @@ router.post('/', passport.isLoggedIn(), (req, res) => {
     if(error) return res.status(500).send(error);
     res.json({ success: true })
   });
+});
+
+//@Route DELETE /api/text
+router.delete('/delete/:channelID', passport.isLoggedIn(), (req, res) => {
+  Text.deleteOne({ _id: req.params.channelID }, (error, result) => {
+    if(error) return res.status(500).send(error);
+    Message.deleteMany({ channel: req.params.channelID }, (error, result) => {
+      if(error) return res.status(500).send(error);
+      res.json({succ: true});
+    })
+  });
+
 });
 
 module.exports = router;

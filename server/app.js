@@ -55,6 +55,10 @@ io.on('connection', (socket) => {
     io.in('General Room').emit('create voice channel', {});
   });
 
+  socket.on('create whiteboard channel', () => {
+    io.in('General Room').emit('create whiteboard channel', {});
+  });
+
   socket.on('created channel', () => {
     io.in('General Room').emit('created channel', {});
   });

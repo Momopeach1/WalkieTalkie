@@ -1,12 +1,12 @@
 import ToolKit from '../components/ChatPage/whiteboard/ToolKit';
-import { SocketProvider } from '../contexts/SocketContext';
+import server from '../apis/server';
 
 
 
 const whiteboardChannelSocket = (socket, channelContext, whiteboardContext) => {
 
-  const { appendCursor, shapesRef, setBgColor, onBackgroundChange, cacheShape, dragShape, redrawCanvas } = whiteboardContext;
-  const { fetchWhiteboardChannels, selectedChannelRef } = channelContext;
+  const { appendCursor, shapesRef, setBgColor, onBackgroundChange, cacheShape, dragShape, redrawCanvas, setWhiteboards } = whiteboardContext;
+  const { fetchWhiteboardChannels, selectedChannelRef, setWhiteboardChannels } = channelContext;
 
 
 
@@ -101,7 +101,13 @@ const whiteboardChannelSocket = (socket, channelContext, whiteboardContext) => {
     console.log('OwOasdasdas')
     const { x0, y0, x1, y1, shapeIndex, color, fontSize, fontStyle, type, text } = data;
     cacheShape(x0, y0, x1, y1, shapeIndex, color, fontSize, fontStyle, type, text);
-  })
+  });
+
+  socket.on('create whiteboard channel', () => {
+    server.get('/whiteboard').then(response => {
+      setWhiteboardChannels(response.data);
+    })
+  });
 
 };
 

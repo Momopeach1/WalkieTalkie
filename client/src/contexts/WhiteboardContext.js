@@ -247,7 +247,7 @@ export const WhiteboardProvider = ({ children }) => {
 
     const requestBody = {
       name: selectedChannel.name,
-      dataURL: canvas.toDataURL(),
+      dataURL: null,
       bgColor: '#' + bgColor,
       shapes: shapesRef.current
     };

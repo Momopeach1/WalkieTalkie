@@ -60,6 +60,7 @@ export const ChannelProvider = ({ children }) => {
       setChannels, 
       selectedChannel, 
       setSelectedChannel, 
+      setWhiteboardChannels,
       talkers,
       setTalkers,
       selectedVoice, 

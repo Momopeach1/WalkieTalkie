@@ -19,6 +19,14 @@ router.get('/', passport.isLoggedIn(), (req, res) => {
   });
 });
 
+//@Route - DELETE /api/whiteboard
+router.delete('/delete/:channelID', passport.isLoggedIn(), (req, res) => {
+  Whiteboard.deleteOne({ _id: req.params.channelID }, (error, result) => {
+    if(error) return res.status(500).send(error);
+    res.json({result});
+  });
+});
+
 // @Route - PUT /api/whiteboard/join
 router.put('/join', passport.isLoggedIn(), (req, res) => {
   Whiteboard.findOne({name: req.body.name}, (finderr, findres) => {
@@ -56,8 +64,11 @@ router.get('/load', passport.isLoggedIn(), (req, res) => {
 
 // @Route - DELETE /api/whiteboard/leave
 router.delete('/leave', passport.isLoggedIn(), (req, res) => {
+  console.log('req body', req.body);
   Whiteboard.findOne({name: req.body.name}, (finderr, findres) => {
+    console.log('message 1');
     if (finderr) return res.status(500).send(finderr.errmsg);
+    console.log('message 2');
     findres.artists = findres.artists.filter(a=> JSON.stringify(a._id) !== JSON.stringify(req.user._id));
     
     if (findres.artists.length === 0) {
@@ -68,7 +79,9 @@ router.delete('/leave', passport.isLoggedIn(), (req, res) => {
     }
 
     findres.save((saveErr, saveRes) => {
+      console.log('message 3');
       if(saveErr) return res.status(500).send(saveErr.errmsg);
+      console.log('message 4');
       res.send("User removed from whiteboard");
     });
   });
