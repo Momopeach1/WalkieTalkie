@@ -86,7 +86,7 @@ const useChannelGroup = () => {
     });
   };
   
-  const handleOnClick = (e, type, channelName) => {
+  const handleOnClick = (e, type, channelName, channelId) => {
     switch(type) {
       case 'voice':
         return server.put('/voice/join-voice', ({ socketId: socket.id, channelName }))
@@ -114,7 +114,7 @@ const useChannelGroup = () => {
       if (e.name !== `${type}-radio`) e.checked = false;
     });
 
-    setSelectedChannel({ name: e.target.value, type: type });
+    setSelectedChannel({ name: e.target.value, type: type, id: channelId });
   };
 
   const handleOnCollapse = type => {
@@ -170,7 +170,7 @@ const useChannelGroup = () => {
               name={`${type}-radio`} 
               className={type === 'voice'? 'voice-radio' : 'channel-radio'}
               value={ch.name} 
-              onClick={e => handleOnClick(e, type, ch.name)} 
+              onClick={e => handleOnClick(e, type, ch.name, ch._id)} 
             />
             <label htmlFor={`${type}-${i}`}>
               { renderChannelIcon(type) }

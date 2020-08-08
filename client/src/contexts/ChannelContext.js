@@ -11,7 +11,7 @@ export const ChannelProvider = ({ children }) => {
   const [textChannels, setTextChannels] = useState([]);
   const [voiceChannels, setVoiceChannels] = useState([]);
   const [whiteboardChannels, setWhiteboardChannels] = useState([]);
-  const [selectedChannel, setSelectedChannel] = useState({ name: '', type: '' });
+  const [selectedChannel, setSelectedChannel] = useState({ name: '', type: '', id: '' });
   const [selectedVoice, setSelectedVoice] = useState('');
   const [talkers, setTalkers] = useState({});
   const selectedChannelRef = useRef(selectedChannel);
@@ -22,7 +22,7 @@ export const ChannelProvider = ({ children }) => {
     server.get('/text')
       .then(response => {
         setTextChannels(response.data);
-        setSelectedChannel({ name: response.data[0].name, type: 'text' }); //always assume we have at least one text channel left
+        setSelectedChannel({ name: response.data[0].name, type: 'text', id: response.data[0]._id }); //always assume we have at least one text channel left
       })
       .catch(err => console.log(err));
   };

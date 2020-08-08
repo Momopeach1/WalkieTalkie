@@ -16,9 +16,12 @@ const WhiteBoard = () => {
       const whiteboardCanvas = document.querySelector('.whiteboard-canvas');
       const activeArtists = document.querySelector('.active-artists');
       const mobileMenu = document.querySelector('.mobile-menu-container');
+      
       drawUI.style.top = `${whiteboardCanvas.scrollTop}px`;
       drawUI.style.left = `${whiteboardCanvas.scrollLeft}px`;
-      activeArtists.style.top = `${whiteboardCanvas.scrollTop + whiteboardCanvas.clientHeight - 45}px`;
+      activeArtists.style.bottom = -whiteboardCanvas.scrollTop + 'px';
+      activeArtists.style.left = whiteboardCanvas.scrollLeft + (whiteboardCanvas.clientWidth / 2) - (activeArtists.clientWidth / 2) + 'px';
+      activeArtists.style.transform = 'none';
       mobileMenu.style.top = `${whiteboardCanvas.scrollTop + whiteboardCanvas.clientHeight - mobileMenu.clientHeight - 8}px`;
     }}>
 

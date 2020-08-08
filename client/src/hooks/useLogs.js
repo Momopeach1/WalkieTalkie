@@ -14,8 +14,9 @@ const useLogs = () => {
   scrollBottom();
 
   const renderLogs2 = () => {
+    console.log(selectedChannel)
     return logs.map((log, i) => {
-      if (log.channel.name !== selectedChannel.name) return null;
+      if (/*log.channel.name !== selectedChannel.name*/log.channel._id !== selectedChannel.id) return null;
 
       const previousUser = i > 0? logs[i-1].sender.email : null;
       const currentUser = log.sender.email;

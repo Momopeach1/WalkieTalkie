@@ -297,6 +297,11 @@ textarea {
   overflow: hidden;
 }
 
+.active-artists {
+  display: flex;
+}
+
+
 @media screen and (max-width: 930px) {
   .whiteboard-island, .left-island, .active-artists {
     display: none;

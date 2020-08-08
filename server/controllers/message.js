@@ -21,7 +21,7 @@ router.get('/', (req, res) => {
 router.post('/', passport.isLoggedIn(), (req, res) => {
   const { content, createdAt, selectedChannel } = req.body;
   
-  Text.findOne({ name: selectedChannel }, (error, result) => {
+  Text.findOne({ _id: selectedChannel }, (error, result) => {
     if (error){ 
       res.status(500).send(error);
       reject(error);
@@ -36,7 +36,7 @@ router.post('/', passport.isLoggedIn(), (req, res) => {
     
     newMessage.save();
 
-    Text.updateOne({ name: selectedChannel }, {messages: [...result.messages, newMessage.id]}, (updateErr, updateRes) => {
+    Text.updateOne({ _id: selectedChannel }, {messages: [...result.messages, newMessage.id]}, (updateErr, updateRes) => {
       if (updateErr){ 
         res.status(500).send(updateErr);
       }

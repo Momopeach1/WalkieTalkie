@@ -77,10 +77,6 @@ const useWhiteboard = () => {
   }
 
   const continueDraw = e => {
-    
-
-    
-
     if (isDrawing) {
       const [x, y] = calculateCanvasCoord(e.clientX, e.clientY);
       let colorHex = color;
@@ -118,9 +114,9 @@ const useWhiteboard = () => {
   }
 
   const mouseDownHelper = e => {
+    const [x, y] = calculateCanvasCoord(e.clientX, e.clientY);
     switch (tool.name) {
       case 'tool-pointer':
-        const [x, y] = calculateCanvasCoord(e.clientX, e.clientY);
         shapeIndex = isMouseOnShape(x, y);
         redrawCanvas();
         if (shapeIndex !== null && shapeIndex > -1) {
@@ -142,8 +138,37 @@ const useWhiteboard = () => {
       case 'tool-text':
         const drawTextArea = document.querySelector('.draw-textarea');
         const canvas = document.querySelector('canvas').getBoundingClientRect();
+        
+        shapeIndex = isMouseOnShape(x, y);
+        if (shapeIndex !== null && shapeIndex >= 0 && shapesRef.current[shapeIndex].text.length > 0) {
+          // edit
+          const textarea = document.createElement('textarea');
+          textarea.setAttribute('class', 'draw-textarea');
 
-        if (!drawTextArea) {
+          x0 = shapesRef.current[shapeIndex].points[0].x;
+          y0 = shapesRef.current[shapeIndex].points[0].y;
+          textarea.style.left = `${x0}px`;
+          textarea.style.top = `${y0 - 10}px`;
+          textarea.style.color = '#000';
+          textarea.style.fontFamily = 'whitney-medium';
+          textarea.style.fontSize = '20px';
+          textarea.style.lineHeight = '20px';
+          textarea.style.whiteSpace = 'pre';
+          textarea.style.height = '20px';
+          textarea.setAttribute('class', 'draw-textarea');
+          textarea.autofocus = true;
+          textarea.innerHTML = shapesRef.current[shapeIndex].text;
+          
+          //this needed because querySelector is async so new text areas wont focus.
+          document.querySelector('.whiteboard-canvas').appendChild(textarea);
+          setTimeout(() => textarea.focus(), 0);
+          
+          textarea.addEventListener('input', e => {
+            textarea.style.width = textarea.scrollWidth + 'px';
+            textarea.style.height = textarea.scrollHeight + 'px';
+          });
+
+        } else if (!drawTextArea) {
           const textarea = document.createElement('textarea');
           textarea.setAttribute('class', 'draw-textarea');
 

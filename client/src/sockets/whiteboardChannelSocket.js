@@ -56,17 +56,7 @@ const whiteboardChannelSocket = (socket, channelContext, whiteboardContext) => {
     shapesRef.current = data.shapes;
 
     redrawCanvas();
-
-    // img.onload = () => {
-    //   canvas.style.width = img.width;
-    //   canvas.style.height = img.height;
-    //   canvas.width = img.width;
-    //   canvas.height = img.height;
-    //   context.drawImage(img, 0, 0);
-    // }
-    // img.src = dataURL;
-
-    setBgColor(data.bgColor);
+    setBgColor(data.bgColor.slice(1));
   });
 
   socket.on('moving mouse', data => {

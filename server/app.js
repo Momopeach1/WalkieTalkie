@@ -43,7 +43,7 @@ io.on('connection', (socket) => {
         displayName: data.displayName,
         photoURL: data.photoURL
       },
-      channel: { name: data.selectedChannel }
+      channel: { _id: data.selectedChannel }
     });
   });
 
