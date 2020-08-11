@@ -301,6 +301,11 @@ textarea {
   display: flex;
 }
 
+.options-header {
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
 
 @media screen and (max-width: 930px) {
   .whiteboard-island, .left-island, .active-artists {

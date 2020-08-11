@@ -55,7 +55,7 @@ textarea::placeholder {
   border: none;
   padding: 0px;
   resize: none;
-  /* background: transparent; */
+  background: transparent;
   width: 1px;
 }
 

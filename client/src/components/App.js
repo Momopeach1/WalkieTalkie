@@ -8,6 +8,7 @@ import { AllUsersProvider } from '../contexts/AllUsersContext';
 import { ChannelProvider } from '../contexts/ChannelContext';
 import { WebRTCProvider } from '../contexts/WebRTCContext';
 import { WhiteboardProvider } from '../contexts/WhiteboardContext';
+import { LeftIslandProvider } from '../contexts/LeftIslandContext';
 
 import '../styles/App.css';
 import history from '../utilities/history';
@@ -43,20 +44,22 @@ const App = () => {
 }
 
 export default () => (
-  <WhiteboardProvider>
-    <WebRTCProvider>
-      <ChannelProvider>
-        <AllUsersProvider>
-          <LogsProvider>
-            <SocketProvider>
-              <UserProvider>
-                <App />
-              </UserProvider>
-            </SocketProvider>
-          </LogsProvider>
-        </AllUsersProvider>
-      </ChannelProvider>
-    </WebRTCProvider>
-  </WhiteboardProvider>
+  <LeftIslandProvider>
+    <WhiteboardProvider>
+      <WebRTCProvider>
+        <ChannelProvider>
+          <AllUsersProvider>
+            <LogsProvider>
+              <SocketProvider>
+                <UserProvider>
+                  <App />
+                </UserProvider>
+              </SocketProvider>
+            </LogsProvider>
+          </AllUsersProvider>
+        </ChannelProvider>
+      </WebRTCProvider>
+    </WhiteboardProvider>
+  </LeftIslandProvider>
 );
 

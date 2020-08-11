@@ -4,7 +4,7 @@ import HexInput from '../HexInput';
 import WhiteboardContext from '../../../../contexts/WhiteboardContext';
 
 const DrawContent = () => {
-  const { color, setColor, onStrokeWidthChange, onStrokeStyleChange, tool } = useContext(WhiteboardContext);
+  const { color, setColor, onStrokeWidthChange, onStrokeStyleChange} = useContext(WhiteboardContext);
 
   return (
     <>
@@ -28,7 +28,7 @@ const DrawContent = () => {
       />
       <div className="stroke-options">
         {/* stroke width  */}
-        <div>Stroke Width</div>
+        <div className="options-header">Stroke Width</div>
         <label onClick={() => onStrokeWidthChange(2)} className="stroke-option-label" >
           <input  className="stroke-radio" type="radio" />
           Thin
@@ -42,7 +42,7 @@ const DrawContent = () => {
           Thick
         </label>
         {/* Stroke Style */}
-        <div>Stroke Style</div>
+        <div className="options-header">Stroke Style</div>
         <label onClick={() => onStrokeStyleChange('solid'/*[]*/)} className="stroke-option-label" >
           <input className="stroke-radio" type="radio" />
           Solid

@@ -32,7 +32,9 @@ export const WhiteboardProvider = ({ children }) => {
     lineWidth: 2,
     name: 'tool-pointer',
     cursorImg: ToolKit.POINTER_ICON,
-    lineStyle: 'solid'
+    lineStyle: 'solid',
+    fontSize: '12px',
+    fontFamily: 'whitney-medium'
   });
 
   const onBackgroundChange = color => {
@@ -78,7 +80,14 @@ export const WhiteboardProvider = ({ children }) => {
 
   const onStrokeWidthChange = width => {
     changeStrokeWidth(width);
-  }
+  };
+
+  const changeFontSize = size =>{
+    setTool(prevTool => {
+      return { ...prevTool, fontSize: size + 'px' };
+    });
+  };
+
 
   /*
     Used when:
@@ -183,7 +192,7 @@ export const WhiteboardProvider = ({ children }) => {
         ctx.stroke();
       } else if (shape.type === 'text') {
         const texts = shape.text.split('\n');
-        let lineHeight = 20;
+        let lineHeight = shape.width;
         const textCursorOffset = 8;
         ctx.font = `${lineHeight}px whitney-medium`;
         //ctx.textBaseline = 'hanging';
@@ -300,7 +309,8 @@ export const WhiteboardProvider = ({ children }) => {
     dragShape,
     onBackgroundChange,
     hexError,
-    setHexError
+    setHexError,
+    changeFontSize
   }}>
     {children}
   </WhiteboardContext.Provider>

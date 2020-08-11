@@ -88,8 +88,14 @@ const whiteboardChannelSocket = (socket, channelContext, whiteboardContext) => {
   });
 
   socket.on('drawing text', data =>{
-    console.log('OwOasdasdas')
     const { x0, y0, x1, y1, shapeIndex, color, fontSize, fontStyle, type, text } = data;
+
+    if (text.trim().length === 0) {
+      shapesRef.current.splice(shapeIndex, 1);
+      redrawCanvas();
+      return;
+    }
+
     cacheShape(x0, y0, x1, y1, shapeIndex, color, fontSize, fontStyle, type, text);
   });
 
