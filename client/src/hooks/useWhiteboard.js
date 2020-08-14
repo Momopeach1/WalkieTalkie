@@ -141,7 +141,7 @@ const useWhiteboard = () => {
         const canvas = document.querySelector('canvas').getBoundingClientRect();
 
         shapeIndex = isMouseOnShape(x, y);
-        if (shapeIndex !== null && shapeIndex >= 0 && shapesRef.current[shapeIndex].text.length > 0) {
+        if (shapeIndex !== null && shapeIndex >= 0 && shapesRef.current[shapeIndex].text.length > 0 && !drawTextArea) {
           // edit
           editShapeIndex = shapeIndex;
           const textarea = document.createElement('textarea');
@@ -172,7 +172,9 @@ const useWhiteboard = () => {
           setTimeout(() => textarea.focus(), 0);
 
           textarea.addEventListener('input', e => {
+            textarea.style.width = '1px';
             textarea.style.width = textarea.scrollWidth + 'px';
+            textarea.style.height =  shapesRef.current[shapeIndex].width + 'px';
             textarea.style.height = textarea.scrollHeight + 'px';
           });
 
@@ -183,7 +185,7 @@ const useWhiteboard = () => {
           x0 = e.clientX - canvas.left;
           y0 = e.clientY - canvas.top;
           textarea.style.left = `${x0}px`;
-          textarea.style.top = `${y0 - 10}px`;
+          textarea.style.top = `${y0 /*- 10*/ - ( parseInt(tool.fontSize.slice(0, 2)) / 2 ) }px`;
           textarea.style.color = '#000';
           textarea.style.fontFamily = tool.fontFamily;
           textarea.style.fontSize = tool.fontSize;
@@ -198,18 +200,18 @@ const useWhiteboard = () => {
           setTimeout(() => textarea.focus(), 0);
 
           textarea.addEventListener('input', e => {
+            textarea.style.width = '1px';
             textarea.style.width = textarea.scrollWidth + 'px';
+            textarea.style.height = tool.fontSize;
             textarea.style.height = textarea.scrollHeight + 'px';
           });
 
         } else {
-
           shapeIndex = editShapeIndex > -1 ? editShapeIndex : shapesRef.current.length;
 
           if (editShapeIndex > -1) {
             shapesRef.current[shapeIndex].text = drawTextArea.value;
           }
-
 
           socket.emit('draw text', {
             x0,
