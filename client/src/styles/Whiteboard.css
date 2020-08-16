@@ -7,7 +7,7 @@
 .whiteboard-canvas > canvas {
   /* height: 100%;
   width: 100%; */
-  border: 1px solid red;
+  /* border: 1px solid red; */
   box-sizing: border-box;
 }
 
@@ -144,9 +144,8 @@
   position: absolute;
   left: 0;
   top: 0;
-  margin-top: 5px;
-  margin-left: 5px;
-
+  /* margin-top: 5px; */
+  /* margin-left: 5px; */
 }
 
 .whiteboard-island, .left-island, .tool-box {
