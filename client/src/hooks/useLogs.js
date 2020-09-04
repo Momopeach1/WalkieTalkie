@@ -14,7 +14,6 @@ const useLogs = () => {
   scrollBottom();
 
   const renderLogs2 = () => {
-    console.log(selectedChannel)
     return logs.map((log, i) => {
       if (/*log.channel.name !== selectedChannel.name*/log.channel._id !== selectedChannel.id) return null;
 

@@ -50,6 +50,17 @@
   margin-bottom: 5px;
 }
 
+.misccontent-tool-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.hide-island-button {
+  width: 25px;
+  height: 25px;
+  background-color: aqua;
+}
+
 .systool > input {
   display: none;
 }

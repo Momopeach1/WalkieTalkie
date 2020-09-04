@@ -74,11 +74,17 @@ const SignIn = props => {
       event.preventDefault();
       server.post('/user/signin', { email, password })
         .then(response => {
+          console.log(response.data);
           setUser(response.data);
           setIsAuth(true);
-          history.push(props.location.state.from || '/chat');
+          console.log('location state', props.location.state);
+          const destination = props.location.state? props.location.state.from : '/chat';
+          history.push(destination);
         })
-        .catch(error => setError(error));
+        .catch(error => {
+          console.log('log in failed', error, error.response)
+          setError(JSON.stringify(error.response.data))
+        });
     };
 
   const onChangeHandler = (event) => {
