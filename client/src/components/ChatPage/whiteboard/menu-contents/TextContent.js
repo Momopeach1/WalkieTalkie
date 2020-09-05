@@ -30,24 +30,48 @@ const TextContent = () => {
     <div className="text-options">
 
       <div className="options-header">Font Size</div>
-      <label onClick={() => changeFontSize(20)} className="stroke-option-label" >
-          <input  className="stroke-radio" type="radio" />
-          Small
-        </label>
-        <label onClick={() => changeFontSize(26)} className="stroke-option-label" >
-          <input  className="stroke-radio" type="radio" />
-          Medium 
-        </label>
-        <label onClick={() => changeFontSize(32)} className="stroke-option-label" >
-          <input  className="stroke-radio" type="radio" />
-          Large
-        </label>
+      <input  
+        type="radio"
+        id="t1"
+        name="size"
+        value="Small"
+        className="stroke-radio" 
+      />
+      <label onClick={() => changeFontSize(20)} htmlFor="t1" >
+        Small
+      </label>
+      <input  
+        type="radio" 
+        id="t2"
+        name="size"
+        value="Medium"
+        className="stroke-radio" 
+      />
+      <label onClick={() => changeFontSize(26)} htmlFor="t2" >
+        Medium 
+      </label>
+      <input  
+        type="radio"
+        id="t3"
+        name="size"
+        value="Large"
+        className="stroke-radio" 
+      />
+      <label onClick={() => changeFontSize(32)} htmlFor="t3" >
+        Large
+      </label>
 
-        <div className="options-header">Font Family</div>
-        <label onClick={() => console.log('kjfndsk')} className="stroke-option-label" >
-          <input  className="stroke-radio" type="radio" />
-          Classic
-        </label>
+      <div className="options-header">Font Family</div>
+      <input  
+        type="radio"
+        id="t4"
+        name="family"
+        value="Classic"
+        className="stroke-radio" 
+      />
+      <label onClick={() => console.log('kjfndsk')} htmlFor="t4" >
+        Classic
+      </label>
     </div>
   </>
   )

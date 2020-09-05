@@ -224,7 +224,7 @@
   display: none;
 }
 
-.stroke-option-label {
+.stroke-radio + label {
   background: #CED4DA;
   font-size: 14px;
   display: inline-block;
@@ -236,11 +236,11 @@
   cursor: pointer;
 }
 
-.stroke-radio:checked {
+.stroke-radio:checked + label {
   background: #8e9297;
 }
 
-.stroke-option-label:hover {
+.stroke-radio:hover + label {
   background: #8e9297;
 }
 

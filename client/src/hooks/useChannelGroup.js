@@ -150,7 +150,7 @@ const useChannelGroup = () => {
               <img 
                 className="artist-icon" 
                 src={a.photoURL} 
-                style={{ position: "absolute", right: "0", transform: `translate(${-(50 * i)}%, -50%)` }} 
+                style={{ position: "absolute", right: "10px", transform: `translate(${-(50 * i)}%, -50%)` }} 
               />
             );
           })

@@ -29,30 +29,67 @@ const DrawContent = () => {
       <div className="stroke-options">
         {/* stroke width  */}
         <div className="options-header">Stroke Width</div>
-        <label onClick={() => onStrokeWidthChange(2)} className="stroke-option-label" >
-          <input  className="stroke-radio" type="radio" />
+
+        <input
+          type="radio" 
+          id="d1"
+          name="width"
+          value="Thin"
+          className="stroke-radio" 
+        />
+        <label onClick={() => onStrokeWidthChange(2)} htmlFor="d1" >
           Thin
         </label>
-        <label onClick={() => onStrokeWidthChange(4)} className="stroke-option-label" >
-          <input className="stroke-radio" type="radio" />
+        <input
+          type="radio" 
+          id="d2"
+          name="width"
+          value="Bold"
+          className="stroke-radio" 
+        />
+        <label onClick={() => onStrokeWidthChange(4)} htmlFor="d2" >
           Bold
         </label>
-        <label onClick={() => onStrokeWidthChange(6)} className="stroke-option-label" >
-          <input className="stroke-radio" type="radio" />
+        <input 
+          type="radio"
+          id="d3"
+          name="width" 
+          value="Thick" 
+          className="stroke-radio" 
+        />
+        <label onClick={() => onStrokeWidthChange(6)} htmlFor="d3" >
           Thick
         </label>
         {/* Stroke Style */}
         <div className="options-header">Stroke Style</div>
-        <label onClick={() => onStrokeStyleChange('solid'/*[]*/)} className="stroke-option-label" >
-          <input className="stroke-radio" type="radio" />
+        <input 
+          type="radio"
+          id="d4"
+          name="style"
+          value="Solid" 
+          className="stroke-radio" 
+        />
+        <label onClick={() => onStrokeStyleChange('solid')} htmlFor="d4" >
           Solid
         </label>
-        <label onClick={() => onStrokeStyleChange('dashed'/*[20,15]*/)} className="stroke-option-label" >
-          <input className="stroke-radio" type="radio" />
+        <input 
+          type="radio"
+          id="d5"
+          name="style"
+          value="Solid" 
+          className="stroke-radio" 
+        />
+        <label onClick={() => onStrokeStyleChange('dashed')} htmlFor="d5" >
           Dashed
         </label>
-        <label onClick={() => onStrokeStyleChange('dotted'/*[tool.lineWidth,10]*/)} className="stroke-option-label" >
-          <input className="stroke-radio" type="radio" />
+        <input 
+          type="radio"
+          id="d6"
+          name="style"
+          value="Solid" 
+          className="stroke-radio" 
+        />
+        <label onClick={() => onStrokeStyleChange('dotted')} htmlFor="d6" >
           Dotted
         </label>
       </div>
