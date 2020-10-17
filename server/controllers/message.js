@@ -7,11 +7,15 @@ const Text = require('../models/text');
 
 //@Route - GET /api/message
 router.get('/', (req, res) => {
-  Message.find({})
+  const limit = parseInt(req.query.limit) || 50;
+  const selectedChannel = req.query.selectedChannel; 
+  Message.find({ selectedChannel })
     .populate('sender')
-    .populate('channel')
+    .sort({ createdAt: -1 })
+    .limit(limit)
     .exec((error, result) => {
       if (error) res.status(500).send(error);
+      result.sort((a, b) => a.createdAt - b.createdAt);
       res.json(result);
     });
 });
@@ -20,29 +24,17 @@ router.get('/', (req, res) => {
 //@Route - POST /api/message
 router.post('/', passport.isLoggedIn(), (req, res) => {
   const { content, createdAt, selectedChannel } = req.body;
-  
-  Text.findOne({ _id: selectedChannel }, (error, result) => {
-    if (error){ 
-      res.status(500).send(error);
-      reject(error);
-    }
-    
-    const newMessage = new Message({ 
-      content, 
-      createdAt, 
-      sender: new mongoose.Types.ObjectId(req.user._id), 
-      channel: new mongoose.Types.ObjectId(result.id)
-    });
-    
-    newMessage.save();
 
-    Text.updateOne({ _id: selectedChannel }, {messages: [...result.messages, newMessage.id]}, (updateErr, updateRes) => {
-      if (updateErr){ 
-        res.status(500).send(updateErr);
-      }
-      
-      res.json({ updateRes });
-    })
+  const newMessage = new Message({
+    selectedChannel,
+    content, 
+    createdAt,
+    sender: new mongoose.Types.ObjectId(req.user._id), 
+  });
+
+  newMessage.save(null, (err, product) => {
+    if (err) res.status(500).send(err);
+    res.json(product);
   });
 })
 

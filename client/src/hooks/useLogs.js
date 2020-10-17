@@ -15,8 +15,6 @@ const useLogs = () => {
 
   const renderLogs2 = () => {
     return logs.map((log, i) => {
-      if (/*log.channel.name !== selectedChannel.name*/log.channel._id !== selectedChannel.id) return null;
-
       const previousUser = i > 0? logs[i-1].sender.email : null;
       const currentUser = log.sender.email;
       const previousTime = i > 0? logs[i-1].createdAt : new Date(-8640000000000000); //before common era
@@ -66,7 +64,7 @@ const useLogs = () => {
       </div>
     </div>
     )
-    return logs;
+    return logs; 
   }
 
   return [renderLogs];
