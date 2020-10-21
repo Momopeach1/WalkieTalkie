@@ -56,14 +56,14 @@ export const ChannelProvider = ({ children }) => {
 
   return(
     <ChannelContext.Provider value={{ 
-      channels, 
-      setChannels, 
-      selectedChannel, 
-      setSelectedChannel, 
+      channels,
+      setChannels,
+      selectedChannel,
+      setSelectedChannel,
       setWhiteboardChannels,
       talkers,
       setTalkers,
-      selectedVoice, 
+      selectedVoice,
       setSelectedVoice,
       fetchTextChannels,
       textChannels,

@@ -43,7 +43,7 @@ const MiscContent = () => {
           </div>
         </div>
       </div>
-      <div className="row">
+      <div className="row"> 
         <div className="col-12">
           <form onSubmit={e => handleOnSubmit(e, bgColor)}>
             <HexInput
