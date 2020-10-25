@@ -27,7 +27,7 @@
 }
 
 .whiteboard-island, .left-island {
-  width: 210px;
+  max-width: max-content;
   background: rgba(255, 255, 255, 0.9);
   box-shadow: 0 1px 5px rgba(0,0,0,0.15);
   border-radius: 5px;

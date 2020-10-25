@@ -7,6 +7,7 @@ import Talker from '../components/ChatPage/sidebar/Talkers';
 import BrushIcon from '@material-ui/icons/Brush';
 import WhiteboardContext from '../contexts/WhiteboardContext';
 import ChannelMenuWrapper from '../components/ContextMenus/ChannelMenuWrapper';
+import LogsContext from '../contexts/LogsContext';
 
 
 const useChannelGroup = () => {
@@ -14,6 +15,7 @@ const useChannelGroup = () => {
 
   const { setBgColor, removeAllCursors, appendCursor, leaveWhiteboard, shapesRef, redrawCanvas } = useContext(WhiteboardContext);
   const { socket } = useContext(SocketContext);
+  const { fetchMessages } = useContext(LogsContext);
   const { getMedia, leaveVoice } = useContext(WebRTCContext);
   const { 
     whiteboardChannels,
@@ -105,6 +107,9 @@ const useChannelGroup = () => {
       case 'text':
         if (selectedChannel.type === 'whiteboard')
           leaveWhiteboard(socket, selectedChannel);
+
+          // improve this (load different messages on screen from front end)
+        fetchMessages(channelId, 2);
         break;
       default:
         return;

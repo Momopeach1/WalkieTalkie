@@ -27,7 +27,7 @@ const MiscContent = () => {
   };
 
   const HideButton = () => {
-    return <div className="hide-island-button" onClick={toggleShow}></div>;
+    return <div className="hide-island-button" onClick={toggleShow}><i class="fas fa-compress-alt"></i></div>;
   };
 
   return show? (
@@ -43,7 +43,7 @@ const MiscContent = () => {
           </div>
         </div>
       </div>
-      <div className="row"> 
+      <div className="row">
         <div className="col-12">
           <form onSubmit={e => handleOnSubmit(e, bgColor)}>
             <HexInput

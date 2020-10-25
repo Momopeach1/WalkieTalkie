@@ -1,6 +1,6 @@
 
 const textChannelSocket = (socket, logsContext, channelContext) => {
-  const { setLogs } = logsContext;
+  const { setLogs, fetchMessages } = logsContext;
   const { fetchTextChannels } = channelContext;
 
 
@@ -17,7 +17,7 @@ const textChannelSocket = (socket, logsContext, channelContext) => {
   });
 
   socket.on('create text channel', () => {
-    fetchTextChannels();
+    fetchTextChannels(fetchMessages);
   });
 
 }

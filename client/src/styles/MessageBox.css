@@ -2,6 +2,7 @@
 .chat-box-container {
   display: flex;
   justify-content: center;
+  padding-top: 10px;
 }
 
 .send-button {

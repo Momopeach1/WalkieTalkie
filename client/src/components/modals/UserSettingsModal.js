@@ -265,6 +265,7 @@ const UserSettingsModal = ({ type }) => {
               onClick = {() => {
                 setIsEdit(false);
                 setChangePassword(false);
+                setpfp(user.photoURL);
               }}
             >
               cancel

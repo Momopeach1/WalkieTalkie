@@ -18,11 +18,13 @@ export const ChannelProvider = ({ children }) => {
 
   selectedChannelRef.current = selectedChannel;
 
-  const fetchTextChannels = () => {
+  const fetchTextChannels = fetchMessages => {
     server.get('/text')
       .then(response => {
+        console.log('text channels', response.data);
         setTextChannels(response.data);
         setSelectedChannel({ name: response.data[0].name, type: 'text', id: response.data[0]._id }); //always assume we have at least one text channel left
+        // fetchMessages(response.data[0]._id, 2);
       })
       .catch(err => console.log(err));
   };

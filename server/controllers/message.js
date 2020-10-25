@@ -8,7 +8,8 @@ const Text = require('../models/text');
 //@Route - GET /api/message
 router.get('/', (req, res) => {
   const limit = parseInt(req.query.limit) || 50;
-  const selectedChannel = req.query.selectedChannel; 
+  const selectedChannel = req.query.channelName; 
+  console.log(limit, selectedChannel);
   Message.find({ selectedChannel })
     .populate('sender')
     .sort({ createdAt: -1 })
@@ -26,7 +27,7 @@ router.post('/', passport.isLoggedIn(), (req, res) => {
   const { content, createdAt, selectedChannel } = req.body;
 
   const newMessage = new Message({
-    selectedChannel,
+    selectedChannels,
     content, 
     createdAt,
     sender: new mongoose.Types.ObjectId(req.user._id), 

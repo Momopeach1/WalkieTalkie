@@ -29,15 +29,14 @@ const useChat = () => {
   const whiteboardContext = useContext(WhiteboardContext);
   
   useEffect(() => {
-    logsContext.fetchMessages(channelContext.selectedChannel.name, 2);
+    // logsContext.fetchMessages(channelContext.selectedChannel.id, 2);
   }, [channelContext.selectedChannel.name])
   
   useEffect(() => {
     if (userContext.user.email !== null) {
       const socket = openSocket();
       setSocket(socket);
-      logsContext.fetchMessages(channelContext.selectedChannel.name, 2);
-      channelContext.fetchTextChannels();
+      channelContext.fetchTextChannels(logsContext.fetchMessages);
       channelContext.fetchVoiceChannels();
       channelContext.fetchWhiteboardChannels();
   
