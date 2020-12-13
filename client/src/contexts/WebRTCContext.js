@@ -9,7 +9,7 @@ export const WebRTCProvider = ({ children }) => {
   const config = { 
     "iceServers": [
       { "url": "stun:stun.1.google.com:19302" }, 
-      { "url": "turn:34.72.190.154:3478", "username": "yong", "credential": "123" }
+      { "url": "turn:54.90.251.22:3478", "username": "borg", "credential": "123" }
     ]
   };
 
