@@ -15,8 +15,6 @@ export const LogsProvider = ({ children }) => {
   const fetchAllMessages = async (channelNames, limit) => {
     const response = await server.post('/message/all', { channelNames, limit });
     messageMapRef.current = response.data;
-    console.log(messageMapRef.current)
-
   }
 
   return (
