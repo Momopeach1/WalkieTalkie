@@ -19,7 +19,6 @@ const ContextMenuWrapper = ({ talker, children, muted, setMuted }) => {
       <ContextMenu id={talker.socketId}>
         <VoiceMenu talker={talker} muted={muted} setMuted={setMuted} />
       </ContextMenu>
- 
     </div>
   );
 }

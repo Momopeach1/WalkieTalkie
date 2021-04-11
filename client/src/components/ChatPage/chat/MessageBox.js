@@ -1,19 +1,21 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import TextField from '@material-ui/core/TextField';
 
-import '../../../styles/MessageBox.css';
 import useMessageBox from '../../../hooks/useMessageBox';
+import ChannelContext from '../../../contexts/ChannelContext';
+import '../../../styles/MessageBox.css';
 
 const MessageBox = ()=>{
   const [message, handleOnChange, handleOnSubmit, handleOnKeyPress] = useMessageBox();
+  const { selectedChannel } = useContext(ChannelContext);
 
   return(
     <form className="chat-form" onSubmit={handleOnSubmit}>
       <TextField
         className="message-box"
         id="standard-textarea"
-        label="Channel Name"
-        placeholder="Message Channel Name"
+        label= { "#" + selectedChannel.name}
+        placeholder="Type message here"
         value={message.text}
         multiline
         onKeyPress={handleOnKeyPress}

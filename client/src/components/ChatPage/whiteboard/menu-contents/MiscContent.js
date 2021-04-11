@@ -10,6 +10,9 @@ const MiscContent = () => {
   const { socket } = useContext(SocketContext);
   const { selectedChannel } = useContext(ChannelContext);
   const { bgColor, setBgColor, hexError, setHexError } = useContext(WhiteboardContext);
+  const [show, setShow] = useState(true);
+
+  const toggleShow = () => setShow(!show);
 
   const handleOnClear = () =>{
     if(window.confirm('This will clear the whole canvas. Are you sure?'))
@@ -23,13 +26,20 @@ const MiscContent = () => {
     }
   };
 
-  return (
+  const HideButton = () => {
+    return <div className="hide-island-button" onClick={toggleShow}><i class="fas fa-compress-alt"></i></div>;
+  };
+
+  return show? (
     <>
       <div className="row">
         <div className="col-12">
-          <div className="systool-container">
-            <SysTool name="systool" id="island-delete" handleOnClick={handleOnClear}>{ToolKit.DELETE}</SysTool>
-            <SysTool name="systool" id="island-save">{ToolKit.SAVE}</SysTool>
+          <div className="misccontent-tool-container">
+            <div className="systool-container">
+              <SysTool name="systool" id="island-delete" handleOnClick={handleOnClear}>{ToolKit.DELETE}</SysTool>
+              <SysTool name="systool" id="island-save">{ToolKit.SAVE}</SysTool>
+            </div>
+            <HideButton />
           </div>
         </div>
       </div>
@@ -57,7 +67,7 @@ const MiscContent = () => {
         </div>
       </div>
     </>
-  )
+  ) : <HideButton />
 }
 
 export default MiscContent;

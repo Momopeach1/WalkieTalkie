@@ -27,6 +27,7 @@
   text-align: center;
   color: #72767d;
   cursor: pointer;
+  right: 30%;
 }
 
 .exit-text {
@@ -59,12 +60,13 @@
  border: 1px solid #202225;
  border-radius: 5px;
  display: flex;
+ max-width: 60%;
 }
 
 /* button */
 .settings-modal-edit {
-  position: absolute;
-  right: 245px;
+  position: relative;
+  right: 1%;
   height: 32px;
   min-width: 60px;
   color: white;
@@ -84,12 +86,12 @@
 .settings-modal-subtitle {
   margin-bottom: 8px;
   color: #8e9297;
-  font-size: 12px;
+  font-size: 16px;
 }
 
 .settings-modal-subtitle-content {
   color: #b9bbbe;
-  font-size: 14px;
+  font-size: 20px;
 }
 
 .button-container {

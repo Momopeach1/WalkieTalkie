@@ -7,7 +7,7 @@
 .whiteboard-canvas > canvas {
   /* height: 100%;
   width: 100%; */
-  border: 1px solid red;
+  /* border: 1px solid red; */
   box-sizing: border-box;
 }
 
@@ -27,7 +27,7 @@
 }
 
 .whiteboard-island, .left-island {
-  width: 210px;
+  max-width: max-content;
   background: rgba(255, 255, 255, 0.9);
   box-shadow: 0 1px 5px rgba(0,0,0,0.15);
   border-radius: 5px;
@@ -48,6 +48,17 @@
 .systool-container {
   display: inline-flex;
   margin-bottom: 5px;
+}
+
+.misccontent-tool-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.hide-island-button {
+  width: 25px;
+  height: 25px;
+  background-color: aqua;
 }
 
 .systool > input {
@@ -144,9 +155,8 @@
   position: absolute;
   left: 0;
   top: 0;
-  margin-top: 5px;
-  margin-left: 5px;
-
+  /* margin-top: 5px; */
+  /* margin-left: 5px; */
 }
 
 .whiteboard-island, .left-island, .tool-box {
@@ -214,7 +224,7 @@
   display: none;
 }
 
-.stroke-option-label {
+.stroke-radio + label {
   background: #CED4DA;
   font-size: 14px;
   display: inline-block;
@@ -226,11 +236,11 @@
   cursor: pointer;
 }
 
-.stroke-radio:checked {
+.stroke-radio:checked + label {
   background: #8e9297;
 }
 
-.stroke-option-label:hover {
+.stroke-radio:hover + label {
   background: #8e9297;
 }
 
@@ -296,6 +306,16 @@ input[name=mobile-tool-radio]:checked + .mobile-tool-style {
 textarea {
   overflow: hidden;
 }
+
+.active-artists {
+  display: flex;
+}
+
+.options-header {
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
 
 @media screen and (max-width: 930px) {
   .whiteboard-island, .left-island, .active-artists {

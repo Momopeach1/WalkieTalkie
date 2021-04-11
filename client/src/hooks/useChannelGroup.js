@@ -6,6 +6,8 @@ import WebRTCContext from '../contexts/WebRTCContext';
 import Talker from '../components/ChatPage/sidebar/Talkers';
 import BrushIcon from '@material-ui/icons/Brush';
 import WhiteboardContext from '../contexts/WhiteboardContext';
+import ChannelMenuWrapper from '../components/ContextMenus/ChannelMenuWrapper';
+import LogsContext from '../contexts/LogsContext';
 
 
 const useChannelGroup = () => {
@@ -13,6 +15,7 @@ const useChannelGroup = () => {
 
   const { setBgColor, removeAllCursors, appendCursor, leaveWhiteboard, shapesRef, redrawCanvas } = useContext(WhiteboardContext);
   const { socket } = useContext(SocketContext);
+  const { fetchMessages, messageMapRef, setLogs } = useContext(LogsContext);
   const { getMedia, leaveVoice } = useContext(WebRTCContext);
   const { 
     whiteboardChannels,
@@ -85,7 +88,7 @@ const useChannelGroup = () => {
     });
   };
   
-  const handleOnClick = (e, type, channelName) => {
+  const handleOnClick = (e, type, channelName, channelId) => {
     switch(type) {
       case 'voice':
         return server.put('/voice/join-voice', ({ socketId: socket.id, channelName }))
@@ -104,6 +107,8 @@ const useChannelGroup = () => {
       case 'text':
         if (selectedChannel.type === 'whiteboard')
           leaveWhiteboard(socket, selectedChannel);
+
+        setLogs(messageMapRef.current[channelId]);
         break;
       default:
         return;
@@ -113,7 +118,7 @@ const useChannelGroup = () => {
       if (e.name !== `${type}-radio`) e.checked = false;
     });
 
-    setSelectedChannel({ name: e.target.value, type: type });
+    setSelectedChannel({ name: e.target.value, type: type, id: channelId });
   };
 
   const handleOnCollapse = type => {
@@ -149,7 +154,7 @@ const useChannelGroup = () => {
               <img 
                 className="artist-icon" 
                 src={a.photoURL} 
-                style={{ position: "absolute", right: "0", transform: `translate(${-(50 * i)}%, -50%)` }} 
+                style={{ position: "absolute", right: "10px", transform: `translate(${-(50 * i)}%, -50%)` }} 
               />
             );
           })
@@ -160,27 +165,29 @@ const useChannelGroup = () => {
   const renderChannels = (type, channels) => {
     return channels.map((ch, i) => {
       return (
-        <div style={{ display: !channelGroupsCollapse[type]? 'block' : isSame(ch.name, selectedChannel.name) }}>
-          <input 
-            defaultChecked={i === 0 && type ==='text' } 
-            type="radio" 
-            id={`${type}-${i}`} 
-            name={`${type}-radio`} 
-            className={type === 'voice'? 'voice-radio' : 'channel-radio'}
-            value={ch.name} 
-            onClick={e => handleOnClick(e, type, ch.name)} 
-          />
-          <label htmlFor={`${type}-${i}`}>
-            { renderChannelIcon(type) }
-            <div>{ch.name}</div>
-            { renderArtistIcons(ch.name, type) || null }
-          </label>
-          { type === 'voice' && talkers[ch.name] &&
-            <div className="talkers-container">
-              { renderTalkers(ch.name) }
-            </div>
-          }
-        </div>
+        <ChannelMenuWrapper channelID={ch._id} channelName={ch.name} channelType={type}>
+          <div style={{ display: !channelGroupsCollapse[type]? 'block' : isSame(ch.name, selectedChannel.name) }}>
+            <input 
+              defaultChecked={i === 0 && type ==='text' } 
+              type="radio" 
+              id={`${type}-${i}`} 
+              name={`${type}-radio`} 
+              className={type === 'voice'? 'voice-radio' : 'channel-radio'}
+              value={ch.name} 
+              onClick={e => handleOnClick(e, type, ch.name, ch._id)} 
+            />
+            <label htmlFor={`${type}-${i}`}>
+              { renderChannelIcon(type) }
+              <div>{ch.name}</div>
+              { renderArtistIcons(ch.name, type) || null }
+            </label>
+            { type === 'voice' && talkers[ch.name] &&
+              <div className="talkers-container">
+                { renderTalkers(ch.name) }
+              </div>
+            }
+          </div>
+        </ChannelMenuWrapper>
       )
     })
   }

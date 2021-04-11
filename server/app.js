@@ -43,7 +43,7 @@ io.on('connection', (socket) => {
         displayName: data.displayName,
         photoURL: data.photoURL
       },
-      channel: { name: data.selectedChannel }
+      channel: { _id: data.selectedChannel }
     });
   });
 
@@ -53,6 +53,10 @@ io.on('connection', (socket) => {
 
   socket.on('create voice channel', () => {
     io.in('General Room').emit('create voice channel', {});
+  });
+
+  socket.on('create whiteboard channel', () => {
+    io.in('General Room').emit('create whiteboard channel', {});
   });
 
   socket.on('created channel', () => {

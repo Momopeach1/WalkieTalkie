@@ -1,12 +1,12 @@
 import ToolKit from '../components/ChatPage/whiteboard/ToolKit';
-import { SocketProvider } from '../contexts/SocketContext';
+import server from '../apis/server';
 
 
 
 const whiteboardChannelSocket = (socket, channelContext, whiteboardContext) => {
 
-  const { appendCursor, shapesRef, setBgColor, onBackgroundChange, cacheShape, dragShape, redrawCanvas } = whiteboardContext;
-  const { fetchWhiteboardChannels, selectedChannelRef } = channelContext;
+  const { appendCursor, shapesRef, setBgColor, onBackgroundChange, cacheShape, dragShape, redrawCanvas, setWhiteboards } = whiteboardContext;
+  const { fetchWhiteboardChannels, selectedChannelRef, setWhiteboardChannels } = channelContext;
 
 
 
@@ -56,17 +56,7 @@ const whiteboardChannelSocket = (socket, channelContext, whiteboardContext) => {
     shapesRef.current = data.shapes;
 
     redrawCanvas();
-
-    // img.onload = () => {
-    //   canvas.style.width = img.width;
-    //   canvas.style.height = img.height;
-    //   canvas.width = img.width;
-    //   canvas.height = img.height;
-    //   context.drawImage(img, 0, 0);
-    // }
-    // img.src = dataURL;
-
-    setBgColor(data.bgColor);
+    setBgColor(data.bgColor.slice(1));
   });
 
   socket.on('moving mouse', data => {
@@ -98,10 +88,22 @@ const whiteboardChannelSocket = (socket, channelContext, whiteboardContext) => {
   });
 
   socket.on('drawing text', data =>{
-    console.log('OwOasdasdas')
     const { x0, y0, x1, y1, shapeIndex, color, fontSize, fontStyle, type, text } = data;
+
+    if (text.trim().length === 0) {
+      shapesRef.current.splice(shapeIndex, 1);
+      redrawCanvas();
+      return;
+    }
+
     cacheShape(x0, y0, x1, y1, shapeIndex, color, fontSize, fontStyle, type, text);
-  })
+  });
+
+  socket.on('create whiteboard channel', () => {
+    server.get('/whiteboard').then(response => {
+      setWhiteboardChannels(response.data);
+    })
+  });
 
 };
 

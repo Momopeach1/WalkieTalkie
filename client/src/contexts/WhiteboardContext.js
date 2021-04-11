@@ -32,7 +32,9 @@ export const WhiteboardProvider = ({ children }) => {
     lineWidth: 2,
     name: 'tool-pointer',
     cursorImg: ToolKit.POINTER_ICON,
-    lineStyle: 'solid'
+    lineStyle: 'solid',
+    fontSize: '12px',
+    fontFamily: 'whitney-medium'
   });
 
   const onBackgroundChange = color => {
@@ -78,7 +80,14 @@ export const WhiteboardProvider = ({ children }) => {
 
   const onStrokeWidthChange = width => {
     changeStrokeWidth(width);
-  }
+  };
+
+  const changeFontSize = size =>{
+    setTool(prevTool => {
+      return { ...prevTool, fontSize: size + 'px' };
+    });
+  };
+
 
   /*
     Used when:
@@ -153,7 +162,7 @@ export const WhiteboardProvider = ({ children }) => {
     const ctx = document.querySelector('canvas').getContext('2d');
     // a  b
     // c  d
-    const padding = { top: 10, bottom: 10, left: 10, right: 10 };
+    const padding = { top: 10 + (shape.width / 2), bottom: 10, left: 10, right: 10 };
     const a = { x: shape.minX - padding.left, y: shape.minY - padding.top };
     const b = { x: shape.maxX + padding.right, y: shape.minY - padding.top };
     const c = { x: shape.minX - padding.left, y: shape.maxY + padding.bottom };
@@ -183,10 +192,10 @@ export const WhiteboardProvider = ({ children }) => {
         ctx.stroke();
       } else if (shape.type === 'text') {
         const texts = shape.text.split('\n');
-        let lineHeight = 20;
-        const textCursorOffset = 8;
+        let lineHeight = shape.width;
+        const textCursorOffset = 0;
         ctx.font = `${lineHeight}px whitney-medium`;
-        //ctx.textBaseline = 'hanging';
+        ctx.textBaseline = 'middle';
         for (let i = 0; i < texts.length; ++i) {
           ctx.fillText(texts[i], shape.x_0 + shape.points[0].x, shape.y_0 + textCursorOffset + (shape.points[0].y + i * lineHeight));
         }
@@ -247,7 +256,7 @@ export const WhiteboardProvider = ({ children }) => {
 
     const requestBody = {
       name: selectedChannel.name,
-      dataURL: canvas.toDataURL(),
+      dataURL: null,
       bgColor: '#' + bgColor,
       shapes: shapesRef.current
     };
@@ -300,7 +309,8 @@ export const WhiteboardProvider = ({ children }) => {
     dragShape,
     onBackgroundChange,
     hexError,
-    setHexError
+    setHexError,
+    changeFontSize
   }}>
     {children}
   </WhiteboardContext.Provider>

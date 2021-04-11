@@ -118,6 +118,7 @@ const UserSettingsModal = ({ type }) => {
   const [isEdit, setIsEdit] = useState(false);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [changePassword, setChangePassword] = useState(false);
+  const [pfp, setpfp] = useState(user.photoURL);
 
   const settingsIcon = <svg aria-hidden="false" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M19.738 10H22V14H19.739C19.498 14.931 19.1 15.798 18.565 16.564L20 18L18 20L16.565 18.564C15.797 19.099 14.932 19.498 14 19.738V22H10V19.738C9.069 19.498 8.203 19.099 7.436 18.564L6 20L4 18L5.436 16.564C4.901 15.799 4.502 14.932 4.262 14H2V10H4.262C4.502 9.068 4.9 8.202 5.436 7.436L4 6L6 4L7.436 5.436C8.202 4.9 9.068 4.502 10 4.262V2H14V4.261C14.932 4.502 15.797 4.9 16.565 5.435L18 3.999L20 5.999L18.564 7.436C19.099 8.202 19.498 9.069 19.738 10ZM12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16Z"></path></svg>;
   const escIcon = <i class="far fa-times-circle fa-2x"></i>;
@@ -155,14 +156,14 @@ const UserSettingsModal = ({ type }) => {
 
   const handleUploaderChange = () => {
     const photo = document.querySelector('.avatar-uploader');
-
+    setpfp(URL.createObjectURL(photo.files[0]));
     setForm({ ...form, photo: photo.files[0] });
   }
 
   const renderProfileInfo = () => {
     return(
       <div className="profile-info-container">
-        <img className="settings-modal-avatar" src={user.photoURL} />
+        <img className="settings-modal-avatar" src={pfp} />
         <div className="settings-modal-info">
           <div className="settings-modal-subtitle">USERNAME</div>
           <div className="settings-modal-subtitle-content">{user.displayName}</div>
@@ -212,7 +213,7 @@ const UserSettingsModal = ({ type }) => {
       <form className="profile-info-container" onSubmit={handleOnSubmit}>
         <input onChange={handleUploaderChange} className="avatar-uploader" type="file" name="photo" style={{ display: "none" }} />
         <div className="avatar-edit-container" onClick={() => document.querySelector(".avatar-uploader").click()}>
-          <img className="settings-modal-avatar" src={user.photoURL} />
+          <img className="settings-modal-avatar" src={pfp} />
         </div>
         <div className="settings-modal-info">
           <Typography classes= {{root: classes.textfieldHeading}}>
@@ -248,7 +249,7 @@ const UserSettingsModal = ({ type }) => {
               required
               id="currentPassword"
               classes={{ root: classes.textfield}}
-              value={form.currentPassword}
+              // value={form.currentPassword}
               autoComplete="off"
               type="password"
               variant="outlined"
@@ -264,6 +265,7 @@ const UserSettingsModal = ({ type }) => {
               onClick = {() => {
                 setIsEdit(false);
                 setChangePassword(false);
+                setpfp(user.photoURL);
               }}
             >
               cancel
@@ -305,11 +307,11 @@ const UserSettingsModal = ({ type }) => {
               <div className="setting-main">
                 <h2 className="user-modal-title">MY ACCOUNT</h2>
                 {renderProfileEdit()}
-                <div className="two-factor-container">
+                {/* <div className="two-factor-container">
                   <h2>
                     Two Factor Authentication
                   </h2>
-                </div>
+                </div> */}
               </div>
 
               <div className="setting-fixed-container">

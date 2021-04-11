@@ -19,7 +19,15 @@ router.post('/', passport.isLoggedIn(), (req, res) => {
     if (error) return res.status(500).send(error.errmsg);
     res.json({ success: true })
   });
-})
+});
+
+//@Route DELETE /api/voice
+router.delete('/delete/:channelID', passport.isLoggedIn(), (req, res) => {
+  Voice.deleteOne({ _id: req.params.channelID }, (error, result) => {
+    if(error) return res.status(500).send(error);
+    res.json({result});
+  });
+});
 
 // @Route PUT /api/voice/join-voice
 router.put('/join-voice', passport.isLoggedIn(), (req, res) => {

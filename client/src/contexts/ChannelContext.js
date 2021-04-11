@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 
 import server from '../apis/server';
+import { MESSAGE_LIMIT } from '../configs';
 
 const ChannelContext = React.createContext();
 
@@ -11,18 +12,20 @@ export const ChannelProvider = ({ children }) => {
   const [textChannels, setTextChannels] = useState([]);
   const [voiceChannels, setVoiceChannels] = useState([]);
   const [whiteboardChannels, setWhiteboardChannels] = useState([]);
-  const [selectedChannel, setSelectedChannel] = useState({ name: '', type: '' });
+  const [selectedChannel, setSelectedChannel] = useState({ name: '', type: '', id: '' });
   const [selectedVoice, setSelectedVoice] = useState('');
   const [talkers, setTalkers] = useState({});
   const selectedChannelRef = useRef(selectedChannel);
 
   selectedChannelRef.current = selectedChannel;
 
-  const fetchTextChannels = () => {
+  const fetchTextChannels = fetchAllMessages => {
     server.get('/text')
       .then(response => {
+        console.log('text channels', response.data);
         setTextChannels(response.data);
-        setSelectedChannel({ name: response.data[0].name, type: 'text' }); //always assume we have at least one text channel left
+        setSelectedChannel({ name: response.data[0].name, type: 'text', id: response.data[0]._id }); //always assume we have at least one text channel left
+        fetchAllMessages(response.data, MESSAGE_LIMIT);
       })
       .catch(err => console.log(err));
   };
@@ -56,13 +59,14 @@ export const ChannelProvider = ({ children }) => {
 
   return(
     <ChannelContext.Provider value={{ 
-      channels, 
-      setChannels, 
-      selectedChannel, 
-      setSelectedChannel, 
+      channels,
+      setChannels,
+      selectedChannel,
+      setSelectedChannel,
+      setWhiteboardChannels,
       talkers,
       setTalkers,
-      selectedVoice, 
+      selectedVoice,
       setSelectedVoice,
       fetchTextChannels,
       textChannels,

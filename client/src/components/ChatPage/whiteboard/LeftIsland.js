@@ -1,11 +1,18 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
-import DrawContent from './menu-contents/DrawContent';
+import LeftIslandContext from '../../../contexts/LeftIslandContext';
+import useLeftIsland from '../../../hooks/whiteboard/useLeftIsland';
+import WhiteboardContext from '../../../contexts/WhiteboardContext';
 
 const LeftIsland = () => {
-  return(
+  const { showLeftIsland } = useContext(LeftIslandContext);
+  const { tool } = useContext(WhiteboardContext);
+  const [renderLeftIslandContent] = useLeftIsland();
+
+  return showLeftIsland && (
     <div className="left-island">
-      <DrawContent />
+      {/* <DrawContent /> */}
+      { renderLeftIslandContent(tool) }
     </div>
   )
 }
