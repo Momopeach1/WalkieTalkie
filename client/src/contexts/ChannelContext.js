@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 
 import server from '../apis/server';
+import { MESSAGE_LIMIT } from '../configs';
 
 const ChannelContext = React.createContext();
 
@@ -18,13 +19,13 @@ export const ChannelProvider = ({ children }) => {
 
   selectedChannelRef.current = selectedChannel;
 
-  const fetchTextChannels = fetchMessages => {
+  const fetchTextChannels = fetchAllMessages => {
     server.get('/text')
       .then(response => {
         console.log('text channels', response.data);
         setTextChannels(response.data);
         setSelectedChannel({ name: response.data[0].name, type: 'text', id: response.data[0]._id }); //always assume we have at least one text channel left
-        // fetchMessages(response.data[0]._id, 2);
+        fetchAllMessages(response.data, MESSAGE_LIMIT);
       })
       .catch(err => console.log(err));
   };

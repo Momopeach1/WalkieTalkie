@@ -23,7 +23,7 @@ const userSocket = (socket, userContext, channelContext, logsContext, allUsersCo
 
   socket.on('refresh users', () => {
     fetchAllUsers();
-    fetchMessages(channelContext.selectedChannel.id, 2);
+    //fetchMessages(channelContext.selectedChannel.id, 2);
   });
 }
 

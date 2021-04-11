@@ -14,7 +14,6 @@ const useLogs = () => {
   scrollBottom();
 
   const renderLogs2 = () => {
-    console.log(logs);
     return logs.map((log, i) => {
       const previousUser = i > 0? logs[i-1].sender.email : null;
       const currentUser = log.sender.email;

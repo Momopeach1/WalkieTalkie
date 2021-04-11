@@ -9,7 +9,6 @@ const Text = require('../models/text');
 router.get('/', (req, res) => {
   const limit = parseInt(req.query.limit) || 50;
   const selectedChannel = req.query.channelName; 
-  console.log(limit, selectedChannel);
   Message.find({ selectedChannel })
     .populate('sender')
     .sort({ createdAt: -1 })
@@ -21,13 +20,38 @@ router.get('/', (req, res) => {
     });
 });
 
+//@Route - POST /api/message
+router.post('/all', async (req, res) => {
+  const limit = parseInt(req.body.limit) || 50;
+  const channelNames = req.body.channelNames;
+  const messageMap = {};
+  const promises = [];
+  channelNames.forEach( async ({ _id, name }) => {
+    promises.push( new Promise((resolve, reject) => Message.find({ selectedChannel: _id })
+      .populate('sender')
+      .sort({ createdAt: -1 })
+      .limit(limit)
+      .exec((error, result) => {
+        if (error){
+          res.status(500).send(error);
+          reject();
+        } 
+        result.sort((a, b) => a.createdAt - b.createdAt);
+        messageMap[_id] = result;
+        resolve();
+    })));
+  });
+  await Promise.all(promises);
+  res.json(messageMap);
+});
+
 
 //@Route - POST /api/message
 router.post('/', passport.isLoggedIn(), (req, res) => {
   const { content, createdAt, selectedChannel } = req.body;
 
   const newMessage = new Message({
-    selectedChannels,
+    selectedChannel,
     content, 
     createdAt,
     sender: new mongoose.Types.ObjectId(req.user._id), 

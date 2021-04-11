@@ -15,7 +15,7 @@ const useChannelGroup = () => {
 
   const { setBgColor, removeAllCursors, appendCursor, leaveWhiteboard, shapesRef, redrawCanvas } = useContext(WhiteboardContext);
   const { socket } = useContext(SocketContext);
-  const { fetchMessages } = useContext(LogsContext);
+  const { fetchMessages, messageMapRef, setLogs } = useContext(LogsContext);
   const { getMedia, leaveVoice } = useContext(WebRTCContext);
   const { 
     whiteboardChannels,
@@ -108,8 +108,7 @@ const useChannelGroup = () => {
         if (selectedChannel.type === 'whiteboard')
           leaveWhiteboard(socket, selectedChannel);
 
-          // improve this (load different messages on screen from front end)
-        fetchMessages(channelId, 2);
+        setLogs(messageMapRef.current[channelId]);
         break;
       default:
         return;
