@@ -6,6 +6,7 @@ import ChannelContext from '../contexts/ChannelContext';
 const useLogs = () => {
   const { logs } = useContext(LogsContext);
   const { selectedChannel } = useContext(ChannelContext);
+  console.log(logs);
 
   const scrollBottom = () => document.querySelector('.log-container')
     ? document.querySelector('.log-container').scrollTop = document.querySelector('.log-container').scrollHeight + 9999

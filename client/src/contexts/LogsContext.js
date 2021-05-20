@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import server from '../apis/server';
+import { MESSAGE_LIMIT } from '../configs'
 
 const LogsContext = React.createContext();
 
@@ -17,8 +18,16 @@ export const LogsProvider = ({ children }) => {
     messageMapRef.current = response.data;
   }
 
+  const appendLogs = async (channelName) => {
+    server.get('/message',  { params: { channelName, limit: MESSAGE_LIMIT, skip: logs.length } })
+    .then(response => {
+      console.log(response.data);
+       setLogs([...response.data, ...logs ]);
+    });
+  }
+
   return (
-    <LogsContext.Provider value={ { logs, setLogs, fetchMessages, fetchAllMessages, messageMapRef } }>
+    <LogsContext.Provider value={ { logs, setLogs, fetchMessages, fetchAllMessages, messageMapRef, appendLogs } }>
       { children }
     </LogsContext.Provider>
   );

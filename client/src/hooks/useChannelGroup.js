@@ -15,7 +15,7 @@ const useChannelGroup = () => {
 
   const { setBgColor, removeAllCursors, appendCursor, leaveWhiteboard, shapesRef, redrawCanvas } = useContext(WhiteboardContext);
   const { socket } = useContext(SocketContext);
-  const { fetchMessages, messageMapRef, setLogs } = useContext(LogsContext);
+  const { messageMapRef, setLogs } = useContext(LogsContext);
   const { getMedia, leaveVoice } = useContext(WebRTCContext);
   const { 
     whiteboardChannels,

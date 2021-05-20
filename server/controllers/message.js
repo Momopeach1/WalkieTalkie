@@ -8,10 +8,12 @@ const Text = require('../models/text');
 //@Route - GET /api/message
 router.get('/', (req, res) => {
   const limit = parseInt(req.query.limit) || 50;
+  const skip = parseInt(req.query.skip) || 0;
   const selectedChannel = req.query.channelName; 
   Message.find({ selectedChannel })
     .populate('sender')
     .sort({ createdAt: -1 })
+    .skip(skip)
     .limit(limit)
     .exec((error, result) => {
       if (error) res.status(500).send(error);

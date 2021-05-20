@@ -32,7 +32,6 @@ router.delete('/delete/:channelID', passport.isLoggedIn(), (req, res) => {
       res.json({succ: true});
     })
   });
-
 });
 
 module.exports = router;
