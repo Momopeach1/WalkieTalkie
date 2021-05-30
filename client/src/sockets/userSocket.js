@@ -4,7 +4,6 @@ const userSocket = (socket, userContext, channelContext, logsContext, allUsersCo
   const { user } = userContext;
   const { fetchAllUsers } = allUsersContext;
   const { fetchVoiceChannels, fetchWhiteboardChannels } = channelContext;
-  const { fetchMessages } = logsContext;
 
   socket.on('generated socket id', async ({ socketId }, announceJoin) => {
     await server.put('/user', { email: user.email, socketId: socketId });
@@ -23,7 +22,6 @@ const userSocket = (socket, userContext, channelContext, logsContext, allUsersCo
 
   socket.on('refresh users', () => {
     fetchAllUsers();
-    //fetchMessages(channelContext.selectedChannel.id, 2);
   });
 }
 

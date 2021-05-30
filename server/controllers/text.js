@@ -19,7 +19,7 @@ router.get('/', passport.isLoggedIn(), (req, res) => {
 router.post('/', passport.isLoggedIn(), (req, res) => {
   Text.create({ name: req.body.name, messages: [] }, (error, result) => {
     if(error) return res.status(500).send(error);
-    res.json({ success: true })
+    res.json(result);
   });
 });
 
@@ -29,7 +29,7 @@ router.delete('/delete/:channelID', passport.isLoggedIn(), (req, res) => {
     if(error) return res.status(500).send(error);
     Message.deleteMany({ channel: req.params.channelID }, (error, result) => {
       if(error) return res.status(500).send(error);
-      res.json({succ: true});
+      res.json({ _id: req.params.channelID });
     })
   });
 });

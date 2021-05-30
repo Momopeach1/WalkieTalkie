@@ -73,10 +73,7 @@ const useChannelGroup = () => {
           canvas.style.background = response.data.bgColor;
           // img.onload = () => context.drawImage(img, 0, 0);
           // img.src = dataURL;
-          console.log('shapes in data', response.data.shapes);
           shapesRef.current = response.data.shapes;
-
-          console.log('shapes in cb', shapesRef.current);
           redrawCanvas();
         })
         .catch(e => console.log(e));

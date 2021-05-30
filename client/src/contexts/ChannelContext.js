@@ -15,7 +15,15 @@ export const ChannelProvider = ({ children }) => {
   const [selectedChannel, setSelectedChannel] = useState({ name: '', type: '', id: '' });
   const [selectedVoice, setSelectedVoice] = useState('');
   const [talkers, setTalkers] = useState({});
-  const selectedChannelRef = useRef(selectedChannel);
+  const channelCoordinatesRef = useRef();
+  const selectedChannelRef = useRef();
+
+  const populateChannelCoords = {};
+  for( let channel of textChannels) {
+    if(!populateChannelCoords.hasOwnProperty(channel.name)) populateChannelCoords[channel.name] = Infinity; 
+  }
+  channelCoordinatesRef.current = populateChannelCoords;
+  console.log(channelCoordinatesRef.current)
 
   selectedChannelRef.current = selectedChannel;
 

@@ -29,7 +29,6 @@ const useChat = () => {
   const whiteboardContext = useContext(WhiteboardContext);
   
   useEffect(() => {
-    // logsContext.fetchMessages(channelContext.selectedChannel.id, 2);
   }, [channelContext.selectedChannel.name])
   
   useEffect(() => {

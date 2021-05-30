@@ -1,21 +1,21 @@
 import moment from 'moment';
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import LogsContext from '../contexts/LogsContext';
 import ChannelContext from '../contexts/ChannelContext';
 
-const useLogs = () => {
-  const { logs } = useContext(LogsContext);
+const useLogs = (logsContainerRef) => {
+  const { logs, appendLogs } = useContext(LogsContext);
   const { selectedChannel } = useContext(ChannelContext);
-  console.log(logs);
 
-  const scrollBottom = () => document.querySelector('.log-container')
-    ? document.querySelector('.log-container').scrollTop = document.querySelector('.log-container').scrollHeight + 9999
-    : null;
-  
-  scrollBottom();
+  useEffect(()=>{
+    if(logsContainerRef) {
+      logsContainerRef.current.scrollIntoView();
+    }
+    
+  },[logs])
 
   const renderLogs2 = () => {
-    return logs.map((log, i) => {
+    return logs?.map((log, i) => {
       const previousUser = i > 0? logs[i-1].sender.email : null;
       const currentUser = log.sender.email;
       const previousTime = i > 0? logs[i-1].createdAt : new Date(-8640000000000000); //before common era
@@ -48,24 +48,26 @@ const useLogs = () => {
   const isRecent = (previousTime, currentTime) => moment(currentTime).diff(moment(previousTime), 'seconds') <= 5;
   
   const renderLogs = () => {
-    const logs = renderLogs2();
+    let logs = renderLogs2();
+    if(!logs) logs = [];
     //welcome text 
-  logs.unshift(
-    <div className="channel-welcome">
-      {/* picture here logo or something */}
-      <div className="channel-welcome-title">
-        Welcome to #
-      {selectedChannel.name}!
-      </div>
-      <div className="channel-welcome-subtext">
-        This is the start of the #{selectedChannel.name} channel.
-        <div className="edit-channel">
-          Edit Channel
+  
+    logs.unshift(
+      <div className="channel-welcome">
+        {/* picture here logo or something */}
+        <div className="channel-welcome-title">
+          Welcome to #
+        {selectedChannel.name}!
+        </div>
+        <div className="channel-welcome-subtext">
+          This is the start of the #{selectedChannel.name} channel.
+          <div className="edit-channel">
+            Edit Channel
+          </div>
         </div>
       </div>
-    </div>
-    )
-    return logs; 
+      )
+      return logs; 
   }
 
   return [renderLogs];

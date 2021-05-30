@@ -10,7 +10,7 @@ const ChannelMenu = ({ channelID, channelType }) => {
 
   const handleDelete = () =>{
     server.delete(`/${channelType}/delete/${channelID}`)
-      .then(() => socket.emit(`create ${channelType} channel`) )
+      .then(res => socket.emit(`create ${channelType} channel`, res.data));
   }
 
   const deleteOption = () => {

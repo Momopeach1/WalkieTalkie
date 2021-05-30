@@ -42,8 +42,8 @@ const AddChannelModal = ({ type }) => {
 
   const handleOnSubmit = () => {
     server.post(`/${type}`, { name: channelName })
-      .then(() => {
-        socket.emit(`create ${type} channel`, {});
+      .then(res => {
+        socket.emit(`create ${type} channel`, res.data);
         closeModal()
       })
       .catch(error => console.log(error));

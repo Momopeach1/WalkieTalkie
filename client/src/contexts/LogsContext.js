@@ -9,8 +9,8 @@ export const LogsProvider = ({ children }) => {
   const [logs, setLogs] = useState([]);
 
   const fetchMessages = async (channelName, limit) => {
-    const response = await server.get('/message',  { params: { channelName, limit } });
-    setLogs(response.data);
+    // const response = await server.get('/message',  { params: { channelName, limit } });
+    // setLogs(response.data);
   }
 
   const fetchAllMessages = async (channelNames, limit) => {
@@ -21,7 +21,6 @@ export const LogsProvider = ({ children }) => {
   const appendLogs = async (channelName) => {
     server.get('/message',  { params: { channelName, limit: MESSAGE_LIMIT, skip: logs.length } })
     .then(response => {
-      console.log(response.data);
        setLogs([...response.data, ...logs ]);
     });
   }
