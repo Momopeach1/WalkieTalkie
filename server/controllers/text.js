@@ -5,7 +5,6 @@ const privilege = require('../middlewares/privilege');
 const Text = require('../models/text');
 const User = require('../models/user');
 const Message = require('../models/message');
-const { response } = require('express');
 
 // @Route GET /api/text
 router.get('/', passport.isLoggedIn(), (req, res) => {
@@ -13,6 +12,14 @@ router.get('/', passport.isLoggedIn(), (req, res) => {
     if (findErr) return res.status(500).send(findErr);
     res.json(findRes);
   })
+});
+
+// @Route GET /api/text
+router.get('/:channelID', passport.isLoggedIn(), (req, res) => {
+  Text.findOne({ _id: req.params.channelID }, (error, result) => {
+    if(error) return res.status(500).send(error);
+    res.json(result);
+  });
 });
 
 // @Route POST /api/text

@@ -1,7 +1,7 @@
 
 const textChannelSocket = (socket, logsContext, channelContext) => {
-  const { setLogs, messageMapRef, fetchMessages } = logsContext;
-  const { fetchTextChannels } = channelContext;
+  const { setLogs, messageMapRef } = logsContext;
+  const { fetchTextChannel, setTextChannels, textChannels } = channelContext;
 
   socket.on('new message', data => {
     messageMapRef.current = {...messageMapRef.current, [data.channel._id]: [...messageMapRef.current[data.channel._id], data]}
@@ -13,13 +13,13 @@ const textChannelSocket = (socket, logsContext, channelContext) => {
   });
 
   socket.on('create text channel', data => {
-    fetchTextChannels(fetchMessages);
+    fetchTextChannel(data._id);
     messageMapRef.current = {...messageMapRef.current, [data._id]: []};
   });
 
   socket.on('delete text channel', data => {
     delete messageMapRef.current[data._id];
-    fetchTextChannels(fetchMessages)
+    setTextChannels(prevTextChannels => prevTextChannels.filter(channel => channel._id !== data._id));
   });
 
 }

@@ -17,7 +17,6 @@ router.get('/', (req, res) => {
     .limit(limit)
     .exec((error, result) => {
       if (error) res.status(500).send(error);
-      console.log('peepeepoopoo', result)
       result.sort((a, b) => a.createdAt - b.createdAt);
       res.json(result);
     });

@@ -16,9 +16,11 @@ const useLogs = (logsContainerRef) => {
 
   const renderLogs2 = () => {
     return logs?.map((log, i) => {
-      const previousUser = i > 0? logs[i-1].sender.email : null;
+      if(i === 0 ) console.log(log.sender);
+      if(!log.sender) return log;
+      const previousUser = i > 0 && !React.isValidElement(logs[i-1])? logs[i-1].sender.email : null;
       const currentUser = log.sender.email;
-      const previousTime = i > 0? logs[i-1].createdAt : new Date(-8640000000000000); //before common era
+      const previousTime = i > 0 && !React.isValidElement(logs[i-1])? logs[i-1].createdAt : new Date(-8640000000000000); //before common era
       const currentTime = log.createdAt;
 
       return !isSameUser(previousUser, currentUser) || !isRecent(previousTime, currentTime)? (
@@ -52,21 +54,21 @@ const useLogs = (logsContainerRef) => {
     if(!logs) logs = [];
     //welcome text 
   
-    logs.unshift(
-      <div className="channel-welcome">
-        {/* picture here logo or something */}
-        <div className="channel-welcome-title">
-          Welcome to #
-        {selectedChannel.name}!
-        </div>
-        <div className="channel-welcome-subtext">
-          This is the start of the #{selectedChannel.name} channel.
-          <div className="edit-channel">
-            Edit Channel
-          </div>
-        </div>
-      </div>
-      )
+    // logs.unshift(
+    //   <div className="channel-welcome">
+    //     {/* picture here logo or something */}
+    //     <div className="channel-welcome-title">
+    //       Welcome to #
+    //     {selectedChannel.name}!
+    //     </div>
+    //     <div className="channel-welcome-subtext">
+    //       This is the start of the #{selectedChannel.name} channel.
+    //       <div className="edit-channel">
+    //         Edit Channel
+    //       </div>
+    //     </div>
+    //   </div>
+    //   )
       return logs; 
   }
 

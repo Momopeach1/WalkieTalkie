@@ -160,6 +160,7 @@ const useChannelGroup = () => {
   }
 
   const renderChannels = (type, channels) => {
+    console.log(channels);
     return channels.map((ch, i) => {
       return (
         <ChannelMenuWrapper channelID={ch._id} channelName={ch.name} channelType={type}>

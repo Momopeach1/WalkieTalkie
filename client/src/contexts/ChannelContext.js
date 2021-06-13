@@ -18,24 +18,31 @@ export const ChannelProvider = ({ children }) => {
   const channelCoordinatesRef = useRef();
   const selectedChannelRef = useRef();
 
-  const populateChannelCoords = {};
-  for( let channel of textChannels) {
-    if(!populateChannelCoords.hasOwnProperty(channel.name)) populateChannelCoords[channel.name] = Infinity; 
-  }
-  channelCoordinatesRef.current = populateChannelCoords;
-  console.log(channelCoordinatesRef.current)
+  // const populateChannelCoords = {};
+  // for( let channel of textChannels) {
+  //   if(!populateChannelCoords.hasOwnProperty(channel.name)) populateChannelCoords[channel.name] = Infinity; 
+  // }
+  // channelCoordinatesRef.current = populateChannelCoords;
+  // console.log(channelCoordinatesRef.current)
 
   selectedChannelRef.current = selectedChannel;
 
   const fetchTextChannels = fetchAllMessages => {
     server.get('/text')
       .then(response => {
-        console.log('text channels', response.data);
         setTextChannels(response.data);
         setSelectedChannel({ name: response.data[0].name, type: 'text', id: response.data[0]._id }); //always assume we have at least one text channel left
         fetchAllMessages(response.data, MESSAGE_LIMIT);
       })
       .catch(err => console.log(err));
+  };
+  
+  //when creating or deleting channels
+  const fetchTextChannel = channelID =>{
+    server.get(`/text/${channelID}`)
+    .then(response => {
+      setTextChannels(prevTextChannels => [...prevTextChannels, response.data]);
+    });
   };
 
   const fetchVoiceChannels = () => {
@@ -77,7 +84,9 @@ export const ChannelProvider = ({ children }) => {
       selectedVoice,
       setSelectedVoice,
       fetchTextChannels,
+      fetchTextChannel,
       textChannels,
+      setTextChannels,
       voiceChannels,
       setVoiceChannels,
       fetchVoiceChannels,
